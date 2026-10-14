@@ -3,6 +3,24 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-10-15
+
+### Added
+
+- `verymath_paper_graph`: deterministic dependency-graph engine (batch merge,
+  cited_by rebuild, shared_node, cycles, both reading directions, focus
+  transitive closure, degraded Mermaid rendering) — replaces the upstream
+  model-generated Python scripts on the DSH path.
+- `verymath_glossary_upsert`: invariant-preserving glossary read/write loop.
+- Glossary query: example sentences and subfield disambiguation filter.
+
+### Fixed
+
+- Glossary cache is invalidated after `verymath_glossary_build` (stale reads).
+- `total` in query results now counts deduplicated candidates before the limit.
+- Bundled skills route to `verymath_paper_graph` first, keeping the Python
+  script flow only as a non-DSH fallback.
+
 ## [0.1.0] - 2026-10-14
 
 ### Added
