@@ -75,6 +75,26 @@
   结构化 JSON 输出（ok:false + findings[line/text]）→ 可直接包成 verymath_lean_detect_sorry 工具。
 - Lean doctor/smoke-test/env 均优雅降级（详见上表证据）。
 
+### Evolving 试点预验证（主线实测，2026-10-15）
+
+- `validate_project.py --json <示例项目>` → ok:true，唯一 warning 是缺失 LLM_API_KEY（设计内）。rc=0。
+- `summarize_run.py --json <空目录>` → 结构化 `hasBest:false`，优雅降级。rc=0。
+- `interactive_session.py --workspace <tmp> status` → 正常。rc=0。
+- 结论：三个脚本可直接包成 verymath_evolve_validate / verymath_evolve_summarize 工具，
+  interactive_session 的 run/tail/stop 留给 DSH Jobs（或先 skill 内 shell 引导）。
+
+### council task-3 已回（研究工作流方向）—— 核心结论
+
+- **Evolving = 最佳首个试点**：1 包 4 脚本零声明依赖、合成测试覆盖进程生命周期（假 CLI 全链路）、
+  validate_project/summarize_run 与 verymath_paper_validate 工具模式同构、run/tail/stop ↔ DSH Jobs 一一映射。
+- **Auto-Research 三技能跟进**（discover-math-problems / proof-blueprint-review / open-problem-research-pipeline）：
+  纯方法论零 API，与 math-paper-reading 形成 reading→discovery→proof-review 链；角色分离天然映射 DSH 子代理。
+- **不整合**：danus-helper-dsh（绑 DSH 0.1.0-rc.x 版本断层）、graph-theory-researcher（与 math-paper-reading 重叠+300行shell校验难维护）、
+  co-mathematician 本体（=单机迷你 DSH，重复造轮子；仅提炼 workspace 闸门 schema 与 suggest-skills CJK 评分两个概念）。
+- co-math 有价值可移植资产：GOALS.yaml 目标状态机 + workstream 完成闸门（gating.py:60-71，纯文件契约）、
+  CJK 数学别名评分表（skills.py:30-41）、PDF 材料提取的进程隔离+限额纪律（materials.py:170-186）。
+- Evolving SKILL.md 自带跨技能路由出口："演化结果产生定理主张 → 路由到 proof-blueprint-review 或 lean-formalization"。
+
 ## 待评审输入（4 个 council-glm 报告将回答）
 
 1. Writing/Optimization 各子技能的依赖与测试可行性（B/D/E）
@@ -92,4 +112,4 @@
 - [ ] Auto-Research 与我们已接入 paper-to-skill 的关系（issue #152 表格里 paper-to-skill 属论文阅读方向）
 
 ---
-> 评审报告回来后本文件升级为 v2 终稿；council 输出存于 research/reports/
+*评审报告回来后本文件升级为 v2 终稿；council 输出存于 research/reports/*
