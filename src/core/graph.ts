@@ -476,21 +476,37 @@ export interface FocusResult {
  */
 export function focusClosure(input: StructureInput, label: string): FocusResult {
   const { entities } = mergeBatches(input)
+  const artifact = isSingleStructure(input) ? input : undefined
+  const theorems: readonly MainTheorem[] = artifact?.main_theorems ?? []
+  // Labels resolve against the merged namespace: entities plus main_theorems
+  // (upstream top-down reading paths start at main_theorems, which the
+  // compact v4.2 form may omit from entities[]). Main theorems absent from
+  // entities participate as leaf nodes with no recorded forward edges.
   const byLabel = new Map(entities.map(entity => [entity.label, entity]))
-  if (!byLabel.has(label)) {
+  const mergedNamespace = new Map(byLabel)
+  for (const theorem of theorems) {
+    if (!mergedNamespace.has(theorem.label)) {
+      mergedNamespace.set(theorem.label, {
+        type: 'THEOREM',
+        label: theorem.label,
+        statement: theorem.statement,
+      })
+    }
+  }
+  if (!mergedNamespace.has(label)) {
     return { label, closure: [], levels: [], found: false }
   }
   const dependenciesOf = (entity: PaperEntity): string[] => [
     ...(entity.dependencies ?? []).map(stripUncertain),
     ...(entity.uncertain_dependencies ?? []).map(stripUncertain),
-  ].filter(dependency => byLabel.has(dependency))
+  ].filter(dependency => mergedNamespace.has(dependency))
   const levels: string[][] = [[label]]
   const seen = new Set<string>([label])
   let frontier = [label]
   while (frontier.length > 0) {
     const next: string[] = []
     for (const current of frontier) {
-      const entity = byLabel.get(current)
+      const entity = mergedNamespace.get(current)
       if (entity === undefined) continue
       for (const dependency of dependenciesOf(entity)) {
         if (!seen.has(dependency)) {

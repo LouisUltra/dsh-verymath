@@ -272,4 +272,35 @@ describe('focusClosure', () => {
     expect(focus.found).toBe(false)
     expect(focus.closure).toEqual([])
   })
+
+  it('resolves labels in main_theorems even when absent from entities (compact v4.2 form)', () => {
+    // Maynard-style artifact: theorems live only in main_theorems[].
+    const compact: PaperStructure = {
+      paper: { title: 'Compact form', authors: ['A'] },
+      main_theorems: [{ label: 'Theorem 1.2', statement: 'S.' }],
+      entities: [entity('Def 1', 'DEFINITION')],
+    }
+    const focus = focusClosure(compact, 'Theorem 1.2')
+    expect(focus.found).toBe(true)
+    expect(focus.levels[0]).toEqual(['Theorem 1.2'])
+    // No recorded edges from the synthetic theorem node: single-layer closure.
+    expect(focus.levels).toHaveLength(1)
+    expect(focus.closure).toEqual(['Theorem 1.2'])
+  })
+
+  it('follows dependencies from an entities-backed theorem through the merged namespace', () => {
+    // If the artifact later adds dependencies onto the theorem entity, closure traverses them.
+    const linked = structure(
+      [
+        entity('Def 1', 'DEFINITION'),
+        entity('Lemma 1', 'LEMMA', ['Def 1']),
+        entity('Theorem 1.2', 'THEOREM', ['Lemma 1']),
+      ],
+      ['Theorem 1.2'],
+    )
+    const focus = focusClosure(linked, 'Theorem 1.2')
+    expect(focus.found).toBe(true)
+    expect(focus.levels).toEqual([['Theorem 1.2'], ['Lemma 1'], ['Def 1']])
+    expect(focus.closure).toEqual(['Def 1', 'Lemma 1', 'Theorem 1.2'])
+  })
 })
