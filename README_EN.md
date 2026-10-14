@@ -18,6 +18,7 @@
 | `verymath_python_check` | Check local Python 3 availability and surface installation hints. |
 | `verymath_paper_validate` | Validate `math-paper-reading` `<slug>_structure.json` artifacts (entity kinds, dependency integrity). |
 | `verymath_paper_graph` | Paper dependency-graph engine: batch merging, `cited_by` reconstruction, `shared_node` hubs, cycle detection, both reading directions, `focus` transitive closure, Mermaid rendering (auto-degrades above 40 entities). |
+| `verymath_ocr_scan` | OCR Markdown error-candidate locator (22 rule categories: glued operators, font misreads, dollar imbalance, environment mismatches; candidates only, for the after-ocr review protocol; needs Python). |
 
 **Bundled skills** (registered in the DSH skill catalog; model- and user-invocable):
 
@@ -25,6 +26,19 @@
 | --- | --- | --- |
 | `math-glossary` | Full workflow to build, maintain, and query bilingual glossaries from PDFs, dictionaries, and tables. | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) `math-glossary` v0.1.0 |
 | `math-paper-reading` | Structured extraction, theorem-dependency analysis, deep reading, literature search, reference management. | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) v4.2 |
+| `graph-theory-paper-reading` | Six-dimension deep reading of graph-theory papers with proof-tree LaTeX reports. | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) |
+| `after-ocr` | Whole-document review and repair discipline for formula-dense OCR Markdown. | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) |
+| `paper-writing` | Source-grounded mathematical paper writing: skeletons, claim-evidence ledgers, obligation audits, notation consistency. | [AI4Math-Writing](https://github.com/VeryMath/AI4Math-Writing) |
+| `discover-math-problems` | Math-problem discovery: from vague background to problem menus, conjecture lattices, and work orders. | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
+| `proof-blueprint-review` | Proof blueprint generation with verifier-style review (generator/verifier role separation). | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
+| `open-problem-research-pipeline` | Open-problem workflow: literature search → method analysis → proof framework → report. | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
+| `least-squares` | Least-squares fitting and parameter estimation (OLS/WLS/regularized/nonlinear/Bayesian, 12-tier degradation). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
+| `invariant-computation` | Routing and evidence reporting for algebraic/topological/geometric invariant computation (approval-gated installs). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
+
+> Deferred (rationale and upgrade paths in `docs/integration-matrix.md`): Sagemath-skill (GPLv3 + 47.5MB corpus),
+> matlab-runner (unusable without MATLAB), math-beamer (TeX-heavy; planned with beamer_check),
+> paper-to-skill chain (conda + cloud API), agent-laboratory-workflow (external LLM API + heavy deploy),
+> co-mathematician (standalone app; concepts only), textbook-copilot (Apache-2.0 standalone app).
 
 Skills carry the methodology; tools carry deterministic execution. The plugin cooperates naturally with DSH sessions, workspaces, sandboxing, and other plugins such as `literature` (e.g. fetch full text with `literature_fulltext`, then analyze it with `math-paper-reading`).
 

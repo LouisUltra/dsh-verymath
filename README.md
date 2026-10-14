@@ -18,6 +18,7 @@
 | `verymath_python_check` | 检查本机 Python 3 可用性并给出安装提示。 |
 | `verymath_paper_validate` | 校验 `math-paper-reading` 产出的 `<slug>_structure.json`（实体类型、依赖完整性）。 |
 | `verymath_paper_graph` | 论文依赖图引擎：批次合并、`cited_by` 重建、`shared_node` 枢纽、环检测、双向阅读路径、`focus` 传递闭包、Mermaid 渲染（>40 实体自动降级）。 |
+| `verymath_ocr_scan` | OCR Markdown 错误候选定位（胶连算符/字体误识/美元失衡/环境失配等 22 类规则；候选仅供 after-ocr 逐段审校，需 Python）。 |
 
 **随包技能**（注册进 DSH 技能目录，模型与用户均可触发）：
 
@@ -25,6 +26,19 @@
 | --- | --- | --- |
 | `math-glossary` | 从 PDF/词典/表格构建、维护、查询双语术语库的完整工作流。 | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) `math-glossary` v0.1.0 |
 | `math-paper-reading` | 论文结构化提取、定理依赖分析、深读、文献检索、引用管理。 | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) v4.2 |
+| `graph-theory-paper-reading` | 图论论文六维深读与证明树 LaTeX 报告。 | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) |
+| `after-ocr` | 公式密集 OCR Markdown 的通篇审校与修复纪律。 | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) |
+| `paper-writing` | 有源可溯的数学论文写作：骨架、断言-证据台账、义务审计、符号一致性。 | [AI4Math-Writing](https://github.com/VeryMath/AI4Math-Writing) |
+| `discover-math-problems` | 从模糊背景到问题菜单、猜想格与工作订单的数学问题发现。 | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
+| `proof-blueprint-review` | 证明蓝图生成与验证者式审查（生成/验证角色分离）。 | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
+| `open-problem-research-pipeline` | 开放问题的检索→方法分析→证明框架→报告四段工作流。 | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
+| `least-squares` | 最小二乘拟合与参数估计（OLS/WLS/正则化/非线性/贝叶斯，12 级降级链）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
+| `invariant-computation` | 代数/拓扑/几何不变量的计算路由与证据报告（审批式环境安装）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
+
+> 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill（GPLv3+47.5MB 语料）、
+> matlab-runner（无 MATLAB 环境即不可用）、math-beamer（TeX 依赖重，后续配 beamer_check 接入）、
+> paper-to-skill 全链（conda+云 API）、agent-laboratory-workflow（外部 LLM API+重部署）、
+> co-mathematician（独立 App，仅提炼概念）、textbook-copilot（Apache-2.0 独立应用）。
 
 技能承载方法论，工具承载确定性执行；与 DSH 会话、工作区、沙箱和 `literature` 等其他插件天然协作（如用 `literature_fulltext` 下载论文全文，再交给 `math-paper-reading` 分析）。
 
