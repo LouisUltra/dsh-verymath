@@ -204,6 +204,16 @@ export class VeryMathRuntime extends Service {
     return this.runPython(python, [scriptPath, ...args], timeoutMs)
   }
 
+  /**
+   * Run a Python executable directly with an explicit argument list. Public on
+   * purpose for skill-script bridges (e.g. the after-ocr scanner) whose files
+   * are bundled inside the plugin package; call sites must keep the script
+   * path inside the package and the argument list fully constructed.
+   */
+  runPythonCommand(executable: string, args: readonly string[], timeoutMs?: number): Promise<PythonRunResult> {
+    return this.runPython(executable, args, timeoutMs ?? 60_000)
+  }
+
   private runPython(executable: string, args: readonly string[], timeoutMs: number): Promise<PythonRunResult> {
     return new Promise((resolvePromise, rejectPromise) => {
       let child: ReturnType<typeof spawn>

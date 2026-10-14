@@ -24,9 +24,14 @@
         "skills/math-paper-reading/skill_pathway_proof.md",
         "skills/math-paper-reading/skill_paper_deep_read.md",
         "skills/math-paper-reading/skill_reference_manager.md",
-        "skills/math-paper-reading/skill_literature_search.md"
+        "skills/math-paper-reading/skill_literature_search.md",
+        "skills/graph-theory-paper-reading/SKILL.md",
+        "skills/after-ocr/SKILL.md",
+        "skills/after-ocr/scripts/",
+        "skills/after-ocr/references/",
+        "skills/after-ocr/tests/"
       ],
-      "adaptationNotes": "Skill routing adapted for DSH invocation and workspace artifact conventions; analysis methodology and the v4.2 structure JSON contract unchanged; optional verymath_paper_validate tool references added."
+      "adaptationNotes": "Skill routing adapted for DSH invocation and workspace artifact conventions; analysis methodology and the v4.2 structure JSON contract unchanged; optional verymath_paper_validate tool references added. graph-theory-paper-reading bundled verbatim with a DSH Integration Notes section added; after-ocr bundled with scripts/tests/references verbatim plus DSH notes. Both registered as independent bundled skills alongside math-paper-reading."
     }
   ],
   "packageLicense": "MIT",

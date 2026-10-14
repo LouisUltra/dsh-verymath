@@ -13,10 +13,12 @@ This package contains code and skill content adapted from third-party sources.
   verbatim. Skill content and scripts remain under the upstream MIT license;
   this NOTICE and UPSTREAM.json record the provenance.
 
-## VeryMath AI4Math-Paper-Reading (`math-paper-reading`)
+## VeryMath AI4Math-Paper-Reading (`math-paper-reading`, `graph-theory-paper-reading`, `after-ocr`)
 
 - Source: https://github.com/VeryMath/AI4Math-Paper-Reading
-- Directory adapted: `skills/math-paper-reading/` (agent_router.md, skill_*.md)
+- Directories adapted: `skills/math-paper-reading/` (agent_router.md, skill_*.md);
+  `skills/graph-theory-paper-reading/SKILL.md` (verbatim + DSH notes);
+  `skills/after-ocr/` (SKILL.md, scripts/, references/, tests/ verbatim + DSH notes)
 - License: MIT (see the upstream repository)
 - Adapted commit: recorded in `UPSTREAM.json`
 - Changes: routing text adapted for DSH (skill invocation, workspace artifact

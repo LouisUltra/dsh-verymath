@@ -3,6 +3,26 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-10-15
+
+### Added
+
+- Bundled skills `graph-theory-paper-reading` (proof-tree LaTeX reports) and
+  `after-ocr` (OCR Markdown review discipline) adapted from VeryMath
+  AI4Math-Paper-Reading, with DSH integration notes.
+- `verymath_ocr_scan`: deterministic OCR error-candidate locator bridging the
+  bundled `scan_markdown_ocr.py` (pure stdlib; candidates only — the after-ocr
+  line-by-line protocol still applies).
+- Package-hygiene tests ported from upstream `test_course_skills.py`
+  (no machine-local paths/secrets in skills, no tool caches).
+
+### Fixed
+
+- Glossary behavior gaps from the upstream contract: `verymath_glossary_upsert`
+  documented in the skill's DSH tool table, translation-agent trigger restored,
+  `requirements-ai.txt` shipped, exit 2/3 surfaced as structured outcomes
+  (`needs-force` / `partial`) instead of exceptions.
+
 ## [0.2.0] - 2026-10-15
 
 ### Added

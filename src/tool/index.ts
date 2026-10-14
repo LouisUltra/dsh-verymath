@@ -11,7 +11,7 @@ import type { ContentBlock } from '@deepseek-ai/dsh-llm'
 import type {} from '@deepseek-ai/dsh-fs'
 import { isAbsolute, resolve } from 'node:path'
 import { VeryMathError, isVeryMathError } from '@louisultra/dsh-verymath/core'
-import { computeTopology, dependencySummary, focusClosure, mergeBatches, parsePaperStructure, renderMermaid, upsertTerms, type TermUpsert } from '@louisultra/dsh-verymath/core'
+import { bundledSkillsDir, computeTopology, dependencySummary, focusClosure, mergeBatches, parsePaperStructure, renderMermaid, upsertTerms, type TermUpsert } from '@louisultra/dsh-verymath/core'
 
 export const name = 'tool-verymath'
 export const inject = ['tools', 'verymath', 'fs']
@@ -401,6 +401,86 @@ export const apply = (ctx: Context, config: Config = {}): void => {
         }
       }
       return { available: true, executable: python }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_ocr_scan',
+    description: 'Scan an OCR-produced Markdown file (formula-dense academic scans) for likely recognition errors: glued operators, misread fonts (\\mathbb{D} etc.), epsilon-as-index digits, odd dollar counts, unclosed LaTeX environments, environment mismatches. Deterministic candidate locator only — the after-ocr skill\'s line-by-line review discipline is still required after scanning; never treat findings as confirmed errors. Requires Python 3 (check verymath_python_check first).',
+    parameters: {
+      path: { type: 'string', required: true, description: 'Workspace path of the OCR Markdown file' },
+      startLine: { type: 'number', description: 'First line to scan (1-based, inclusive)' },
+      endLine: { type: 'number', description: 'Last line to scan (inclusive)' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          path: { type: 'string' },
+          totalLines: { type: 'number' },
+          findingCount: { type: 'number' },
+          findings: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                rule: { type: 'string' },
+                line: { type: 'number' },
+                snippet: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as { path: string, findingCount: number, findings: Array<{ rule: string, line: number, snippet?: string }> }
+        if (result.findingCount === 0) {
+          return [{ type: 'text', text: `No OCR error candidates found in ${result.path}. Proceed with the after-ocr line-by-line review protocol.` }]
+        }
+        const lines = result.findings.slice(0, 30).map(finding => `- line ${finding.line}: ${finding.rule}`)
+        const note = result.findingCount > 30 ? `\n(showing 30 of ${result.findingCount})` : ''
+        return [{ type: 'text', text: `${result.findingCount} candidate finding(s) in ${result.path}:\n${lines.join('\n')}${note}\nThese are candidates only — verify each against the source per the after-ocr protocol.` }]
+      },
+    },
+    async execute(args, exec) {
+      const python = await ctx.verymath.resolvePython()
+      if (python === undefined) {
+        throw new VeryMathError('verymath_ocr_scan requires Python 3; run verymath_python_check for install hints', 'VERYMATH_PYTHON_UNAVAILABLE')
+      }
+      const fs = ctx.fs
+      if (fs === undefined) {
+        throw new VeryMathError('verymath_ocr_scan requires the fs service', 'VERYMATH_IO')
+      }
+      const absolute = toWorkspacePath(args.path, exec.agent?.session.header.cwd)
+      // The scan script reads host paths: map the workspace path into the fs execution world.
+      const processPath = fs.processPath(await fs.resolve(absolute, { signal: exec.signal }))
+      const scriptPath = bundledSkillsDir() + '/after-ocr/scripts/scan_markdown_ocr.py'
+      const scriptArgs = [scriptPath, '--format', 'json', processPath]
+      if (args.startLine !== undefined) scriptArgs.push('--start-line', String(args.startLine))
+      if (args.endLine !== undefined) scriptArgs.push('--end-line', String(args.endLine))
+      const result = await ctx.verymath.runPythonCommand(python, scriptArgs, 60_000)
+      if (result.exitCode !== 0) {
+        throw new VeryMathError(`ocr scan exited ${result.exitCode}: ${(result.stderr || result.stdout).slice(0, 1000)}`, 'VERYMATH_IO')
+      }
+      let parsed: { findings?: Array<{ rule?: string, line?: number, snippet?: string }>, summary?: { total_lines?: number }, total_lines?: number }
+      try {
+        parsed = JSON.parse(result.stdout)
+      } catch (error) {
+        throw new VeryMathError(`ocr scan produced invalid JSON: ${error instanceof Error ? error.message : String(error)}`, 'VERYMATH_IO', { cause: error })
+      }
+      const findings = parsed.findings ?? []
+      return {
+        path: args.path,
+        totalLines: parsed.summary?.total_lines ?? parsed.total_lines ?? 0,
+        findingCount: findings.length,
+        findings: findings.slice(0, 200).map(finding => ({
+          rule: finding.rule ?? 'unknown',
+          line: finding.line ?? 0,
+          ...(finding.snippet !== undefined ? { snippet: String(finding.snippet).slice(0, 120) } : {}),
+        })),
+      }
     },
   }))
 
