@@ -8,6 +8,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import type { ContentBlock } from '@deepseek-ai/dsh-llm'
+import type { JsonValue } from '@deepseek-ai/dsh-util-values'
 import type {} from '@deepseek-ai/dsh-fs'
 import { isAbsolute, resolve } from 'node:path'
 import { VeryMathError, isVeryMathError } from '@louisultra/dsh-verymath/core'
@@ -401,6 +402,157 @@ export const apply = (ctx: Context, config: Config = {}): void => {
         }
       }
       return { available: true, executable: python }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_osqp_check',
+    description: 'Probe the Python environment for the OSQP solver stack (osqp with major-version gate >=1,<2, numpy, scipy) without installing anything. Returns per-package availability plus an install hint. Call before verymath_osqp_solve.',
+    parameters: {},
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          ready: { type: 'boolean' },
+          packages: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                name: { type: 'string' },
+                available: { type: 'boolean' },
+                version: { type: 'string' },
+              },
+            },
+          },
+          hint: { type: 'string' },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as { ready: boolean, packages: Array<{ name: string, available: boolean, version?: string }>, hint?: string }
+        const lines = result.packages.map(pkg => `- ${pkg.name}: ${pkg.available ? `ok${pkg.version !== undefined ? ` ${pkg.version}` : ''}` : 'missing'}`)
+        const status = result.ready ? 'OSQP stack ready' : 'OSQP stack NOT ready'
+        return [{ type: 'text', text: [status, ...lines, result.hint !== undefined ? `hint: ${result.hint}` : ''].filter(Boolean).join('\n') }]
+      },
+    },
+    async execute() {
+      const python = await ctx.verymath.resolvePython()
+      if (python === undefined) {
+        return {
+          ready: false,
+          packages: [{ name: 'python3', available: false }],
+          hint: 'Install Python 3 first (see verymath_python_check), then: python3 -m pip install \'osqp>=1,<2\'',
+        }
+      }
+      const scriptPath = bundledSkillsDir() + '/osqp-solver/scripts/check_osqp_environment.py'
+      const result = await ctx.verymath.runPythonCommand(python, [scriptPath, '--json'], 30_000)
+      let parsed: { ready?: boolean, packages?: Array<{ name?: string, available?: boolean, version?: string }>, install_hint?: string, hint?: string }
+      try {
+        parsed = JSON.parse(result.stdout)
+      } catch (error) {
+        throw new VeryMathError(`osqp check produced invalid JSON: ${error instanceof Error ? error.message : String(error)}`, 'VERYMATH_IO', { cause: error })
+      }
+      return {
+        ready: parsed.ready === true,
+        packages: (parsed.packages ?? []).map(pkg => ({
+          name: pkg.name ?? 'unknown',
+          available: pkg.available === true,
+          ...(pkg.version !== undefined ? { version: pkg.version } : {}),
+        })),
+        ...(parsed.install_hint !== undefined || parsed.hint !== undefined
+          ? { hint: parsed.install_hint ?? parsed.hint }
+          : {}),
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_osqp_solve',
+    description: 'Solve a continuous convex quadratic program (minimize 0.5 x^T P x + q^T x subject to l <= Ax <= u, P symmetric PSD) from a JSON problem document with independent verification: 11-state solver-status gates, primal/dual residual and KKT complementarity checks, and infeasibility certificates. Input JSON: {P, q, A, l, u} dense arrays (optionally {name, settings}). Deterministic; atomic output; exit-code contract (0 solved/verified, 2 input error, 3 numerical rejection). Requires the OSQP Python stack (verymath_osqp_check first). Not for mixed-integer, nonconvex, or general conic problems.',
+    parameters: {
+      problem: { type: 'string', required: true, description: 'Workspace path of the JSON QP problem document' },
+      output: { type: 'string', description: 'Workspace path for the result JSON (atomic write); omit to return the result inline' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          status: { type: 'string' },
+          solution: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              x: { type: 'array', items: { type: 'number' } },
+              y: { type: 'array', items: { type: 'number' } },
+            },
+          },
+          verification: { type: 'json' },
+          problem: { type: 'json' },
+          outputPath: { type: 'string' },
+          raw: { type: 'json' },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as {
+          status: { classification?: string, reported?: string, accepted?: boolean },
+          solution?: { x?: number[] },
+          verification?: { kind?: string },
+          outputPath?: string,
+        }
+        const parts = [
+          `status: ${result.status?.classification ?? result.status?.reported ?? 'unknown'} (accepted: ${String(result.status?.accepted ?? false)})`,
+        ]
+        if (result.solution?.x !== undefined) parts.push(`x = [${result.solution.x.map(entry => entry.toFixed(4)).join(', ')}]`)
+        if (result.verification?.kind !== undefined) parts.push(`verification: ${result.verification.kind}`)
+        if (result.outputPath !== undefined) parts.push(`result written to: ${result.outputPath}`)
+        return [{ type: 'text', text: parts.join('\n') }]
+      },
+    },
+    async execute(args, exec) {
+      const python = await ctx.verymath.resolvePython()
+      if (python === undefined) {
+        throw new VeryMathError('verymath_osqp_solve requires Python 3; run verymath_python_check for install hints', 'VERYMATH_PYTHON_UNAVAILABLE')
+      }
+      const fs = ctx.fs
+      if (fs === undefined) {
+        throw new VeryMathError('verymath_osqp_solve requires the fs service', 'VERYMATH_IO')
+      }
+      const problemPath = toWorkspacePath(args.problem, exec.agent?.session.header.cwd)
+      const scriptPath = bundledSkillsDir() + '/osqp-solver/scripts/solve_qp.py'
+      const scriptArgs = [scriptPath, fs.processPath(await fs.resolve(problemPath, { signal: exec.signal }))]
+      let outputPath: string | undefined
+      if (args.output !== undefined) {
+        outputPath = toWorkspacePath(args.output, exec.agent?.session.header.cwd)
+        scriptArgs.push('--output', fs.processPath(await fs.resolve(outputPath, { signal: exec.signal })))
+      }
+      const result = await ctx.verymath.runPythonCommand(python, scriptArgs, 120_000)
+      let parsed: Record<string, unknown>
+      try {
+        parsed = JSON.parse(result.stdout)
+      } catch (error) {
+        throw new VeryMathError(
+          `osqp solve produced invalid JSON (exit ${result.exitCode}): ${(result.stderr || result.stdout).slice(0, 500)}`,
+          'VERYMATH_IO',
+          { cause: error },
+        )
+      }
+      const status = parsed.status as { classification?: string, reported?: string, accepted?: boolean } | undefined
+      const solution = parsed.solution as { x?: number[], y?: number[] } | undefined
+      // JSON-normalize passthrough blocks so they satisfy the JsonValue output contract.
+      const normalize = (value: unknown): JsonValue => JSON.parse(JSON.stringify(value ?? null)) as JsonValue
+      return {
+        status: status?.classification ?? status?.reported ?? 'unknown',
+        ...(solution !== undefined && solution.x !== undefined
+          ? { solution: { x: solution.x, ...(solution.y !== undefined ? { y: solution.y } : {}) } }
+          : {}),
+        ...(parsed.verification !== undefined ? { verification: normalize(parsed.verification) } : {}),
+        ...(parsed.problem !== undefined ? { problem: normalize(parsed.problem) } : {}),
+        ...(outputPath !== undefined ? { outputPath } : {}),
+        raw: normalize(parsed),
+      }
     },
   }))
 
