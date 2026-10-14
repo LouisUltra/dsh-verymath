@@ -53,6 +53,7 @@ interface GlossaryBuildJson {
   readonly exitCode: number
   readonly output: string
   readonly pythonExecutable: string
+  readonly status: 'completed' | 'partial' | 'needs-force'
 }
 
 /** The `verymath_python_check` canonical value. */
@@ -102,7 +103,7 @@ function renderGlossaryBuild(_args: unknown, value: unknown): ContentBlock[] {
   const result = value as GlossaryBuildJson
   const parts = [
     `python ${result.script} ${result.args.join(' ')}`,
-    `exit code: ${result.exitCode}`,
+    `exit code: ${result.exitCode} (${result.status})`,
   ]
   if (result.output.length > 0) parts.push('', result.output)
   return [{ type: 'text', text: parts.join('\n') }]
@@ -246,6 +247,7 @@ export const apply = (ctx: Context, config: Config = {}): void => {
           exitCode: { type: 'number' },
           output: { type: 'string' },
           pythonExecutable: { type: 'string' },
+          status: { type: 'string' },
         },
       },
       render: renderGlossaryBuild,
@@ -253,7 +255,10 @@ export const apply = (ctx: Context, config: Config = {}): void => {
     async execute(args) {
       const result = await ctx.verymath.runGlossaryScript(args.script, args.args ?? [])
       const output = [result.stderr.trim(), result.stdout.trim()].filter(part => part.length > 0).join('\n')
-      if (result.exitCode !== 0) {
+      // Upstream contract: exit 3 = partial success (JSON written, Excel pending because
+      // openpyxl is missing — report honestly, never claim full completion); exit 2 = the
+      // output already exists and --force is required. Both are structured outcomes.
+      if (result.exitCode !== 0 && result.exitCode !== 2 && result.exitCode !== 3) {
         throw new VeryMathError(
           `glossary script ${args.script} exited ${result.exitCode}: ${output.slice(0, 2000) || '(no output)'}`,
           'VERYMATH_IO',
@@ -272,6 +277,7 @@ export const apply = (ctx: Context, config: Config = {}): void => {
         exitCode: result.exitCode,
         output: output.slice(0, 8000),
         pythonExecutable: (await ctx.verymath.resolvePython()) ?? '(unknown)',
+        status: result.exitCode === 3 ? 'partial' : result.exitCode === 2 ? 'needs-force' : 'completed',
       }
     },
   }))

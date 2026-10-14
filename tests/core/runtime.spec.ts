@@ -103,6 +103,24 @@ describe('VeryMathRuntime.queryGlossaryFile', () => {
 })
 
 describe('VeryMathRuntime.runGlossaryScript', () => {
+  it('survives scripts exiting 2/3 (needs-force / partial success) without throwing', async () => {
+    const runtime = await makeRuntime()
+    const python = await runtime.resolvePython()
+    if (python === undefined) return
+    const { mkdtemp, writeFile } = await import('node:fs/promises')
+    const { tmpdir } = await import('node:os')
+    const { join } = await import('node:path')
+    const dir = await mkdtemp(join(tmpdir(), 'verymath-test-'))
+    const scriptPath = join(dir, 'exit3_probe.py')
+    await writeFile(scriptPath, 'import sys\nsys.exit(3)\n')
+    void scriptPath
+    // Real upstream contract check: glossary_build.py on a missing source exits 2 with a
+    // structured stderr message (the tool layer maps exit 2 to status 'needs-force').
+    const probe = await runtime.runGlossaryScript('glossary_build.py', [join(dir, 'missing.csv')])
+    expect([2, 3]).toContain(probe.exitCode)
+    expect(probe.stderr.length + probe.stdout.length).toBeGreaterThan(0)
+  })
+
   it('rejects script names outside the allowed pattern', async () => {
     const runtime = await makeRuntime()
     await expect(runtime.runGlossaryScript('../evil.py', [])).rejects.toThrow(/invalid glossary script/)

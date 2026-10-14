@@ -1,6 +1,6 @@
 ---
 name: math-glossary
-description: "术语库构建与管理 skill。当用户需要从专业词汇文献（PDF/Excel/TXT/JSON/CSV/YAML/MDX/扫描件）中提取、构建、维护双语术语库时使用。触发场景：用户说'建术语库'、'整理数学词汇'、'从词典提取术语'、'术语库'、'glossary'、'词汇表'、'翻译术语管理'，或需要查询术语库（'查术语'、'流形英文怎么说'）时。学科无关的通用框架，数学是第一个应用场景。在 DSH 中优先使用 verymath_glossary_query / verymath_glossary_build / verymath_python_check 工具执行。"
+description: "术语库构建与管理 skill。当用户需要从专业词汇文献（PDF/Excel/TXT/JSON/CSV/YAML/MDX/扫描件）中提取、构建、维护双语术语库时使用。触发场景：用户说'建术语库'、'整理数学词汇'、'从词典提取术语'、'术语库'、'glossary'、'词汇表'、'翻译术语管理'，需要查询术语库（'查术语'、'流形英文怎么说'），或翻译 agent 需要查询/更新术语库时。学科无关的通用框架，数学是第一个应用场景。在 DSH 中优先使用 verymath_glossary_query / verymath_glossary_upsert / verymath_glossary_build / verymath_python_check 工具执行。"
 ---
 
 # 数学术语库构建与管理
@@ -15,8 +15,9 @@ description: "术语库构建与管理 skill。当用户需要从专业词汇文
 
 | 任务 | 工具 | 说明 |
 | --- | --- | --- |
-| 查询术语 | `verymath_glossary_query` | 按英文/中文/term_id/子领域查询 `glossary.json`，无需 Python |
-| 结构化建库/扩充 | `verymath_glossary_build` | 运行 `scripts/` 下的 `glossary_build.py` 等脚本（需本地 Python 3） |
+| 查询术语 | `verymath_glossary_query` | 按英文/中文/term_id/子领域查询 `glossary.json`，返回例句，支持子领域过滤，无需 Python |
+| 存词/更新 | `verymath_glossary_upsert` | 读论文/翻译遇到新术语时追加或更新条目；自动维护排序、连续 idx 与日期，**不要手改 glossary.json** |
+| 结构化建库/扩充 | `verymath_glossary_build` | 运行 `scripts/` 下的 `glossary_build.py` 等脚本（需本地 Python 3）；Excel 缺依赖时工具会报告部分成功，如实转述 |
 | 依赖检查 | `verymath_python_check` | 检查 Python 3 是否可用并给出安装提示 |
 | 结构化校验 | （无工具时）读 JSON 后按 `references/glossary-schema.md` 校验 | 术语库不变量见下文 |
 
@@ -336,7 +337,7 @@ python3 -m pip install mdict-utils              # 仅 MDX，可选
 
 本 skill 只负责术语库的构建和维护，不直接调用翻译 agent。与翻译 agent 之间的接口约定：
 
-- 翻译 agent 读取 `glossary.json`，建立 `{term_id → cn}` 映射表
+- 翻译 agent 读取 `glossary.json`，建立 `{term_id → cn}` 映射表；**在 DSH 中新增/更新术语一律走 `verymath_glossary_upsert` 工具**，不要手改 JSON（工具自动维护不变量）
 - 翻译时优先按 `term_id` 精确查找，再按 en 子串匹配
 - 同一个 en 在不同 field 下有不同 cn（多义术语），需根据文献上下文所属子领域以及语境选择
 - 术语若有例句（`examples`），翻译 agent 应将原文上下文与例句对比，选择语义最接近的义项
