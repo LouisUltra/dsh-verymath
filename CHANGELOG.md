@@ -7,12 +7,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Bundled skills `graph-theory-paper-reading` (proof-tree LaTeX reports) and
-  `after-ocr` (OCR Markdown review discipline) adapted from VeryMath
-  AI4Math-Paper-Reading, with DSH integration notes.
-- `verymath_ocr_scan`: deterministic OCR error-candidate locator bridging the
-  bundled `scan_markdown_ocr.py` (pure stdlib; candidates only — the after-ocr
-  line-by-line protocol still applies).
+- **13 bundled skills** covering the six issue-#152 directions:
+  - Paper reading: `math-paper-reading` (v4.2), `graph-theory-paper-reading`,
+    `after-ocr` (all from AI4Math-Paper-Reading).
+  - Glossary: `math-glossary` (AI4Math-MathTool v0.1.0).
+  - Writing: `paper-writing` with six flattened sub-skill modules
+    (AI4Math-Writing).
+  - Research workflow: `discover-math-problems`, `proof-blueprint-review`,
+    `open-problem-research-pipeline` (AI4Math-Auto-Research).
+  - Optimization: `osqp-solver` (AI4Math-Optimization).
+  - Computation: `least-squares`, `invariant-computation`
+    (AI4Math-Computational-Mathematics).
+  - Formalization: `lean-formalization` (with embedded lean-runtime support
+    layer), `lean-setup` (AI4Math-Lean-Agents).
+- **12 model-facing tools**: `verymath_glossary_query`, `verymath_glossary_upsert`,
+  `verymath_glossary_build`, `verymath_python_check`, `verymath_osqp_check`,
+  `verymath_osqp_solve`, `verymath_ocr_scan`, `verymath_lean_detect_sorry`,
+  `verymath_paper_validate`, `verymath_paper_graph` (+ `focus` closure),
+  and the paper-graph engine.
 - Package-hygiene tests ported from upstream `test_course_skills.py`
   (no machine-local paths/secrets in skills, no tool caches).
 
