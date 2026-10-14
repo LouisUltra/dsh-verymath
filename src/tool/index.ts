@@ -454,13 +454,18 @@ export const apply = (ctx: Context, config: Config = {}): void => {
       } catch (error) {
         throw new VeryMathError(`osqp check produced invalid JSON: ${error instanceof Error ? error.message : String(error)}`, 'VERYMATH_IO', { cause: error })
       }
+      // Upstream shape: packages is an OBJECT keyed by package name.
+      const packagesRaw = parsed.packages ?? {}
       return {
         ready: parsed.ready === true,
-        packages: (parsed.packages ?? []).map(pkg => ({
-          name: pkg.name ?? 'unknown',
-          available: pkg.available === true,
-          ...(pkg.version !== undefined ? { version: pkg.version } : {}),
-        })),
+        packages: Object.entries(packagesRaw).map(([name, info]) => {
+          const detail = (typeof info === 'object' && info !== null ? info : {}) as { available?: boolean, version?: string }
+          return {
+            name,
+            available: detail.available === true,
+            ...(detail.version !== undefined ? { version: detail.version } : {}),
+          }
+        }),
         ...(parsed.install_hint !== undefined || parsed.hint !== undefined
           ? { hint: parsed.install_hint ?? parsed.hint }
           : {}),
@@ -497,13 +502,15 @@ export const apply = (ctx: Context, config: Config = {}): void => {
       },
       render: (_args, value) => {
         const result = value as {
-          status: { classification?: string, reported?: string, accepted?: boolean },
+          status: string,
           solution?: { x?: number[] },
           verification?: { kind?: string },
           outputPath?: string,
+          raw?: { status?: { accepted?: boolean, reported?: string } },
         }
+        const accepted = result.raw?.status?.accepted
         const parts = [
-          `status: ${result.status?.classification ?? result.status?.reported ?? 'unknown'} (accepted: ${String(result.status?.accepted ?? false)})`,
+          `status: ${result.status} (accepted: ${String(accepted ?? false)})`,
         ]
         if (result.solution?.x !== undefined) parts.push(`x = [${result.solution.x.map(entry => entry.toFixed(4)).join(', ')}]`)
         if (result.verification?.kind !== undefined) parts.push(`verification: ${result.verification.kind}`)
