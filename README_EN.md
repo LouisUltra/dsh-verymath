@@ -51,7 +51,7 @@ Then just ask in a session, e.g. "look up the Chinese term for manifold" or "rea
 
 - **Query and paper validation**: no external dependencies.
 - **Glossary build/export** (`verymath_glossary_build`): requires a local Python 3 plus the upstream script dependencies (`PyYAML`; Excel export additionally needs `openpyxl`, the web UI needs `Flask`). Check availability with `verymath_python_check` first and install per its hints; the plugin does not bundle Python.
-- **Platforms**: verified on macOS (Apple Silicon); Windows should work (Node and Python on PATH) but is not yet tested — feedback welcome.
+- **Platforms**: verified on macOS (Apple Silicon) (DSH CLI sandbox + the EduWork 0.4.3 desktop app itself); Windows should work (Node and Python on PATH) but is not yet tested — feedback welcome.
 
 ## Developing from source
 

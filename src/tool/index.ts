@@ -527,10 +527,10 @@ export const apply = (ctx: Context, config: Config = {}): void => {
         if (top.length > 0) parts.push('key nodes:', ...top)
         if (result.focus !== undefined) {
           if (!result.focus.found) {
-            parts.push(`focus ${JSON.stringify(result.focus.label)}: not found in the merged entities`)
+            parts.push(`focus ${JSON.stringify(result.focus.label)}: not found in the merged entities (found=false)`)
           } else {
             parts.push(
-              `reading path for ${result.focus.label} (bottom-up layers):`,
+              `focus ${JSON.stringify(result.focus.label)}: found=true; reading path (bottom-up layers):`,
               ...result.focus.levels.map((level, index) => `  L${index}: ${level.join(', ')}`),
             )
           }

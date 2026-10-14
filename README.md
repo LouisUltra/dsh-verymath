@@ -51,7 +51,7 @@ dsh plugin --profile <你的profile> add ./louisultra-dsh-verymath-<version>.tgz
 
 - **查询与论文校验**：无需任何外部依赖。
 - **术语库构建/导出**（`verymath_glossary_build`）：需要本地 Python 3 与上游脚本依赖（`PyYAML`；Excel 导出另需 `openpyxl`，Web 管理界面另需 `Flask`）。缺失时先用 `verymath_python_check` 检查并按提示安装；插件不捆绑 Python。
-- **平台**：macOS（Apple Silicon）已验证；Windows 理论可用（依赖 Node 与 Python 的 PATH），尚未实测——欢迎反馈。
+- **平台**：macOS（Apple Silicon）已验证（DSH CLI 沙箱 + EduWork 0.4.3 桌面端实际装载）；Windows 理论可用（依赖 Node 与 Python 的 PATH），尚未实测——欢迎反馈。
 
 ## 从源码开发
 
