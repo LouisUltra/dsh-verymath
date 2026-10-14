@@ -118,6 +118,27 @@
 - **benchmark 数字不可信**（宣称 100 问题 100% 通过率但无复现脚本，AI 生成痕迹）——接入文案不引用。
 - 黄金联动线：osqp 的 outputs/<run_id>/verification.json 作为 paper-writing "experiment 型断言"标准证据。
 
+### council task-4 已回（论文阅读深挖 + 独立工具）—— 核心结论
+
+**接入（P1）**：
+- `graph-theory-paper-reading` → 第 3 个捆绑技能目录（零代码接入，VeryMathSkillProvider 自动扫描；
+  注意是第 3 个不是第 4 个——现捆绑 2 个技能）；改 probe-runtime 断言 + README 表。
+- `after-ocr` → 技能随包 + `verymath_ocr_scan` 工具（scan_markdown_ocr.py 纯标准库 ~650 行，
+  JSON 输出，上游自带 unittest）；EduWork 扫描件场景直接受益。
+- **上游 glossary 测试补齐（补丁级）**：vendor tests/ 进插件包；`verymath_glossary_build` 把 exit 3
+  （JSON 完成 Excel 待完成）映射为结构化部分成功而非 throw；补 requirements-ai.txt；
+  SKILL.md 工具表补 upsert 行（修复与手改 JSON 的自相矛盾）；触发词补"翻译 agent 查询/更新"。
+- 包卫生 lint 移植（frontmatter 键最小化 + 无本地路径/密钥正则）；实测能抓到 `.ruff_cache` 会被打进 npm 包。
+
+**不接**：
+- paper-to-skill 9 技能链（conda+MinerU 云 API 隐私+下载审批超 MVP）；仅摘 proof_pattern_taxonomy.md +
+  quality_rubric.md 做深读附录（P3）。
+- matlab-runner（无 MATLAB 学生触发即 MCP_UNAVAILABLE，死重+误导；借鉴其错误九分类/调用预算到工具层文档）。
+- textbook-copilot（独立 app，Apache-2.0 许可差异；read-pages.mjs 零 Python PDF 读取器可后摘）。
+
+**已接入部分的行为缺口（E 专项，7 项）**：requirements-ai.txt 缺失、upsert 未进 SKILL 工具表、
+exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cache 污染、math-paper-reading 引用不存在的 examples/。
+
 ## 待评审输入（4 个 council-glm 报告将回答）
 
 1. Writing/Optimization 各子技能的依赖与测试可行性（B/D/E）
