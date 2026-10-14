@@ -32,6 +32,17 @@
         "skills/after-ocr/tests/"
       ],
       "adaptationNotes": "Skill routing adapted for DSH invocation and workspace artifact conventions; analysis methodology and the v4.2 structure JSON contract unchanged; optional verymath_paper_validate tool references added. graph-theory-paper-reading bundled verbatim with a DSH Integration Notes section added; after-ocr bundled with scripts/tests/references verbatim plus DSH notes. Both registered as independent bundled skills alongside math-paper-reading."
+    },
+    {
+      "repository": "https://github.com/VeryMath/AI4Math-Writing",
+      "commit": "418eb2e0c9cad7f259d114d7acfe6043971f4b94",
+      "license": "MIT",
+      "adaptedPaths": [
+        "skills/paper-writing/SKILL.md",
+        "skills/paper-writing/skills/*/SKILL.md (flattened to skill_*.md modules)",
+        "skills/paper-writing/templates/"
+      ],
+      "adaptationNotes": "paper-writing bundled with sub-skills flattened to module files (plugin skill-discovery layout) and DSH Integration Notes added; templates verbatim. math-beamer NOT bundled (TeX-heavy; candidate for later with verymath_beamer_check)."
     }
   ],
   "packageLicense": "MIT",
