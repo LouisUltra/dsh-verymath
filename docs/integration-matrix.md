@@ -95,6 +95,29 @@
   CJK 数学别名评分表（skills.py:30-41）、PDF 材料提取的进程隔离+限额纪律（materials.py:170-186）。
 - Evolving SKILL.md 自带跨技能路由出口："演化结果产生定理主张 → 路由到 proof-blueprint-review 或 lean-formalization"。
 
+### council task-1 已回（写作与优化方向）—— 核心结论
+
+**Writing（MIT, commit 418eb2e）**：
+- `paper-writing`（8步写作流 + 6子技能 + 5模板）→ **skill，优先级高**：零依赖零脚本；需扁平化重构
+  （6子技能→模块md，因插件捆绑技能发现器只readdir一层）；与 math-paper-reading（结构产物→source packet）
+  和 verymath_glossary_query（双语查术语）天然闭环。
+- `math-beamer`（8阶段4闸门 + 23模板×46预览）→ **skill，中**：需新增 verymath_beamer_check 探测 latexmk；
+  严禁 vendor template-source-index 里的 ECNU 第三方模板；体积可接受。
+- 小缺陷：paper-writing README 引用的 validate_skill_repo.py 断链（属于 organizer 仓库）。
+
+**Optimization（MIT, commit a054d39a）**：
+- `osqp-solver` → **both（skill + verymath_osqp_check/solve 工具），高**：全仓工程质量最高
+  （700行确定性 JSON→JSON runner + 11态状态门 + 3种独立KKT/证书验证器 + 500行合成测试）；
+  solve_qp.py 与现有 Python spawn 桥完美匹配（exit 0/2/3、原子写、schema版本号）。
+  注意：frontmatter `>-` 块标量必须改单行（插件解析器只认单行）；上游自述"候选状态未合并"，钉 commit。
+- `optskills`（103张LP原型卡）→ skill 中：删掉"每次 git ls-remote"外呼步骤。
+- `or-solver` → skill 中（环境配置配套件，对接 verymath_python_check）。
+- `cdopt-optimization` → skill + verymath_cdopt_check，低（torch/jax 重栈只探测不装）。
+- `second-order-cone-programming` → skill 低（frontmatter 修复后；CBLIB 版权头保留）。
+- **`mixed-integer-programming` 暂缓**：examples.md 是 SOCP 错版拷贝（实质内容缺陷），等上游修复。
+- **benchmark 数字不可信**（宣称 100 问题 100% 通过率但无复现脚本，AI 生成痕迹）——接入文案不引用。
+- 黄金联动线：osqp 的 outputs/<run_id>/verification.json 作为 paper-writing "experiment 型断言"标准证据。
+
 ## 待评审输入（4 个 council-glm 报告将回答）
 
 1. Writing/Optimization 各子技能的依赖与测试可行性（B/D/E）
