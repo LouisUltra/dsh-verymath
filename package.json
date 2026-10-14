@@ -1,0 +1,85 @@
+{
+  "name": "@louisultra/dsh-verymath",
+  "version": "0.1.0",
+  "description": "VeryMath capabilities for DSH: bilingual math glossary tools and adaptive math paper-reading skills. Community plugin for issue ECNU/EduWork#152.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": "./lib/index.js",
+    "./core": "./lib/core/index.js",
+    "./tool": "./lib/tool/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "skills/**/*",
+    "cordis.patch.yml",
+    "README.md",
+    "README_EN.md",
+    "LICENSE",
+    "NOTICE.md",
+    "UPSTREAM.json",
+    "CHANGELOG.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:runtime": "node scripts/probe-runtime.mjs",
+    "check": "npm run typecheck && npm run build && npm test && npm run test:runtime"
+  },
+  "engines": {
+    "node": ">=24.18.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/dsh-fs": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-llm": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-skill": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/dsh-tools": ">=0.2.0-rc.1 <0.3.0-0",
+    "@deepseek-ai/schemastery": "^3.18.4"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.4",
+    "@deepseek-ai/cordis-plugin-include": "1.0.9",
+    "@deepseek-ai/cordis-plugin-loader": "1.0.5",
+    "@deepseek-ai/dsh-fs": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-fs-local": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-llm": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-skill": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-system-prompt": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2",
+    "@deepseek-ai/schemastery": "3.18.4",
+    "@types/node": "^22.20.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "verymath",
+    "mathematics",
+    "glossary",
+    "paper-reading",
+    "eduwork"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LouisUltra/dsh-verymath.git"
+  },
+  "homepage": "https://github.com/LouisUltra/dsh-verymath#readme",
+  "bugs": {
+    "url": "https://github.com/LouisUltra/dsh-verymath/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}

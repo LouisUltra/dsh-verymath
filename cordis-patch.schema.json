@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cordis plugin patch list (dsh bundle patch manifest)",
+  "description": "Patch-list format consumed by cordis-plugin-include applyEntryPatches(): an ordered array of id-targeted overrides, disables, and insert lists. This is NOT JSON-Patch (RFC 6902); the 'insert' key is Cordis-specific.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Target entry id for non-insert patches; groups may receive config.push inserts."
+      },
+      "name": {
+        "type": "string",
+        "description": "Plugin module specifier for entries inserted by this patch."
+      },
+      "insert": {
+        "type": "array",
+        "description": "Entries appended to the targeted group's config, or to the root list when id is omitted.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "name": { "type": "string" },
+            "disabled": { "type": ["boolean", "string"] },
+            "inject": { "type": "array", "items": { "type": "string" } },
+            "config": { "type": "object" }
+          },
+          "required": ["id", "name"]
+        }
+      },
+      "disabled": {
+        "type": ["boolean", "string"],
+        "description": "Disable the targeted entry; !!js expressions are allowed."
+      },
+      "inject": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Service ids the targeted entry requires."
+      },
+      "config": {
+        "type": "object",
+        "description": "Config overrides merged into the targeted entry."
+      }
+    }
+  }
+}

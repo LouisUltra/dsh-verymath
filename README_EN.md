@@ -1,0 +1,72 @@
+# dsh-verymath
+
+**English** | [简体中文](README.md)
+
+<p align="center"><strong>Community plugin bringing VeryMath math-research capabilities to DSH / EduWork.</strong><br><sub>Bilingual math glossary · structured paper reading · skills + tools in one package</sub></p>
+
+`@louisultra/dsh-verymath` packages the VeryMath AI4Math skills and tools as a [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) plugin for [EduWork](https://github.com/ECNU/EduWork) and other DSH 0.2.x hosts. It addresses the first-phase scenarios of [ECNU/EduWork#152](https://github.com/ECNU/EduWork/issues/152).
+
+## What it provides
+
+**Model-facing tools** (available right after install; the Agent calls them automatically):
+
+| Tool | Purpose |
+| --- | --- |
+| `verymath_glossary_query` | Query a bilingual (English-Chinese) math glossary JSON: exact, prefix, substring, term_id, and subfield matching. |
+| `verymath_glossary_build` | Run the upstream `math-glossary` Python scripts to build or extend a glossary from CSV/TSV/JSON/YAML. |
+| `verymath_python_check` | Check local Python 3 availability and surface installation hints. |
+| `verymath_paper_validate` | Validate `math-paper-reading` `<slug>_structure.json` artifacts (entity kinds, dependency integrity). |
+
+**Bundled skills** (registered in the DSH skill catalog; model- and user-invocable):
+
+| Skill | Purpose | Upstream |
+| --- | --- | --- |
+| `math-glossary` | Full workflow to build, maintain, and query bilingual glossaries from PDFs, dictionaries, and tables. | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) `math-glossary` v0.1.0 |
+| `math-paper-reading` | Structured extraction, theorem-dependency analysis, deep reading, literature search, reference management. | [AI4Math-Paper-Reading](https://github.com/VeryMath/AI4Math-Paper-Reading) v4.2 |
+
+Skills carry the methodology; tools carry deterministic execution. The plugin cooperates naturally with DSH sessions, workspaces, sandboxing, and other plugins such as `literature` (e.g. fetch full text with `literature_fulltext`, then analyze it with `math-paper-reading`).
+
+## Installation and usage
+
+Requires Node.js `24.18.0+` and DSH `0.2.x (since 0.2.0-rc.1)`.
+
+```sh
+dsh plugin --profile <your-profile> add @louisultra/dsh-verymath
+```
+
+Or build from source:
+
+```sh
+git clone https://github.com/LouisUltra/dsh-verymath.git
+cd dsh-verymath
+npm install && npm run check && npm pack
+dsh plugin --profile <your-profile> add ./louisultra-dsh-verymath-<version>.tgz
+```
+
+Then just ask in a session, e.g. "look up the Chinese term for manifold" or "read the structure of this paper". Artifacts (`glossary.json`, `<slug>_structure.json`, structure reports) are written into the current session workspace.
+
+### Dependencies
+
+- **Query and paper validation**: no external dependencies.
+- **Glossary build/export** (`verymath_glossary_build`): requires a local Python 3 plus the upstream script dependencies (`PyYAML`; Excel export additionally needs `openpyxl`, the web UI needs `Flask`). Check availability with `verymath_python_check` first and install per its hints; the plugin does not bundle Python.
+- **Platforms**: verified on macOS (Apple Silicon); Windows should work (Node and Python on PATH) but is not yet tested — feedback welcome.
+
+## Developing from source
+
+```sh
+npm run typecheck     # tsc --noEmit
+npm run build         # tsc → lib/
+npm test              # vitest synthetic tests (no network)
+npm run test:runtime  # real DSH API probe (synthetic data, no model calls)
+npm run check         # all of the above
+```
+
+## License and provenance
+
+This package is MIT licensed (`LICENSE`). Skill content and Python scripts are adapted from VeryMath's MIT projects; the adapted commits and paths are recorded in `UPSTREAM.json`, with attribution details in `NOTICE.md`. Thanks to the VeryMath team and upstream contributors.
+
+## Known limitations
+
+- MDX dictionaries, OCR scans, and the web management UI follow the skill workflow (shell) and are not exposed as plugin tools.
+- The full paper-reading pipeline (post-OCR review, graph rendering) relies on model capability; this plugin only provides structured contract validation.
+- Upstream remains under active development; the adapted upstream versions are recorded in `UPSTREAM.json`.

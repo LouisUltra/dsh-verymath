@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "repository": "https://github.com/VeryMath/AI4Math-MathTool",
+      "commit": "a51dd41e69b17c6fac60303bfc02e5191acbb1b2",
+      "license": "MIT",
+      "adaptedPaths": [
+        "skills/math-glossary/SKILL.md",
+        "skills/math-glossary/scripts/",
+        "skills/math-glossary/references/",
+        "skills/math-glossary/tests/"
+      ],
+      "adaptationNotes": "SKILL.md routing and script-invocation text adapted for DSH tool names (verymath_glossary_*); Python scripts included verbatim; tests adapted to run from the skill directory."
+    },
+    {
+      "repository": "https://github.com/VeryMath/AI4Math-Paper-Reading",
+      "commit": "991f7053220bbebfd8826a3fa439c656b2e0905f",
+      "license": "MIT",
+      "adaptedPaths": [
+        "skills/math-paper-reading/SKILL.md",
+        "skills/math-paper-reading/agent_router.md",
+        "skills/math-paper-reading/skill_base.md",
+        "skills/math-paper-reading/skill_pathway_proof.md",
+        "skills/math-paper-reading/skill_paper_deep_read.md",
+        "skills/math-paper-reading/skill_reference_manager.md",
+        "skills/math-paper-reading/skill_literature_search.md"
+      ],
+      "adaptationNotes": "Skill routing adapted for DSH invocation and workspace artifact conventions; analysis methodology and the v4.2 structure JSON contract unchanged; optional verymath_paper_validate tool references added."
+    }
+  ],
+  "packageLicense": "MIT",
+  "packageLicenseFile": "LICENSE",
+  "attributionFile": "NOTICE.md"
+}

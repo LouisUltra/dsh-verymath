@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=./cordis-patch.schema.json
+---
+# @louisultra/dsh-verymath: stable entry IDs.
+# Cordis patch-list manifest (see cordis-patch.schema.json); NOT JSON-Patch
+# (RFC 6902). JSONPatch diagnostics on this file are a known yaml-language-
+# server false positive for Cordis bundle patch manifests.
+- insert:
+    - id: verymath
+      name: '@louisultra/dsh-verymath/core'
+
+    - id: tool-verymath
+      name: '@louisultra/dsh-verymath/tool'
