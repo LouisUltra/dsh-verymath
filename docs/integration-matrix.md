@@ -139,6 +139,27 @@
 **已接入部分的行为缺口（E 专项，7 项）**：requirements-ai.txt 缺失、upsert 未进 SKILL 工具表、
 exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cache 污染、math-paper-reading 引用不存在的 examples/。
 
+### council task-2 已回（计算与形式化方向）—— 核心结论（4/4 齐了）
+
+**Computational-Mathematics（MIT）→ 高优先第一批**：
+- `least-squares` 整技能随包（零脚本零运行时，12 级降级链，环境检测指引与 verymath_python_check 无缝衔接）。
+- `invariant-computation` 整技能随包 + `verymath_invariant_validate` 工具（现成 JSON Schema + 示例 + 负例测试，
+  与 verymath_paper_validate 同型）。建议再加 `verymath_scipy_check`（numpy/scipy/sklearn 分层探测）。
+- `scientific-computing-reproduction` 暂缓整包（Codex 生态耦合），仅按需摘零依赖脚本。
+
+**Lean-Agents（MIT）→ 中优先第二批**：
+- lean-setup + lean-formalization 两个公开技能 + lean-runtime 支撑层原样随包（不可拆）。
+- 工具：`verymath_lean_check`（两级 readiness）+ `verymath_lean_detect_sorry` + `verymath_lean_review`
+  （后两个无 Lean 环境也有真实价值——纯文本分析）。不移植 Numina/Archon 后端。
+- **elan shim 陷阱（必须照抄）**：`.elan/bin` 下的 lean/lake 绝不能跑 `--version`（触发 GB 级隐式工具链下载）；
+  版本从 lean-toolchain 文件读（上游 tool_status.py:33-41）。
+- GB 级工具链不随包——上游本就是"检测+引导+批准后安装"设计；共享工作区 ~/.ai4math/lean-workspace 概念带入。
+
+**Sagemath-skill（GPLv3 ⚠）→ P3 完全不集成（当前证据下最优解）**：
+- GPLv3 传染 + 语料 47.5MB 膨胀 npm 包 + Windows 强制 WSL + 上游零测试 + 技能契约依赖全量语料。
+- 附条件升级路径：目录隔离+子进程调用组合（需法务确认 mere-aggregation）；或独立 GPL 发行渠道。
+- `verymath_sage_check` 探针可 TS 独立重写（不携带 GPL 文件），但属法务确认项，MVP 不碰。
+
 ## 待评审输入（4 个 council-glm 报告将回答）
 
 1. Writing/Optimization 各子技能的依赖与测试可行性（B/D/E）
@@ -156,4 +177,4 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 - [ ] Auto-Research 与我们已接入 paper-to-skill 的关系（issue #152 表格里 paper-to-skill 属论文阅读方向）
 
 ---
-*评审报告回来后本文件升级为 v2 终稿；council 输出存于 research/reports/*
+> 评审报告回来后本文件升级为 v2 终稿；council 输出存于 research/reports/
