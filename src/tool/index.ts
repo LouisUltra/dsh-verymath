@@ -564,6 +564,78 @@ export const apply = (ctx: Context, config: Config = {}): void => {
   }))
 
   ctx.tools.register(defineTool({
+    name: 'verymath_lean_detect_sorry',
+    description: 'Scan a Lean 4 file for forbidden proof placeholders: sorry, admit, and axiom declarations (plain-text analysis; does NOT require a Lean toolchain). Part of the lean-formalization safety contract: final patches must not hide unfinished proofs. Use on any .lean file before accepting a proof patch, and on delivery candidates.',
+    parameters: {
+      path: { type: 'string', required: true, description: 'Workspace path of the .lean file' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          path: { type: 'string' },
+          clean: { type: 'boolean' },
+          findings: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                kind: { type: 'string' },
+                line: { type: 'number' },
+                text: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as { path: string, clean: boolean, findings: Array<{ kind: string, line: number, text?: string }> }
+        if (result.clean) {
+          return [{ type: 'text', text: `${result.path}: clean (no sorry/admit/axiom found).` }]
+        }
+        const lines = result.findings.slice(0, 20).map(finding => `- line ${finding.line} [${finding.kind}]: ${(finding.text ?? '').slice(0, 80)}`)
+        const note = result.findings.length > 20 ? `\n(showing 20 of ${result.findings.length})` : ''
+        return [{ type: 'text', text: `${result.path}: ${result.findings.length} forbidden token(s)\n${lines.join('\n')}${note}` }]
+      },
+    },
+    async execute(args, exec) {
+      const python = await ctx.verymath.resolvePython()
+      if (python === undefined) {
+        throw new VeryMathError('verymath_lean_detect_sorry requires Python 3; run verymath_python_check for install hints', 'VERYMATH_PYTHON_UNAVAILABLE')
+      }
+      const fs = ctx.fs
+      if (fs === undefined) {
+        throw new VeryMathError('verymath_lean_detect_sorry requires the fs service', 'VERYMATH_IO')
+      }
+      const absolute = toWorkspacePath(args.path, exec.agent?.session.header.cwd)
+      const scriptPath = bundledSkillsDir() + '/lean-formalization/lean-runtime/scripts/ai4m_lean.py'
+      const result = await ctx.verymath.runPythonCommand(
+        python,
+        [scriptPath, 'detect-sorry', '--file', fs.processPath(await fs.resolve(absolute, { signal: exec.signal }))],
+        30_000,
+      )
+      let parsed: { ok?: boolean, status?: string, findings?: Array<{ kind?: string, line?: number, text?: string }> }
+      try {
+        parsed = JSON.parse(result.stdout)
+      } catch (error) {
+        throw new VeryMathError(`lean detect-sorry produced invalid JSON: ${error instanceof Error ? error.message : String(error)}`, 'VERYMATH_IO', { cause: error })
+      }
+      const findings = parsed.findings ?? []
+      return {
+        path: args.path,
+        clean: findings.length === 0,
+        findings: findings.slice(0, 100).map(finding => ({
+          kind: finding.kind ?? 'unknown',
+          line: finding.line ?? 0,
+          ...(finding.text !== undefined ? { text: String(finding.text).slice(0, 200) } : {}),
+        })),
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
     name: 'verymath_ocr_scan',
     description: 'Scan an OCR-produced Markdown file (formula-dense academic scans) for likely recognition errors: glued operators, misread fonts (\\mathbb{D} etc.), epsilon-as-index digits, odd dollar counts, unclosed LaTeX environments, environment mismatches. Deterministic candidate locator only — the after-ocr skill\'s line-by-line review discipline is still required after scanning; never treat findings as confirmed errors. Requires Python 3 (check verymath_python_check first).',
     parameters: {

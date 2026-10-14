@@ -64,6 +64,16 @@
         "skills/invariant-computation/ (SKILL.md + references + schema + examples + manifest.yaml)"
       ],
       "adaptationNotes": "least-squares frontmatter flattened to single-line description (author attribution moved to comment); both skills carry DSH integration notes. scientific-computing-reproduction NOT bundled (Codex ecosystem coupling)."
+    },
+    {
+      "repository": "https://github.com/VeryMath/AI4Math-Lean-Agents",
+      "commit": "7aed4db687e7c5b1cd50b843454107d1042c5a10",
+      "license": "MIT",
+      "adaptedPaths": [
+        "skills/lean-formalization/ (SKILL.md + lean-runtime/ support layer embedded)",
+        "skills/lean-setup/SKILL.md"
+      ],
+      "adaptationNotes": "Both public entry skills bundled; lean-runtime embedded inside lean-formalization (DSH discovery layout) with ../lean-runtime/ refs rewritten; DSH notes carry the elan-shim no---version rule and two-level readiness contract. Numina/Archon backends not configured (optional upstream path)."
     }
   ],
   "packageLicense": "MIT",
