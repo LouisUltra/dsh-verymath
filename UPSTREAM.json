@@ -43,6 +43,27 @@
         "skills/paper-writing/templates/"
       ],
       "adaptationNotes": "paper-writing bundled with sub-skills flattened to module files (plugin skill-discovery layout) and DSH Integration Notes added; templates verbatim. math-beamer NOT bundled (TeX-heavy; candidate for later with verymath_beamer_check)."
+    },
+    {
+      "repository": "https://github.com/VeryMath/AI4Math-Auto-Research",
+      "commit": "4d93ba665a448caef9b0b963108a77803b1483da",
+      "license": "MIT",
+      "adaptedPaths": [
+        "skills/discover-math-problems/ (SKILL.md + references)",
+        "skills/proof-blueprint-review/ (SKILL.md + references)",
+        "skills/open-problem-research-pipeline/ (SKILL.md + 4 nested skills flattened to skill_*.md + references)"
+      ],
+      "adaptationNotes": "Three pure-methodology research-workflow skills bundled with DSH integration notes; agent-laboratory-workflow/danus/graph-theory-researcher NOT bundled (version gaps, overlap with math-paper-reading, external API deployment)."
+    },
+    {
+      "repository": "https://github.com/VeryMath/AI4Math-Computational-Mathematics",
+      "commit": "e9a3a7c0738106c4d923dd6fb6253072365b0023",
+      "license": "MIT",
+      "adaptedPaths": [
+        "skills/least-squares/ (SKILL.md + examples.md + README.md)",
+        "skills/invariant-computation/ (SKILL.md + references + schema + examples + manifest.yaml)"
+      ],
+      "adaptationNotes": "least-squares frontmatter flattened to single-line description (author attribution moved to comment); both skills carry DSH integration notes. scientific-computing-reproduction NOT bundled (Codex ecosystem coupling)."
     }
   ],
   "packageLicense": "MIT",
