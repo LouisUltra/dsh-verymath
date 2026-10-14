@@ -12,10 +12,12 @@
 
 | Tool | Purpose |
 | --- | --- |
-| `verymath_glossary_query` | Query a bilingual (English-Chinese) math glossary JSON: exact, prefix, substring, term_id, and subfield matching. |
+| `verymath_glossary_query` | Query a bilingual (English-Chinese) math glossary JSON: exact, prefix, substring, term_id, and subfield matching; returns examples and supports subfield disambiguation. |
 | `verymath_glossary_build` | Run the upstream `math-glossary` Python scripts to build or extend a glossary from CSV/TSV/JSON/YAML. |
+| `verymath_glossary_upsert` | Save terms while reading/translating: maintains contract invariants (term_id, ordering, contiguous idx) automatically — no hand-editing of glossary.json. |
 | `verymath_python_check` | Check local Python 3 availability and surface installation hints. |
 | `verymath_paper_validate` | Validate `math-paper-reading` `<slug>_structure.json` artifacts (entity kinds, dependency integrity). |
+| `verymath_paper_graph` | Paper dependency-graph engine: batch merging, `cited_by` reconstruction, `shared_node` hubs, cycle detection, both reading directions, `focus` transitive closure, Mermaid rendering (auto-degrades above 40 entities). |
 
 **Bundled skills** (registered in the DSH skill catalog; model- and user-invocable):
 
@@ -65,8 +67,15 @@ npm run check         # all of the above
 
 This package is MIT licensed (`LICENSE`). Skill content and Python scripts are adapted from VeryMath's MIT projects; the adapted commits and paths are recorded in `UPSTREAM.json`, with attribution details in `NOTICE.md`. Thanks to the VeryMath team and upstream contributors.
 
+## Differences from upstream VeryMath
+
+- **Paper dependency graph as a tool**: upstream `skill_base`/`skill_pathway_proof` explicitly forbid model-side manual graph traversal but ship no merge/topology scripts (the model regenerates one each time). This plugin implements a deterministic TypeScript engine (`verymath_paper_graph`); the paper-reading critical path no longer requires Python.
+- **Glossary read/write loop**: `verymath_glossary_upsert` maintains the upstream contract invariants (term_id derivation, ordering, contiguous idx) that upstream leaves to hand-edits.
+- **Disambiguation**: queries return examples and support subfield filtering, implementing the upstream usage-guide strategies that could not execute in DSH before.
+- **Honest scope**: this plugin performs structural validation (dependency integrity, cycles, dangling/isolated nodes) and does not verify mathematical proof correctness — consistent with the upstream `skill_base` capability boundary.
+
 ## Known limitations
 
 - MDX dictionaries, OCR scans, and the web management UI follow the skill workflow (shell) and are not exposed as plugin tools.
-- The full paper-reading pipeline (post-OCR review, graph rendering) relies on model capability; this plugin only provides structured contract validation.
+- Glossary build/export still requires Python (query, upsert, and the paper-graph engine do not).
 - Upstream remains under active development; the adapted upstream versions are recorded in `UPSTREAM.json`.

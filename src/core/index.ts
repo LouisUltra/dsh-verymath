@@ -11,16 +11,23 @@ import { spawn } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 import { normalize } from 'node:path'
 import { VeryMathError } from './error.ts'
-import { parseGlossary, queryGlossary, validateGlossaryInvariants, type GlossaryHit, type GlossaryTerm } from './glossary.ts'
+import { parseGlossary, queryGlossary, validateGlossaryInvariants, type GlossaryHit, type GlossaryQueryOptions, type GlossaryTerm } from './glossary.ts'
 import { bundledSkillsDir } from './paths.ts'
 import { VeryMathSkillProvider } from './skills.ts'
 
 export { VeryMathError, isVeryMathError } from './error.ts'
 export { bundledSkillsDir } from './paths.ts'
 export { VeryMathSkillProvider } from './skills.ts'
-export { parseGlossary, queryGlossary, sortGlossary, validateGlossaryInvariants } from './glossary.ts'
-export type { GlossaryHit, GlossaryTerm } from './glossary.ts'
+export { parseGlossary, queryGlossary, sortGlossary, upsertTerms, validateGlossaryInvariants } from './glossary.ts'
+export type { GlossaryHit, GlossaryQueryOptions, GlossaryTerm, TermUpsert, UpsertResult } from './glossary.ts'
 export { parsePaperStructure, dependencySummary } from './paper.ts'
+export {
+  mergeBatches, collectEntities, computeTopology, renderMermaid, focusClosure,
+  mermaidDisplayText, stripUncertain, isSingleStructure, requireStructure,
+} from './graph.ts'
+export type {
+  StructureInput, MergeReport, EntityTopology, DependencyCycle, GraphTopology, FocusResult,
+} from './graph.ts'
 export type {
   PaperStructure, PaperMeta, PaperSection, PaperEntity, PaperTable,
   MainTheorem, ProofMethod, ProofFramework, CompletenessCheck, RelatedWorkEntry,
@@ -138,15 +145,21 @@ export class VeryMathRuntime extends Service {
     this.glossaryCache.delete(normalize(path))
   }
 
+  /** Forget every cached glossary (used when a build script's output path is unknown). */
+  invalidateAllGlossaries(): void {
+    this.glossaryCache.clear()
+  }
+
   /**
    * Query a glossary document for terms matching a bilingual query.
    * @param path - glossary document path.
    * @param query - English term, Chinese term, term_id, or subfield name.
    * @param signal - cancels the load.
    */
-  async queryGlossaryFile(path: string, query: string, signal?: AbortSignal): Promise<GlossaryHit[]> {
+  async queryGlossaryFile(path: string, query: string, options: GlossaryQueryOptions & { signal?: AbortSignal } = {}): Promise<{ hits: GlossaryHit[], total: number }> {
+    const { signal, ...queryOptions } = options
     const { terms } = await this.loadGlossary(path, signal)
-    return queryGlossary(terms, query, this.config.queryMaxHits)
+    return queryGlossary(terms, query, { limit: this.config.queryMaxHits, ...queryOptions })
   }
 
   /**

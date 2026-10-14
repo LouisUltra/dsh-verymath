@@ -93,12 +93,12 @@ describe('VeryMathRuntime.queryGlossaryFile', () => {
     ])
     await writeFile(path, JSON.stringify(glossary))
 
-    const hits = await runtime.queryGlossaryFile(path, 'manifold')
+    const { hits } = await runtime.queryGlossaryFile(path, 'manifold')
     // Exact English match wins; 'smooth manifold' is not an en-prefix of 'manifold'.
     expect(hits).toHaveLength(1)
     expect(hits[0]?.matchedBy).toBe('en')
     const chinese = await runtime.queryGlossaryFile(path, '流形')
-    expect(chinese).toHaveLength(2)
+    expect(chinese.hits).toHaveLength(2)
   })
 })
 

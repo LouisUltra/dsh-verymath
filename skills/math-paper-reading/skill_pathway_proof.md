@@ -52,9 +52,10 @@
 
 图谱渲染的核心是拓扑度量（入度、出度、共享节点标志）。由于 LLM 存在计数和图遍历的注意力缺陷，**严禁** LLM 手工统计 JSON 数组长度或手动构造依赖表。
 
-所有拓扑度量**必须通过生成并执行 Python 脚本计算**，将计算结果回写至 JSON 后，再基于更新后的 JSON 渲染 Mermaid 图。
+**DSH 宿主首选（@louisultra/dsh-verymath 插件）**：直接调用 `verymath_paper_graph` 工具（传 `path` 指向 `<slug>_structure.json`）。工具在插件内部完成全部拓扑计算（入度/出度/`shared_node`/环检测/双向阅读路径），返回 label 级节点表与可选 Mermaid 图，无需 Python。需要某实体的传递依赖闭包与阅读路径时传 `focus: "<label>"`。
 
-**标准操作流**：
+**回退流程（无 verymath 插件的宿主）**：所有拓扑度量必须通过生成并执行 Python 脚本计算，将计算结果回写至 JSON 后，再基于更新后的 JSON 渲染 Mermaid 图：
+
 1. Agent 动态生成 `compute_topology.py`（参考下方模板）。
 2. 通过 Bash 执行 `python3 compute_topology.py <slug>_structure.json`。
 3. Agent 读取脚本执行成功的输出后，再根据 JSON 中新增的 `in_degree` 和 `out_degree` 字段生成节点分析表格。

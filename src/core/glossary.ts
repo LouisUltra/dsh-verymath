@@ -146,37 +146,160 @@ export interface GlossaryHit {
   readonly matchedBy: 'en' | 'en-prefix' | 'cn' | 'field' | 'term_id'
 }
 
+/** Options for {@link queryGlossary}. */
+export interface GlossaryQueryOptions {
+  /** Maximum hits returned (default 20). */
+  readonly limit?: number
+  /** Restrict candidates to terms whose `field` array contains this subfield exactly (upstream usage-guide disambiguation strategy 2). */
+  readonly field?: string
+}
+
 /**
- * Query a parsed glossary: exact en/cn match first, then prefix and field hits.
+ * Query a parsed glossary: exact en/cn match first, then prefix, substring,
+ * and subfield hits. `total` is the deduplicated candidate count before the
+ * limit cut, so callers can detect truncation.
  * @param terms - validated glossary terms.
- * @param query - user query: an English/Chinese term, a term_id, or a subfield name.
- * @param limit - maximum hits returned (default 20).
+ * @param query - an English/Chinese term, a term_id, or a subfield name.
+ * @param options - limit and optional subfield disambiguation filter; a bare
+ *   number is accepted as the limit for backwards compatibility.
  */
-export function queryGlossary(terms: readonly GlossaryTerm[], query: string, limit = 20): GlossaryHit[] {
+export function queryGlossary(terms: readonly GlossaryTerm[], query: string, options: GlossaryQueryOptions | number = {}): { hits: GlossaryHit[], total: number } {
+  const opts = typeof options === 'number' ? { limit: options } : options
+  const limit = opts.limit ?? 20
+  const fieldFilter = opts.field?.trim()
+  const candidates = fieldFilter !== undefined && fieldFilter.length > 0
+    ? terms.filter(term => term.field?.includes(fieldFilter) === true)
+    : terms
   const needle = query.trim()
-  if (needle.length === 0) return []
+  if (needle.length === 0) return { hits: [], total: 0 }
   const lower = needle.toLowerCase()
   const hits: GlossaryHit[] = []
+  const matched = new Set<string>()
+  let total = 0
   const push = (term: GlossaryTerm, matchedBy: GlossaryHit['matchedBy']) => {
-    if (hits.length < limit && !hits.some(hit => hit.term.term_id === term.term_id)) {
-      hits.push({ term, matchedBy })
-    }
+    if (matched.has(term.term_id)) return
+    matched.add(term.term_id)
+    total += 1
+    if (hits.length < limit) hits.push({ term, matchedBy })
   }
-  for (const term of terms) {
+  for (const term of candidates) {
     if (term.en.toLowerCase() === lower || term.cn === needle) push(term, 'en')
     else if (term.term_id.toLowerCase() === lower) push(term, 'term_id')
   }
-  if (hits.length >= limit) return hits
-  for (const term of terms) {
+  for (const term of candidates) {
     if (term.en.toLowerCase().startsWith(lower)) push(term, 'en-prefix')
   }
-  if (hits.length >= limit) return hits
-  for (const term of terms) {
+  for (const term of candidates) {
     if (term.cn.includes(needle)) push(term, 'cn')
   }
-  if (hits.length >= limit) return hits
-  for (const term of terms) {
+  for (const term of candidates) {
     if (term.field?.some(entry => entry === needle || entry.includes(needle))) push(term, 'field')
   }
-  return hits
+  return { hits, total }
+}
+
+/** One term upsert request for {@link upsertTerms}. */
+export interface TermUpsert {
+  /** English term. */
+  readonly en: string
+  /** Chinese translation (or alias). */
+  readonly cn: string
+  /** Optional part of speech in Chinese. */
+  readonly pos?: string
+  /** Optional subfields. */
+  readonly field?: readonly string[]
+  /** Optional source label. */
+  readonly source?: string
+  /** Optional bilingual example. */
+  readonly example?: { readonly en: string; readonly cn: string }
+}
+
+/** Result of one upsert batch. */
+export interface UpsertResult {
+  /** New terms that did not exist before (by term_id). */
+  readonly added: readonly string[]
+  /** Existing terms whose cn/pos/field/source/examples were overwritten. */
+  readonly updated: readonly string[]
+  /** The complete re-sorted document ready to write (idx reassigned, today's dates on changed rows). */
+  readonly document: GlossaryTerm[]
+}
+
+const UPSERT_DATE = /^\d{4}-\d{2}-\d{2}$/
+
+/** Today as an ISO date (upsert stamps updated_at/created_at). */
+function todayIso(): string {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
+/** Optional-field merge: keep the request value, else keep the existing one. */
+function keepOr<T>(request: T | undefined, existing: T | undefined): T | undefined {
+  return request !== undefined ? request : existing
+}
+
+/**
+ * Merge upsert requests into an existing glossary per the upstream contract:
+ * term_id is the lowercased en for the primary translation and `en__N` for
+ * additional alias rows of the same en; an existing term with the same
+ * (term_id) is updated in place; the merged document is re-sorted by
+ * (en, cn) with contiguous idx. The input document is never mutated.
+ * @param terms - current glossary terms (any order).
+ * @param upserts - terms to add or update.
+ * @throws VeryMathError when the merged document breaks an invariant.
+ */
+export function upsertTerms(terms: readonly GlossaryTerm[], upserts: readonly TermUpsert[]): UpsertResult {
+  const today = todayIso()
+  for (const date of [today]) {
+    if (!UPSERT_DATE.test(date)) {
+      throw new VeryMathError('system date is not ISO; refusing to stamp terms', 'VERYMATH_GLOSSARY_INVALID')
+    }
+  }
+  const byId = new Map(terms.map(term => [term.term_id, { ...term }]))
+  const added: string[] = []
+  const updated: string[] = []
+  for (const request of upserts) {
+    const en = request.en.trim()
+    const cn = request.cn.trim()
+    if (en.length === 0 || cn.length === 0) {
+      throw new VeryMathError('upsert requires non-empty en and cn', 'VERYMATH_GLOSSARY_INVALID')
+    }
+    const termId = en.toLowerCase()
+    const existing = byId.get(termId)
+    const field = request.field !== undefined && request.field.length > 0 ? [...request.field] : undefined
+    const examples = request.example !== undefined ? [{ ...request.example }] : undefined
+    if (existing !== undefined) {
+      const pos = keepOr(request.pos, existing.pos)
+      const mergedField = keepOr(field, existing.field)
+      const source = keepOr(request.source, existing.source)
+      const mergedExamples = keepOr(examples, existing.examples)
+      byId.set(termId, {
+        ...existing,
+        cn,
+        ...(pos !== undefined ? { pos } : {}),
+        ...(mergedField !== undefined ? { field: mergedField } : {}),
+        ...(source !== undefined ? { source } : {}),
+        ...(mergedExamples !== undefined ? { examples: mergedExamples } : {}),
+        updated_at: today,
+      })
+      updated.push(termId)
+    } else {
+      byId.set(termId, {
+        term_id: termId,
+        en,
+        cn,
+        ...(request.pos !== undefined ? { pos: request.pos } : {}),
+        ...(field !== undefined ? { field } : {}),
+        ...(request.source !== undefined ? { source: request.source } : {}),
+        ...(examples !== undefined ? { examples } : {}),
+        created_at: today,
+        updated_at: today,
+      })
+      added.push(termId)
+    }
+  }
+  const document = sortGlossary([...byId.values()])
+  validateGlossaryInvariants(document)
+  return { added, updated, document }
 }

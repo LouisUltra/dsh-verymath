@@ -275,9 +275,11 @@ DEFINITION / LEMMA / PROPOSITION / THEOREM / COROLLARY / CONSTRUCTION / CLAIM / 
 
 ### 分批合并协议（强制代码执行）
 
-由于 Batch 数量可能较多，且合并 `cited_by` 和计算 `shared_node` 属于精确的图遍历算法，**严禁大模型通过文本生成来手工遍历或拼接 JSON**。必须按以下流程调用本地代码工具执行合并：
+由于 Batch 数量可能较多，且合并 `cited_by` 和计算 `shared_node` 属于精确的图遍历算法，**严禁大模型通过文本生成来手工遍历或拼接 JSON**。必须调用本地代码工具执行合并。
 
-**执行步骤**：
+**DSH 宿主首选（@louisultra/dsh-verymath 插件）**：直接调用 `verymath_paper_graph` 工具，传 `path`（主 `<slug>_structure.json`）与 `extraPaths`（各批次文件）；工具自动完成按 label 去重合并、`cited_by` 反向索引重建、`shared_node` 计算、环检测，并返回合并回执（不回显超长 JSON）。工具不可用时才回退到下面的 Python 脚本流程。
+
+**回退流程（无 verymath 插件的宿主）**：
 1. **生成合并脚本**：生成并使用 Bash 运行一个临时 Python 脚本（如 `merge_batches.py`）。
 2. **脚本必须包含以下严谨逻辑**：
    - 读取当前工作目录下所有批次的暂存 JSON 文件（或解析全部 entities）。

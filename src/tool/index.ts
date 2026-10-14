@@ -11,7 +11,7 @@ import type { ContentBlock } from '@deepseek-ai/dsh-llm'
 import type {} from '@deepseek-ai/dsh-fs'
 import { isAbsolute, resolve } from 'node:path'
 import { VeryMathError, isVeryMathError } from '@louisultra/dsh-verymath/core'
-import { dependencySummary, parsePaperStructure } from '@louisultra/dsh-verymath/core'
+import { computeTopology, dependencySummary, focusClosure, mergeBatches, parsePaperStructure, renderMermaid, upsertTerms, type TermUpsert } from '@louisultra/dsh-verymath/core'
 
 export const name = 'tool-verymath'
 export const inject = ['tools', 'verymath', 'fs']
@@ -42,6 +42,7 @@ interface GlossaryQueryJson {
     readonly pos?: string
     readonly field?: readonly string[]
     readonly source?: string
+    readonly examples?: readonly { readonly en: string; readonly cn: string }[]
   }>
 }
 
@@ -84,7 +85,13 @@ function renderGlossaryQuery(_args: unknown, value: unknown): ContentBlock[] {
       term.field !== undefined && term.field.length > 0 ? `field: ${term.field.join(', ')}` : undefined,
       term.source !== undefined ? `source: ${term.source}` : undefined,
     ].filter((part): part is string => part !== undefined)
-    return `- ${term.en} | ${term.cn} (${term.matchedBy}${extras.length > 0 ? `; ${extras.join('; ')}` : ''})`
+    const examples = term.examples !== undefined && term.examples.length > 0
+      ? term.examples.slice(0, 2).map(example => `  ex: ${example.en} — ${example.cn}`)
+      : []
+    return [
+      `- ${term.en} | ${term.cn} (${term.matchedBy}${extras.length > 0 ? `; ${extras.join('; ')}` : ''})`,
+      ...examples,
+    ].join('\n')
   })
   const note = result.total > result.terms.length ? `\n(showing ${result.terms.length} of ${result.total})` : ''
   return [{ type: 'text', text: lines.join('\n') + note }]
@@ -148,10 +155,11 @@ export const apply = (ctx: Context, config: Config = {}): void => {
 
   ctx.tools.register(defineTool({
     name: 'verymath_glossary_query',
-    description: 'Query a VeryMath bilingual (English-Chinese) mathematical glossary JSON document for terms. Matches by exact English/Chinese term, term id, English prefix, Chinese substring, or subfield name. The glossary follows the VeryMath math-glossary contract (sorted entries, unique term_id).',
+    description: 'Query a VeryMath bilingual (English-Chinese) mathematical glossary JSON document for terms. Matches by exact English/Chinese term, term id, English prefix, Chinese substring, or subfield name; returns examples when entries carry them (use them to disambiguate polysemous terms per the math-glossary usage guide). Use the field parameter to restrict matches to one subdomain when a term has different translations in different fields. The glossary follows the VeryMath math-glossary contract (sorted entries, unique term_id).',
     parameters: {
       query: { type: 'string', required: true, description: 'English term, Chinese term, term_id, or subfield name' },
       glossaryPath: { type: 'string', description: 'Path of the glossary.json document; defaults to the workspace default glossary' },
+      field: { type: 'string', description: 'Restrict matches to terms whose subfield list contains exactly this value, e.g. 代数拓扑' },
     },
     output: {
       schema: {
@@ -174,6 +182,17 @@ export const apply = (ctx: Context, config: Config = {}): void => {
                 pos: { type: 'string' },
                 field: { type: 'array', items: { type: 'string' } },
                 source: { type: 'string' },
+                examples: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    additionalProperties: false,
+                    properties: {
+                      en: { type: 'string' },
+                      cn: { type: 'string' },
+                    },
+                  },
+                },
               },
             },
           },
@@ -185,11 +204,14 @@ export const apply = (ctx: Context, config: Config = {}): void => {
       try {
         const path = toWorkspacePath(args.glossaryPath ?? glossaryHome, exec.agent?.session.header.cwd)
         const library = await ctx.verymath.loadGlossary(path, exec.signal)
-        const hits = await ctx.verymath.queryGlossaryFile(path, args.query, exec.signal)
+        const { hits, total } = await ctx.verymath.queryGlossaryFile(path, args.query, {
+          ...(args.field !== undefined ? { field: args.field } : {}),
+          signal: exec.signal,
+        })
         return {
           query: args.query,
           glossary: library.path,
-          total: hits.length,
+          total,
           terms: hits.map(hit => ({
             term_id: hit.term.term_id,
             en: hit.term.en,
@@ -198,6 +220,7 @@ export const apply = (ctx: Context, config: Config = {}): void => {
             ...(hit.term.pos !== undefined ? { pos: hit.term.pos } : {}),
             ...(hit.term.field !== undefined ? { field: [...hit.term.field] } : {}),
             ...(hit.term.source !== undefined ? { source: hit.term.source } : {}),
+            ...(hit.term.examples !== undefined ? { examples: hit.term.examples.map(example => ({ ...example })) } : {}),
           })),
         }
       } catch (error) {
@@ -236,12 +259,113 @@ export const apply = (ctx: Context, config: Config = {}): void => {
           'VERYMATH_IO',
         )
       }
+      // A successful build may have rewritten the glossary on disk; drop stale
+      // cached entries so follow-up queries observe the new document.
+      const scriptArgs = args.args ?? []
+      const outputFlagIndex = scriptArgs.indexOf('--output')
+      const outputPath = outputFlagIndex >= 0 ? scriptArgs[outputFlagIndex + 1] : undefined
+      if (outputPath !== undefined) ctx.verymath.invalidateGlossary(outputPath)
+      else ctx.verymath.invalidateAllGlossaries()
       return {
         script: args.script,
-        args: args.args ?? [],
+        args: scriptArgs,
         exitCode: result.exitCode,
         output: output.slice(0, 8000),
         pythonExecutable: (await ctx.verymath.resolvePython()) ?? '(unknown)',
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_glossary_upsert',
+    description: 'Add or update terms in a VeryMath bilingual glossary JSON document, preserving the contract invariants automatically: term_id derives from the lowercased English term, the document is re-sorted by (en, cn) with contiguous idx, and updated terms get today\'s date stamps. Use this when reading papers or translating and you encounter a term worth saving — do not hand-edit glossary.json. Existing entries are updated when the term_id matches; unspecified optional fields are preserved.',
+    parameters: {
+      terms: {
+        type: 'array',
+        required: true,
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            en: { type: 'string', required: true },
+            cn: { type: 'string', required: true },
+            pos: { type: 'string' },
+            field: { type: 'array', items: { type: 'string' } },
+            source: { type: 'string' },
+            example: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                en: { type: 'string' },
+                cn: { type: 'string' },
+              },
+            },
+          },
+        },
+        description: 'Terms to add or update',
+      },
+      glossaryPath: { type: 'string', description: 'Path of the glossary.json document; defaults to the workspace default glossary. Created with just the new terms when it does not exist yet.' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          glossary: { type: 'string' },
+          added: { type: 'array', items: { type: 'string' } },
+          updated: { type: 'array', items: { type: 'string' } },
+          totalTerms: { type: 'number' },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as { glossary: string, added: string[], updated: string[], totalTerms: number }
+        const parts = [
+          `Glossary updated: ${result.glossary}`,
+          `added: ${result.added.length > 0 ? result.added.join(', ') : '(none)'}`,
+          `updated: ${result.updated.length > 0 ? result.updated.join(', ') : '(none)'}`,
+          `total terms: ${result.totalTerms}`,
+        ]
+        return [{ type: 'text', text: parts.join('\n') }]
+      },
+    },
+    async execute(args, exec) {
+      const path = toWorkspacePath(args.glossaryPath ?? glossaryHome, exec.agent?.session.header.cwd)
+      const fs = ctx.fs
+      if (fs === undefined) {
+        throw new VeryMathError('verymath_glossary_upsert requires the fs service', 'VERYMATH_IO')
+      }
+      const target = await fs.resolve(path, { signal: exec.signal })
+      // Read the current document if it exists; an absent file starts a new glossary.
+      let current: Awaited<ReturnType<typeof ctx.verymath.loadGlossary>> | undefined
+      try {
+        current = await ctx.verymath.loadGlossary(path, exec.signal)
+      } catch (error) {
+        if (!(isVeryMathError(error) && error.code === 'VERYMATH_GLOSSARY_UNAVAILABLE')) throw error
+      }
+      const requests: TermUpsert[] = (args.terms ?? []).map((request) => {
+        const example = request.example
+        const validExample = example !== undefined && typeof example.en === 'string' && typeof example.cn === 'string'
+          ? { en: example.en, cn: example.cn }
+          : undefined
+        return {
+          en: request.en ?? '',
+          cn: request.cn ?? '',
+          ...(request.pos !== undefined ? { pos: request.pos } : {}),
+          ...(request.field !== undefined ? { field: request.field } : {}),
+          ...(request.source !== undefined ? { source: request.source } : {}),
+          ...(validExample !== undefined ? { example: validExample } : {}),
+        }
+      })
+      const result = upsertTerms(current?.terms ?? [], requests)
+      // Write through ctx.fs so the session sandbox policy governs the write.
+      const sandboxPolicy = ctx.get('sandboxPolicy')?.resolve(exec.agent !== undefined ? { session: exec.agent.session } : {})
+      await fs.writeText(target, JSON.stringify(result.document, null, 2) + '\n', undefined, exec.signal, sandboxPolicy)
+      ctx.verymath.invalidateGlossary(path)
+      return {
+        glossary: path,
+        added: [...result.added],
+        updated: [...result.updated],
+        totalTerms: result.document.length,
       }
     },
   }))
@@ -323,6 +447,163 @@ export const apply = (ctx: Context, config: Config = {}): void => {
         roots: [...roots],
         completeness: structure.completeness_check?.self_containment ?? 'unknown',
         valid: true,
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_paper_graph',
+    description: 'Compute the dependency graph of a VeryMath math-paper-reading structure artifact (<slug>_structure.json): merges batch files, rebuilds the cited_by reverse index, computes shared_node hubs, in/out degrees, cycle detection, and both reading directions (top-down from main theorems, bottom-up reproduction order). Optionally renders a Mermaid dependency graph (auto-degrades above 40 entities to THEOREM-rooted depth-2 subgraphs unless forceFull). Use this instead of manually counting dependencies — the upstream skill forbids model-side graph traversal.',
+    parameters: {
+      path: { type: 'string', required: true, description: 'Workspace path of the <slug>_structure.json artifact' },
+      extraPaths: { type: 'array', items: { type: 'string' }, description: 'Additional batch artifact paths to merge (upstream batch merging protocol)' },
+      render: { type: 'boolean', description: 'Also render the Mermaid graph (default true)' },
+      forceFull: { type: 'boolean', description: 'Force full Mermaid rendering even above the 40-entity degradation threshold' },
+      focus: { type: 'string', description: 'Return the transitive dependency closure and layered reading path for this entity label (e.g. a main theorem), instead of (or in addition to) the full-graph digest' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          title: { type: 'string' },
+          totalEntities: { type: 'number' },
+          mergedDuplicates: { type: 'number' },
+          danglingEdges: { type: 'array', items: { type: 'string' } },
+          sharedNodes: { type: 'array', items: { type: 'string' } },
+          cycles: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+          isolated: { type: 'array', items: { type: 'string' } },
+          longestChain: { type: 'array', items: { type: 'string' } },
+          topDownOrder: { type: 'array', items: { type: 'string' } },
+          bottomUpLevels: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+          degradedRendering: { type: 'boolean' },
+          metrics: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                label: { type: 'string' },
+                type: { type: 'string' },
+                inDegree: { type: 'number' },
+                outDegree: { type: 'number' },
+                sharedNode: { type: 'boolean' },
+                supportsMainTheorem: { type: 'boolean' },
+              },
+            },
+          },
+          mermaid: { type: 'string' },
+          focus: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              label: { type: 'string' },
+              found: { type: 'boolean' },
+              closure: { type: 'array', items: { type: 'string' } },
+              levels: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+            },
+          },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as {
+          title: string, totalEntities: number, sharedNodes: string[], cycles: string[][],
+          isolated: string[], longestChain: string[], bottomUpLevels: string[][],
+          degradedRendering: boolean, metrics: Array<{ label: string, type: string, inDegree: number, outDegree: number, sharedNode: boolean }>, mermaid?: string,
+          focus?: { label: string, found: boolean, closure: string[], levels: string[][] },
+        }
+        const parts = [
+          `Dependency graph for ${result.title}: ${result.totalEntities} entities`,
+          `shared nodes (hubs): ${result.sharedNodes.length > 0 ? result.sharedNodes.join(', ') : '(none)'}`,
+          `cycles: ${result.cycles.length > 0 ? result.cycles.map(cycle => cycle.join(' -> ')).join('; ') : 'none'}`,
+          `isolated: ${result.isolated.length > 0 ? result.isolated.join(', ') : '(none)'}`,
+          `longest chain: ${result.longestChain.join(' -> ')}`,
+          `bottom-up levels: ${result.bottomUpLevels.map(level => `[${level.join(', ')}]`).join(' -> ')}`,
+        ]
+        if (result.degradedRendering) parts.push('(rendering degraded: >40 entities)')
+        const top = result.metrics
+          .filter(metric => metric.sharedNode || metric.inDegree >= 3)
+          .map(metric => `- ${metric.label} (${metric.type}): in ${metric.inDegree}, out ${metric.outDegree}${metric.sharedNode ? ' [shared]' : ''}`)
+        if (top.length > 0) parts.push('key nodes:', ...top)
+        if (result.focus !== undefined) {
+          if (!result.focus.found) {
+            parts.push(`focus ${JSON.stringify(result.focus.label)}: not found in the merged entities`)
+          } else {
+            parts.push(
+              `reading path for ${result.focus.label} (bottom-up layers):`,
+              ...result.focus.levels.map((level, index) => `  L${index}: ${level.join(', ')}`),
+            )
+          }
+        }
+        if (result.mermaid !== undefined) parts.push('', '```mermaid', result.mermaid, '```')
+        return [{ type: 'text', text: parts.join('\n') }]
+      },
+    },
+    async execute(args, exec) {
+      const paths = [args.path, ...(args.extraPaths ?? [])]
+      const fs = ctx.fs
+      if (fs === undefined) {
+        throw new VeryMathError('verymath_paper_graph requires the fs service', 'VERYMATH_IO')
+      }
+      const cwd = exec.agent?.session.header.cwd
+      const documents = await Promise.all(paths.map(async (path) => {
+        const absolute = toWorkspacePath(path, cwd)
+        const raw = await fs.readText(await fs.resolve(absolute, { signal: exec.signal }), exec.signal)
+        let parsed: unknown
+        try {
+          parsed = JSON.parse(raw)
+        } catch (error) {
+          throw new VeryMathError(
+            `paper structure at ${absolute} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
+            'VERYMATH_PAPER_INVALID',
+            { cause: error },
+          )
+        }
+        return parsePaperStructure(parsed)
+      }))
+      const primary = documents[0]
+      if (primary === undefined) {
+        throw new VeryMathError('no structure artifact paths resolved', 'VERYMATH_PAPER_INVALID')
+      }
+      const input: typeof primary | typeof documents = documents.length === 1 ? primary : documents
+      const { report } = mergeBatches(input)
+      const topology = computeTopology(input)
+      const focus = args.focus !== undefined ? focusClosure(input, args.focus) : undefined
+      const shouldRender = args.render ?? true
+      const mermaid = shouldRender && primary !== undefined
+        ? renderMermaid(primary, { ...(args.forceFull === true ? { forceFull: true } : {}) })
+        : undefined
+      return {
+        title: primary.paper.title,
+        totalEntities: report.totalEntities,
+        mergedDuplicates: report.mergedDuplicates,
+        danglingEdges: [...report.danglingEdges],
+        sharedNodes: [...report.sharedNodes],
+        cycles: topology.cycles.map(cycle => [...cycle.labels]),
+        isolated: [...topology.isolated],
+        longestChain: [...topology.longestChain],
+        topDownOrder: [...topology.topDownOrder],
+        bottomUpLevels: topology.bottomUpLevels.map(level => [...level]),
+        degradedRendering: topology.degradedRendering,
+        metrics: topology.metrics.map(metric => ({
+          label: metric.label,
+          type: metric.type,
+          inDegree: metric.inDegree,
+          outDegree: metric.outDegree,
+          sharedNode: metric.sharedNode,
+          supportsMainTheorem: metric.supportsMainTheorem,
+        })),
+        ...(mermaid !== undefined ? { mermaid } : {}),
+        ...(focus !== undefined
+          ? {
+              focus: {
+                label: focus.label,
+                found: focus.found,
+                closure: [...focus.closure],
+                levels: focus.levels.map(level => [...level]),
+              },
+            }
+          : {}),
       }
     },
   }))
