@@ -60,6 +60,15 @@
 
 **结论：所有 MIT 仓库都有离线测试套件，全部通过 —— 分批接入时每批可带上游测试做回归门。**
 
+### 额外实证（Optimization 真实求解，2026-10-15）
+
+- 本机安装 osqp 1.1.3 后，`skills/osqp-solver/scripts/solve_qp.py` 真实求解了 2 变量 QP：
+  x≈[0.25, 0.75]，status.classification=solved，且脚本自带**独立 KKT 验证**（verification 块含
+  complementarity/dual 阈值检查）→ `verymath_opt_solve` 工具化路径完全可行，执行+验证是确定性的。
+- 无依赖时结构化降级：`error.kind=dependency` + pip 安装提示，退出码 0。
+- `check_osqp_environment.py` / `check_cdopt_environment.py` 输出 ready:false + install_hint（环境探测工具直接可用）。
+- 注意：本机 pip 装 osqp 把 numpy 升到 2.5.4（pptagent 要求 <2.0）——接入 OSQP 时 README 需写明 numpy 版本权衡。
+
 ### 额外实证（Lean 工具粒度）
 
 - `ai4m_lean.py detect-sorry --file x.lean` **无需 Lean 环境**（纯文本分析）：检测 sorry/admit/axiom，
