@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added (late 0.3.0 round)
 
+- Sage execution path verified: miniforge `sage=10.9` env installed; the
+  sagemath-skill runner works via SAGE_PYTHON with Python-form syntax
+  (preparser constructs like `x^2` are correctly rejected per the contract).
+  Search works without the binary; execution requires it.
+
 - `verymath_research_gate`: three-gate validation for Co-Mathematician-style
   research workspaces (goal approval / workstream completion / final render),
   ported from the documented upstream file contract (report.md mandatory
