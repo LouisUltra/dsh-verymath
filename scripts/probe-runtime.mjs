@@ -37,7 +37,7 @@ try {
   // Skills: the bundled provider lists and loads both adapted skills.
   const skills = await ctx.skills.list()
   const names = skills.filter(skill => skill.provider === 'verymath-bundled').map(skill => skill.name).sort()
-  assert.deepEqual(names, ['after-ocr', 'discover-math-problems', 'graph-theory-paper-reading', 'invariant-computation', 'lean-formalization', 'lean-setup', 'least-squares', 'math-glossary', 'math-paper-reading', 'matlab-runner', 'mixed-integer-programming', 'open-problem-research-pipeline', 'osqp-solver', 'paper-writing', 'proof-blueprint-review'], JSON.stringify(names))
+  assert.deepEqual(names, ['after-ocr', 'discover-math-problems', 'graph-theory-paper-reading', 'invariant-computation', 'lean-formalization', 'lean-setup', 'least-squares', 'math-beamer', 'math-glossary', 'math-paper-reading', 'matlab-runner', 'mixed-integer-programming', 'open-problem-research-pipeline', 'osqp-solver', 'paper-writing', 'proof-blueprint-review'], JSON.stringify(names))
   const glossarySkill = await ctx.skills.get('math-glossary')
   assert.ok(glossarySkill.content.includes('verymath_glossary_query'))
   assert.equal(glossarySkill.resourceBase.kind, 'directory')

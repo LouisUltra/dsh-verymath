@@ -41,9 +41,10 @@
       "adaptedPaths": [
         "skills/paper-writing/SKILL.md",
         "skills/paper-writing/skills/*/SKILL.md (flattened to skill_*.md modules)",
-        "skills/paper-writing/templates/"
+        "skills/paper-writing/templates/",
+        "skills/math-beamer/ (SKILL.md + templates/ catalog+23 packs+previews + references/, verbatim with DSH notes)"
       ],
-      "adaptationNotes": "paper-writing bundled with sub-skills flattened to module files (plugin skill-discovery layout) and DSH Integration Notes added; templates verbatim. math-beamer NOT bundled (TeX-heavy; candidate for later with verymath_beamer_check)."
+      "adaptationNotes": "paper-writing bundled with sub-skills flattened to module files (plugin skill-discovery layout) and DSH Integration Notes added; templates verbatim. math-beamer NOT bundled (TeX-heavy; candidate for later with verymath_beamer_check). math-beamer bundled after verifying local TeX Live 2025 compiles the seminar-minimal-zh template end-to-end; ECNU third-party template index NOT vendored (upstream policy)."
     },
     {
       "repository": "https://github.com/VeryMath/AI4Math-Auto-Research",
