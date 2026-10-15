@@ -11,8 +11,10 @@ description: "Use when a user explicitly requests MATLAB execution or verificati
   MathWorks 官方 `matlab/matlab-mcp-server` v0.14.0（stdio），5 个工具以
   `mcp__matlab__check_matlab_code / evaluate_matlab_code / run_matlab_file /
   run_matlab_test_file / detect_matlab_toolboxes` 暴露——与本技能 §4 的能力清单一一对应。
-- 服务器按需启动 MATLAB（`--matlab-root /Applications/MATLAB_R2025b.app`，
-  nodesktop）；首次调用可能耗时数十秒（MATLAB 启动），属正常。
+- 服务器支持两种执行路径：默认 auto 模式优先附着桌面共享会话（桌面 MATLAB 运行
+  `shareMATLABSession()` 后），附着不上则自建 headless 会话（`--matlab-root
+  /Applications/MATLAB_R2025b.app`，nodesktop）；首次调用可能耗时数十秒（MATLAB 启动），属正常。
+  附着桌面会话时执行结果与连接问候直接出现在用户的桌面 MATLAB 中（已验证 getpid 一致）。
 - 用户环境：R2025b Update 7 + Optimization Toolbox + Symbolic Math Toolbox（已验证 license）。
 - 工具不可用时按本技能 §5 报 `MCP_UNAVAILABLE`，并提示检查
   `~/matlab-mcp/matlab-mcp-server` 与 MATLAB 安装。
