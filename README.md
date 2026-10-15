@@ -39,13 +39,13 @@
 | `invariant-computation` | 代数/拓扑/几何不变量的计算路由与证据报告（审批式环境安装）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `mixed-integer-programming` | MILP 建模求解：背包/指派等实测示例（PuLP+CBC）+ 恢复的上游 LP 示例。 | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization)（已修复错版示例） |
 | `matlab-runner` | MATLAB 执行路由/安全/报告层——经 MathWorks 官方 MCP server 驱动本机 MATLAB（需用户自装 MATLAB + license）。 | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) |
+| `math-beamer` | 数学 Beamer 幻灯片：23 模板包（中英/学科分类）、4 闸门引导流程、slide-source-ledger 溯源。 | [AI4Math-Writing](https://github.com/VeryMath/AI4Math-Writing) |
 | `lean-formalization` | Lean 4 形式化、证明修复、sorry 补全与 patch 审查（编码代理优先，GB 级工具链留在用户机器）。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib 工作区的检测、安装引导与两级就绪度报告。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
 > 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill 技能本体（GPLv3；已按路线 a 以
-> 干净房间 TS 实现查询能力，语料独立分发）、math-beamer（已实测可编译，下一步配 beamer_check 接入）、
-> paper-to-skill 全链（MinerU 云 API 隐私考量；本地 mineru 可选）、agent-laboratory-workflow（外部 LLM API+重部署）、
-> scientific-computing-reproduction（Codex 生态耦合，零依赖脚本按需摘取）、
+> 干净房间 TS 实现查询能力，语料独立分发）、paper-to-skill 全链（MinerU 云 API 隐私考量；本地 mineru 可选）、
+> agent-laboratory-workflow（外部 LLM API+重部署）、scientific-computing-reproduction（Codex 生态耦合，零依赖脚本按需摘取）、
 > co-mathematician（独立 App，仅提炼概念）、textbook-copilot（Apache-2.0 独立应用）。
 
 技能承载方法论，工具承载确定性执行；与 DSH 会话、工作区、沙箱和 `literature` 等其他插件天然协作（如用 `literature_fulltext` 下载论文全文，再交给 `math-paper-reading` 分析）。

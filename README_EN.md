@@ -39,12 +39,12 @@
 | `invariant-computation` | Routing and evidence reporting for algebraic/topological/geometric invariant computation (approval-gated installs). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `mixed-integer-programming` | MILP modeling and solving: tested knapsack/assignment examples (PuLP+CBC) + restored upstream LP examples. | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization) (broken examples repaired) |
 | `matlab-runner` | MATLAB execution routing/safety/reporting layer — drives local MATLAB via the official MathWorks MCP server (requires user-installed MATLAB + license). | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) |
+| `math-beamer` | Mathematical Beamer slide decks: 23 template packs (bilingual, per-field), 4-gate guided workflow, slide-source-ledger provenance. | [AI4Math-Writing](https://github.com/VeryMath/AI4Math-Writing) |
 | `lean-formalization` | Lean 4 formalization, proof repair, sorry completion, and patch review (coding-agent-first; the GB-scale toolchain stays on the user machine). | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib workspace detection, install guidance, and two-level readiness reporting. | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
 > Deferred (rationale and upgrade paths in `docs/integration-matrix.md`): Sagemath-skill skill body (GPLv3; route-a
-> clean-room TS lookup shipped, corpus distributed separately), math-beamer (compiles on test machines; next with beamer_check),
-> paper-to-skill chain (MinerU cloud-API privacy; local mineru optional), agent-laboratory-workflow (external LLM API + heavy deploy),
+> clean-room TS lookup shipped, corpus distributed separately), paper-to-skill chain (MinerU cloud-API privacy; local mineru optional), agent-laboratory-workflow (external LLM API + heavy deploy),
 > scientific-computing-reproduction (Codex ecosystem coupling; zero-dep scripts extractable on demand),
 > co-mathematician (standalone app; concepts only), textbook-copilot (Apache-2.0 standalone app).
 
