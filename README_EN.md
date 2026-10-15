@@ -21,6 +21,7 @@
 | `verymath_ocr_scan` | OCR Markdown error-candidate locator (22 rule categories: glued operators, font misreads, dollar imbalance, environment mismatches; candidates only, for the after-ocr review protocol; needs Python). |
 | `verymath_osqp_check` / `verymath_osqp_solve` | OSQP stack probe (major-version gate >=1,<2) / JSON-contract QP solving with 11-state status gates and independent KKT/certificate verification (needs the osqp Python stack). |
 | `verymath_lean_detect_sorry` | sorry/admit/axiom forbidden-token scan for Lean files — **works without a Lean toolchain**; a patch-acceptance safety gate. |
+| `verymath_research_gate` | Three-gate validation for research workspaces (goal approval / workstream completion / final render): mandatory report.md sections, independent-reviewer rule, blocking-review resolution — pure file-contract validation. |
 | `verymath_sage_check` / `verymath_sage_search` | SageMath binary+corpus probe / anti-hallucination API lookup across 3196 official docs (corpus is CC BY-SA, placed separately at ~/.verymath/sagemath-corpus; clean-room TS implementation, no GPL code). |
 
 **Bundled skills** (registered in the DSH skill catalog; model- and user-invocable):

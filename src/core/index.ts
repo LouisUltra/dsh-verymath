@@ -22,6 +22,11 @@ export { parseGlossary, queryGlossary, sortGlossary, upsertTerms, validateGlossa
 export type { GlossaryHit, GlossaryQueryOptions, GlossaryTerm, TermUpsert, UpsertResult } from './glossary.ts'
 export { parsePaperStructure, dependencySummary } from './paper.ts'
 export {
+  checkGate, checkGoalApproval, checkWorkstreamCompletion, checkFinalRender,
+  loadGoals, listWorkstreams, hasSection,
+} from './gates.ts'
+export type { GateResult } from './gates.ts'
+export {
   loadManifest, searchSageRefs, scoreRow, termsFor, findExcerpt,
   readCorpusDoc, readCorpusDocWindow, resolveCorpusRoot, defaultCorpusRoot, docPath,
 } from './sage.ts'

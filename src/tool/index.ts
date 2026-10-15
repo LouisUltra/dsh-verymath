@@ -13,7 +13,7 @@ import type {} from '@deepseek-ai/dsh-fs'
 import { spawn } from 'node:child_process'
 import { isAbsolute, resolve } from 'node:path'
 import { VeryMathError, isVeryMathError } from '@louisultra/dsh-verymath/core'
-import { bundledSkillsDir, computeTopology, dependencySummary, findExcerpt, focusClosure, loadManifest, mergeBatches, parsePaperStructure, readCorpusDocWindow, renderMermaid, resolveCorpusRoot, searchSageRefs, termsFor, upsertTerms, type TermUpsert } from '@louisultra/dsh-verymath/core'
+import { bundledSkillsDir, checkGate, computeTopology, dependencySummary, findExcerpt, focusClosure, loadManifest, mergeBatches, parsePaperStructure, readCorpusDocWindow, renderMermaid, resolveCorpusRoot, searchSageRefs, termsFor, upsertTerms, type GateResult, type TermUpsert } from '@louisultra/dsh-verymath/core'
 
 export const name = 'tool-verymath'
 export const inject = ['tools', 'verymath', 'fs']
@@ -782,6 +782,47 @@ export const apply = (ctx: Context, config: Config = {}): void => {
           throw new VeryMathError(error.message, 'VERYMATH_SAGE_CORPUS_MISSING')
         }
         throw toToolError(error)
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_research_gate',
+    description: 'Check a Co-Mathematician-style research workspace against its three completion gates: goal_approval (project/GOALS.yaml has an approved goal), workstream_completion (each workstream has report.md with Provenance/Uncertainty/Failed Explorations sections, an independent reviewer approval, and no unresolved blocking reviews), and final_render (which workstreams are render-ready). Pure file-contract validation; use before declaring a research workstream complete or assembling a final report.',
+    parameters: {
+      workspace: { type: 'string', required: true, description: 'Workspace root containing project/ and workstreams/' },
+      gate: { type: 'string', required: true, description: 'One of goal_approval, workstream_completion, final_render' },
+      goalId: { type: 'string', description: 'Specific goal id for goal_approval' },
+      workstreamId: { type: 'string', description: 'Specific workstream directory name for workstream_completion' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          gate: { type: 'string' },
+          passed: { type: 'boolean' },
+          issues: { type: 'array', items: { type: 'string' } },
+          details: { type: 'json' },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as GateResult
+        const head = `${result.gate}: ${result.passed ? 'PASSED' : 'NOT PASSED'}`
+        if (result.issues.length === 0) return [{ type: 'text', text: head }]
+        return [{ type: 'text', text: [head, ...result.issues.map(issue => `- ${issue}`)].join('\n') }]
+      },
+    },
+    async execute(args) {
+      const result = await checkGate(args.workspace, args.gate as 'goal_approval' | 'workstream_completion' | 'final_render', {
+        ...(args.goalId !== undefined ? { goalId: args.goalId } : {}),
+        ...(args.workstreamId !== undefined ? { workstreamId: args.workstreamId } : {}),
+      })
+      return {
+        gate: result.gate,
+        passed: result.passed,
+        issues: [...result.issues],
+        details: structuredClone(result.details) as JsonValue,
       }
     },
   }))

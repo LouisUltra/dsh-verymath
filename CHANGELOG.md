@@ -3,6 +3,19 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+### Added (late 0.3.0 round)
+
+- `verymath_research_gate`: three-gate validation for Co-Mathematician-style
+  research workspaces (goal approval / workstream completion / final render),
+  ported from the documented upstream file contract (report.md mandatory
+  sections, independent-reviewer rule, blocking-review resolution).
+- `verymath_sage_check` / `verymath_sage_search`: clean-room TypeScript corpus
+  search over the separately-distributed CC BY-SA SageMath docs (route-a).
+- `verymath_osqp_check` / `verymath_osqp_solve`: OSQP stack probe + JSON
+  contract QP solving with independent verification.
+- Bundled skills: `osqp-solver`, `mixed-integer-programming` (repaired),
+  `matlab-runner`, `math-beamer`.
+
 ## [0.3.0] - 2026-10-15
 
 ### Added

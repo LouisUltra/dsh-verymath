@@ -21,6 +21,7 @@
 | `verymath_ocr_scan` | OCR Markdown 错误候选定位（胶连算符/字体误识/美元失衡/环境失配等 22 类规则；候选仅供 after-ocr 逐段审校，需 Python）。 |
 | `verymath_osqp_check` / `verymath_osqp_solve` | OSQP 求解栈探测（主版本门 >=1,<2）/ JSON 契约 QP 求解：11 态状态门 + 独立 KKT 与不可行证书验证（需 osqp Python 栈）。 |
 | `verymath_lean_detect_sorry` | Lean 文件的 sorry/admit/axiom 禁用词扫描——**无需 Lean 工具链**，patch 验收安全门。 |
+| `verymath_research_gate` | 研究工作区三道闸门校验（目标批准/工作流完成/最终渲染）：report.md 强制三节、独立审阅人、阻断性评审解决状态——纯文件契约校验。 |
 | `verymath_sage_check` / `verymath_sage_search` | SageMath 二进制+语料探测 / 3196 篇官方文档的**反幻觉 API 查询**（语料 CC BY-SA，独立放置于 ~/.verymath/sagemath-corpus；干净房间 TS 实现，无 GPL 代码）。 |
 
 **随包技能**（注册进 DSH 技能目录，模型与用户均可触发）：
