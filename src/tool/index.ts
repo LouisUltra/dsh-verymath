@@ -10,9 +10,10 @@ import { defineTool } from '@deepseek-ai/dsh-tools'
 import type { ContentBlock } from '@deepseek-ai/dsh-llm'
 import type { JsonValue } from '@deepseek-ai/dsh-util-values'
 import type {} from '@deepseek-ai/dsh-fs'
+import { spawn } from 'node:child_process'
 import { isAbsolute, resolve } from 'node:path'
 import { VeryMathError, isVeryMathError } from '@louisultra/dsh-verymath/core'
-import { bundledSkillsDir, computeTopology, dependencySummary, focusClosure, mergeBatches, parsePaperStructure, renderMermaid, upsertTerms, type TermUpsert } from '@louisultra/dsh-verymath/core'
+import { bundledSkillsDir, computeTopology, dependencySummary, findExcerpt, focusClosure, loadManifest, mergeBatches, parsePaperStructure, readCorpusDocWindow, renderMermaid, resolveCorpusRoot, searchSageRefs, termsFor, upsertTerms, type TermUpsert } from '@louisultra/dsh-verymath/core'
 
 export const name = 'tool-verymath'
 export const inject = ['tools', 'verymath', 'fs']
@@ -631,6 +632,156 @@ export const apply = (ctx: Context, config: Config = {}): void => {
           line: finding.line ?? 0,
           ...(finding.text !== undefined ? { text: String(finding.text).slice(0, 200) } : {}),
         })),
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_sage_check',
+    description: 'Check SageMath availability (the sage binary / SAGE_PYTHON / conda env chain) AND the local SageMath documentation corpus (default ~/.verymath/sagemath-corpus, set VERYMATH_SAGE_CORPUS to override). SageMath itself must be installed by the user (conda-forge sage=10.9 recommended; Windows requires WSL). The corpus is SageMath official documentation (CC BY-SA 3.0), distributed separately from this MIT package.',
+    parameters: {},
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          corpusAvailable: { type: 'boolean' },
+          corpusRoot: { type: 'string' },
+          manifestRows: { type: 'number' },
+          sageBinaryAvailable: { type: 'boolean' },
+          hint: { type: 'string' },
+        },
+
+      },
+      render: (_args, value) => {
+        const result = value as { corpusAvailable: boolean, corpusRoot?: string, manifestRows?: number, sageBinaryAvailable?: boolean, hint?: string }
+        const parts = [
+          `corpus: ${result.corpusAvailable ? `available at ${result.corpusRoot} (${result.manifestRows} docs)` : 'MISSING'}`,
+          `sage binary: ${result.sageBinaryAvailable ? 'found' : 'not found'}`,
+        ]
+        if (result.hint !== undefined) parts.push(result.hint)
+        return [{ type: 'text', text: parts.join('\n') }]
+      },
+    },
+    async execute() {
+      const sageBinaryAvailable = await new Promise<boolean>((resolvePromise) => {
+        const probe = spawn('sage', ['--version'], { stdio: 'ignore' })
+        probe.on('error', () => resolvePromise(false))
+        probe.on('close', (code) => resolvePromise(code === 0))
+        setTimeout(() => { probe.kill(); resolvePromise(false) }, 5_000)
+      })
+      try {
+        const root = await resolveCorpusRoot()
+        const rows = await loadManifest(root)
+        const hints: string[] = []
+        if (!sageBinaryAvailable) {
+          hints.push('SageMath not found: install via miniforge (conda-forge sage=10.9; macOS arm64/x86_64 supported; Windows requires WSL). Search still works without the binary; only execution needs it.')
+        }
+        return {
+          corpusAvailable: true,
+          corpusRoot: root,
+          manifestRows: rows.length,
+          sageBinaryAvailable,
+          ...(hints.length > 0 ? { hint: hints.join(' ') } : {}),
+        }
+      } catch (error) {
+        if (isVeryMathError(error) && error.code === 'VERYMATH_SAGE_CORPUS_MISSING') {
+          return {
+            corpusAvailable: false,
+            sageBinaryAvailable,
+            hint: error.message,
+          }
+        }
+        throw error
+      }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_sage_search',
+    description: 'Search the local SageMath documentation corpus (3196 docs) for constructors, methods, and examples before writing Sage code — the anti-hallucination lookup step of the sagemath-skill contract: never invent SageMath APIs from memory. Returns ranked documents with titles, symbol/method lists, and excerpts. Requires the docs corpus (verymath_sage_check); execution of Sage code requires the sage binary.',
+    parameters: {
+      query: { type: 'string', required: true, description: 'English query, e.g. "elliptic curve rank" or "solve ODE numerically"' },
+      limit: { type: 'number', description: 'Max documents (default 8)' },
+      show: { type: 'string', description: 'Document path (from a previous result) to read a wider window from instead of searching' },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          query: { type: 'string' },
+          results: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                title: { type: 'string' },
+                domain: { type: 'string' },
+                path: { type: 'string' },
+                score: { type: 'number' },
+                symbols: { type: 'array', items: { type: 'string' } },
+                methods: { type: 'array', items: { type: 'string' } },
+                excerpt: { type: 'string' },
+              },
+            },
+          },
+        },
+
+      },
+      render: (_args, value) => {
+        const result = value as { query: string, results: Array<{ title: string, domain?: string, path?: string, score?: number, excerpt?: string }> }
+        if (result.results.length === 0) {
+          return [{ type: 'text', text: `No corpus documents matched ${JSON.stringify(result.query)}. Try different terms.` }]
+        }
+        const parts = result.results.map((item, index) => {
+          const head = `${index + 1}. [${item.score}] ${item.title} (${item.domain})`
+          const body = item.excerpt !== undefined && item.excerpt.length > 0 ? `\n${item.excerpt}` : ''
+          return head + body
+        })
+        return [{ type: 'text', text: parts.join('\n\n') }]
+      },
+    },
+    async execute(args) {
+      try {
+        const root = await resolveCorpusRoot()
+        const rows = await loadManifest(root)
+        if (args.show !== undefined) {
+          const target = rows.find(row => row.path === args.show || row.api_path === args.show)
+          if (target === undefined) {
+            throw new VeryMathError(`document not in manifest: ${args.show}`, 'VERYMATH_SAGE_CORPUS_MISSING')
+          }
+          const terms = termsFor(args.query)
+          const lines = await readCorpusDocWindow(root, target, 1).catch(() => [] as string[])
+          const excerpt = findExcerpt(lines, args.query, terms)
+          return {
+            query: args.query,
+            results: [{
+              title: target.title,
+              ...(target.domain !== undefined ? { domain: target.domain } : {}),
+              ...(target.path !== undefined ? { path: target.path } : {}),
+              score: 0,
+              excerpt,
+            }],
+          }
+        }
+        const hits = await searchSageRefs(rows, args.query, { limit: args.limit ?? 8, withExcerpts: 3, corpusRoot: root })
+        return {
+          query: args.query,
+          results: hits.map(hit => ({
+            title: hit.row.title,
+            ...(hit.row.domain !== undefined ? { domain: hit.row.domain } : {}),
+            ...(hit.row.path !== undefined ? { path: hit.row.path } : {}),
+            score: hit.score,
+            excerpt: hit.excerpt,
+          })),
+        }
+      } catch (error) {
+        if (isVeryMathError(error) && error.code === 'VERYMATH_SAGE_CORPUS_MISSING') {
+          throw new VeryMathError(error.message, 'VERYMATH_SAGE_CORPUS_MISSING')
+        }
+        throw toToolError(error)
       }
     },
   }))

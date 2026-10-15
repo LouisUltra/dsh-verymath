@@ -22,6 +22,11 @@ export { parseGlossary, queryGlossary, sortGlossary, upsertTerms, validateGlossa
 export type { GlossaryHit, GlossaryQueryOptions, GlossaryTerm, TermUpsert, UpsertResult } from './glossary.ts'
 export { parsePaperStructure, dependencySummary } from './paper.ts'
 export {
+  loadManifest, searchSageRefs, scoreRow, termsFor, findExcerpt,
+  readCorpusDoc, readCorpusDocWindow, resolveCorpusRoot, defaultCorpusRoot, docPath,
+} from './sage.ts'
+export type { SageRefRow, SageRefHit } from './sage.ts'
+export {
   mergeBatches, collectEntities, computeTopology, renderMermaid, focusClosure,
   mermaidDisplayText, stripUncertain, isSingleStructure, requireStructure,
 } from './graph.ts'
