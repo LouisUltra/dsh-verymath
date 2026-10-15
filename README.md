@@ -21,6 +21,7 @@
 | `verymath_ocr_scan` | OCR Markdown 错误候选定位（胶连算符/字体误识/美元失衡/环境失配等 22 类规则；候选仅供 after-ocr 逐段审校，需 Python）。 |
 | `verymath_osqp_check` / `verymath_osqp_solve` | OSQP 求解栈探测（主版本门 >=1,<2）/ JSON 契约 QP 求解：11 态状态门 + 独立 KKT 与不可行证书验证（需 osqp Python 栈）。 |
 | `verymath_lean_detect_sorry` | Lean 文件的 sorry/admit/axiom 禁用词扫描——**无需 Lean 工具链**，patch 验收安全门。 |
+| `verymath_sage_check` / `verymath_sage_search` | SageMath 二进制+语料探测 / 3196 篇官方文档的**反幻觉 API 查询**（语料 CC BY-SA，独立放置于 ~/.verymath/sagemath-corpus；干净房间 TS 实现，无 GPL 代码）。 |
 
 **随包技能**（注册进 DSH 技能目录，模型与用户均可触发）：
 
@@ -36,12 +37,14 @@
 | `open-problem-research-pipeline` | 开放问题的检索→方法分析→证明框架→报告四段工作流。 | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
 | `least-squares` | 最小二乘拟合与参数估计（OLS/WLS/正则化/非线性/贝叶斯，12 级降级链）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `invariant-computation` | 代数/拓扑/几何不变量的计算路由与证据报告（审批式环境安装）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
+| `mixed-integer-programming` | MILP 建模求解：背包/指派等实测示例（PuLP+CBC）+ 恢复的上游 LP 示例。 | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization)（已修复错版示例） |
+| `matlab-runner` | MATLAB 执行路由/安全/报告层——经 MathWorks 官方 MCP server 驱动本机 MATLAB（需用户自装 MATLAB + license）。 | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) |
 | `lean-formalization` | Lean 4 形式化、证明修复、sorry 补全与 patch 审查（编码代理优先，GB 级工具链留在用户机器）。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib 工作区的检测、安装引导与两级就绪度报告。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
-> 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill（GPLv3+47.5MB 语料，P3）、
-> matlab-runner（无 MATLAB 环境即不可用）、math-beamer（TeX 依赖重，后续配 beamer_check 接入）、
-> paper-to-skill 全链（conda+云 API）、agent-laboratory-workflow（外部 LLM API+重部署）、
+> 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill 技能本体（GPLv3；已按路线 a 以
+> 干净房间 TS 实现查询能力，语料独立分发）、math-beamer（已实测可编译，下一步配 beamer_check 接入）、
+> paper-to-skill 全链（MinerU 云 API 隐私考量；本地 mineru 可选）、agent-laboratory-workflow（外部 LLM API+重部署）、
 > scientific-computing-reproduction（Codex 生态耦合，零依赖脚本按需摘取）、
 > co-mathematician（独立 App，仅提炼概念）、textbook-copilot（Apache-2.0 独立应用）。
 

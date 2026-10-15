@@ -21,6 +21,7 @@
 | `verymath_ocr_scan` | OCR Markdown error-candidate locator (22 rule categories: glued operators, font misreads, dollar imbalance, environment mismatches; candidates only, for the after-ocr review protocol; needs Python). |
 | `verymath_osqp_check` / `verymath_osqp_solve` | OSQP stack probe (major-version gate >=1,<2) / JSON-contract QP solving with 11-state status gates and independent KKT/certificate verification (needs the osqp Python stack). |
 | `verymath_lean_detect_sorry` | sorry/admit/axiom forbidden-token scan for Lean files — **works without a Lean toolchain**; a patch-acceptance safety gate. |
+| `verymath_sage_check` / `verymath_sage_search` | SageMath binary+corpus probe / anti-hallucination API lookup across 3196 official docs (corpus is CC BY-SA, placed separately at ~/.verymath/sagemath-corpus; clean-room TS implementation, no GPL code). |
 
 **Bundled skills** (registered in the DSH skill catalog; model- and user-invocable):
 
@@ -36,12 +37,14 @@
 | `open-problem-research-pipeline` | Open-problem workflow: literature search → method analysis → proof framework → report. | [AI4Math-Auto-Research](https://github.com/VeryMath/AI4Math-Auto-Research) |
 | `least-squares` | Least-squares fitting and parameter estimation (OLS/WLS/regularized/nonlinear/Bayesian, 12-tier degradation). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `invariant-computation` | Routing and evidence reporting for algebraic/topological/geometric invariant computation (approval-gated installs). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
+| `mixed-integer-programming` | MILP modeling and solving: tested knapsack/assignment examples (PuLP+CBC) + restored upstream LP examples. | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization) (broken examples repaired) |
+| `matlab-runner` | MATLAB execution routing/safety/reporting layer — drives local MATLAB via the official MathWorks MCP server (requires user-installed MATLAB + license). | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) |
 | `lean-formalization` | Lean 4 formalization, proof repair, sorry completion, and patch review (coding-agent-first; the GB-scale toolchain stays on the user machine). | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib workspace detection, install guidance, and two-level readiness reporting. | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
-> Deferred (rationale and upgrade paths in `docs/integration-matrix.md`): Sagemath-skill (GPLv3 + 47.5MB corpus, P3),
-> matlab-runner (unusable without MATLAB), math-beamer (TeX-heavy; planned with beamer_check),
-> paper-to-skill chain (conda + cloud API), agent-laboratory-workflow (external LLM API + heavy deploy),
+> Deferred (rationale and upgrade paths in `docs/integration-matrix.md`): Sagemath-skill skill body (GPLv3; route-a
+> clean-room TS lookup shipped, corpus distributed separately), math-beamer (compiles on test machines; next with beamer_check),
+> paper-to-skill chain (MinerU cloud-API privacy; local mineru optional), agent-laboratory-workflow (external LLM API + heavy deploy),
 > scientific-computing-reproduction (Codex ecosystem coupling; zero-dep scripts extractable on demand),
 > co-mathematician (standalone app; concepts only), textbook-copilot (Apache-2.0 standalone app).
 
