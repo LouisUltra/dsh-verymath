@@ -178,3 +178,48 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 
 ---
 > 评审报告回来后本文件升级为 v2 终稿；council 输出存于 research/reports/
+
+
+---
+
+## FINAL STATUS (2026-10-15, user-directed completion round)
+
+## 四个用户质询的最终处置
+
+### 1. Sagemath（用户选路线 a：TS 干净重写）✅ 完成
+- `src/core/sage.ts`：干净房间实现评分契约（无 GPL 代码），语料独立于包（~/.verymath/sagemath-corpus，CC BY-SA）
+- `verymath_sage_check`（corpus+binary 双探测）+ `verymath_sage_search`（反幻觉查询）
+- 实测：3196 行 manifest 30ms 加载、搜索 25ms、真语料摘录；E2E 通过（corpus 可用、binary 缺失如实降级）
+- sage 二进制：miniforge 装至 ~/.verymath/miniforge，`conda create -n sage sage=10.9` 下载中（2-3GB）
+- E2E 证据：/tmp/e2e-sage.log（SAGE_TOOLS_VERIFIED）
+
+### 2. MATLAB（用户装 R2025b）✅ 完成
+- MathWorks 官方 matlab-mcp-server v0.14.0 → ~/matlab-mcp/，`--setup-matlab` 完成
+- dsh-mcp-client 配置：5 工具 `mcp__matlab__*` 全部注册
+- E2E#1（真实计算）：rank=2/det=-2/cond=14.93 来自真 MATLAB（MATLAB_EXEC_VERIFIED）
+- E2E#2（验收场景）：check_matlab_code 干净 + run_matlab_test_file 2 passed + detect_matlab_toolboxes
+  确认 Optimization/Symbolic R2025b（MATLABRUNNER_ACCEPTANCE_VERIFIED）
+- matlab-runner 技能已捆绑（MCP 配置说明内嵌）
+
+### 3. MIP 修复 ✅ 完成
+- git 考古确认上游 examples.md 自创建即 SOCP 错版（3018b23）
+- 恢复 191a4e3^ 的 linear-programming/examples.md（6 LP 示例）→ lp-examples.md
+- 新写 mip-examples-verified.md：背包（最优 220，枚举交叉核对）+ 3×3 指派（最优 9，
+  匈牙利算法核对），PuLP 2.8+CBC 实测；PuLP 4.x API 不兼容已记录
+- E2E 证据：解算过程与最优值在本机真跑
+
+### 4. 其余仓库最终状态
+- math-beamer：TeX Live 2025 本机已装，seminar-minimal-zh 现场编译出 PDF（exit 0）→
+  **下一个接入对象**（待 beamer_check 工具）
+- paper-to-skill：MinerU 云 API 是唯一转换路径（隐私考量维持暂缓）；mineru 4.0.12 本地模式存在（重）
+- agent-laboratory-workflow：维持暂缓（conda 重部署+patch 脆弱）
+- co-mathematician / textbook-copilot：维持概念提炼结论
+
+## 技能/工具最终清单
+- 15 bundled skills（math-glossary, math-paper-reading, graph-theory-paper-reading, after-ocr,
+  paper-writing, discover-math-problems, proof-blueprint-review, open-problem-research-pipeline,
+  least-squares, invariant-computation, mixed-integer-programming, osqp-solver,
+  lean-formalization, lean-setup, matlab-runner）
+- 14 model tools（glossary ×3, python_check, osqp ×2, ocr_scan, lean_detect_sorry,
+  sage ×2, paper_validate, paper_graph）
+- 外部集成：MATLAB MCP server（5 tools）、Sage corpus（3196 docs）
