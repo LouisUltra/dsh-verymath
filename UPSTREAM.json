@@ -26,13 +26,15 @@
         "skills/math-paper-reading/skill_paper_deep_read.md",
         "skills/math-paper-reading/skill_reference_manager.md",
         "skills/math-paper-reading/skill_literature_search.md",
+        "skills/math-paper-reading/references/proof_pattern_taxonomy.md (verbatim from paper-to-skill-extractor/references/)",
+        "skills/math-paper-reading/references/quality_rubric.md (verbatim from paper-to-skill-extractor/references/)",
         "skills/graph-theory-paper-reading/SKILL.md",
         "skills/after-ocr/SKILL.md",
         "skills/after-ocr/scripts/",
         "skills/after-ocr/references/",
         "skills/after-ocr/tests/"
       ],
-      "adaptationNotes": "Skill routing adapted for DSH invocation and workspace artifact conventions; analysis methodology and the v4.2 structure JSON contract unchanged; optional verymath_paper_validate tool references added. graph-theory-paper-reading bundled verbatim with a DSH Integration Notes section added; after-ocr bundled with scripts/tests/references verbatim plus DSH notes. Both registered as independent bundled skills alongside math-paper-reading."
+      "adaptationNotes": "Skill routing adapted for DSH invocation and workspace artifact conventions; analysis methodology and the v4.2 structure JSON contract unchanged; optional verymath_paper_validate tool references added. graph-theory-paper-reading bundled verbatim with a DSH Integration Notes section added; after-ocr bundled with scripts/tests/references verbatim plus DSH notes. Both registered as independent bundled skills alongside math-paper-reading. The paper-to-skill appendix (0.3.1): only proof_pattern_taxonomy.md + quality_rubric.md copied verbatim as deep-read references (per council P3 verdict); the full paper-to-skill chain stays unbundled (MinerU cloud-API privacy); skill_paper_deep_read.md carries the appendix routing in its DSH Integration Notes."
     },
     {
       "repository": "https://github.com/VeryMath/AI4Math-Writing",

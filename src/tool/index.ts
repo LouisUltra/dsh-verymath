@@ -65,6 +65,22 @@ interface PythonCheckJson {
   readonly hint?: string
 }
 
+/** One probed piece of the math-beamer TeX toolchain. */
+interface BeamerToolProbe {
+  readonly name: string
+  /** `binary` = executable on PATH (latexmk, xelatex); `style` = LaTeX package via kpsewhich (forest, ctex). */
+  readonly kind: 'binary' | 'style'
+  readonly available: boolean
+  readonly executable?: string
+}
+
+/** The `verymath_beamer_check` canonical value. */
+interface BeamerCheckJson {
+  readonly available: boolean
+  readonly tools: readonly BeamerToolProbe[]
+  readonly hint?: string
+}
+
 /** The `verymath_paper_validate` canonical value. */
 interface PaperValidateJson {
   readonly title: string
@@ -150,6 +166,72 @@ function toToolError(error: unknown): Error {
   if (isVeryMathError(error)) return error
   if (error instanceof Error) return error
   return new Error(String(error))
+}
+
+/** Spawn one short command and resolve to (exitCode, stdout) or undefined on timeout/launch failure. */
+function probeCommand(executable: string, args: readonly string[], timeoutMs = 5_000): Promise<{ exitCode: number, stdout: string } | undefined> {
+  return new Promise((resolvePromise) => {
+    let child: ReturnType<typeof spawn>
+    try {
+      child = spawn(executable, [...args], { stdio: ['ignore', 'pipe', 'ignore'] })
+    } catch {
+      resolvePromise(undefined)
+      return
+    }
+    const stdout: Buffer[] = []
+    let settled = false
+    const settle = (value: { exitCode: number, stdout: string } | undefined) => {
+      if (!settled) {
+        settled = true
+        resolvePromise(value)
+      }
+    }
+    child.stdout?.on('data', (chunk: Buffer) => stdout.push(chunk))
+    child.on('error', () => settle(undefined))
+    child.on('close', (code) => settle({ exitCode: code ?? -1, stdout: Buffer.concat(stdout).toString() }))
+    setTimeout(() => {
+      child.kill()
+      settle(undefined)
+    }, timeoutMs)
+  })
+}
+
+/**
+ * Probe the math-beamer TeX toolchain: latexmk and xelatex binaries (PATH +
+ * `--version` smoke) and the forest/ctex LaTeX packages (`kpsewhich <name>.sty`).
+ * Nothing is installed, compiled, or downloaded; each probe is independent so a
+ * partial toolchain reports per-piece detail (mirrors the osqp/sage probe pattern).
+ */
+async function probeBeamerToolchain(): Promise<BeamerToolProbe[]> {
+  const binaries: Array<{ name: string }> = [
+    { name: 'latexmk' },
+    { name: 'xelatex' },
+  ]
+  const styles: Array<{ name: string, note?: string }> = [
+    { name: 'forest' },
+    { name: 'ctex', note: 'required by Chinese/bilingual templates only' },
+  ]
+
+  const binaryProbes = await Promise.all(binaries.map(async ({ name }) => {
+    const which = await probeCommand('/usr/bin/which', [name]).catch(() => undefined)
+    const resolved = which !== undefined && which.exitCode === 0 ? which.stdout.trim().split('\n')[0] : undefined
+    const executable = resolved !== undefined && resolved.length > 0 ? resolved : undefined
+    if (executable === undefined) return { name, kind: 'binary' as const, available: false }
+    const smoke = await probeCommand(executable, ['--version']).catch(() => undefined)
+    return smoke !== undefined && smoke.exitCode === 0
+      ? { name, kind: 'binary' as const, available: true, executable }
+      : { name, kind: 'binary' as const, available: false, executable }
+  }))
+
+  const styleProbes = await Promise.all(styles.map(async ({ name }) => {
+    const probe = await probeCommand('/Library/TeX/texbin/kpsewhich', [`${name}.sty`]).catch(() => undefined)
+    const resolved = probe !== undefined && probe.exitCode === 0 ? probe.stdout.trim().split('\n')[0] : undefined
+    return resolved !== undefined && resolved.length > 0
+      ? { name, kind: 'style' as const, available: true, executable: resolved }
+      : { name, kind: 'style' as const, available: false }
+  }))
+
+  return [...binaryProbes, ...styleProbes]
 }
 
 /** Register the VeryMath glossary and paper tools. */
@@ -1114,6 +1196,63 @@ export const apply = (ctx: Context, config: Config = {}): void => {
             }
           : {}),
       }
+    },
+  }))
+
+  ctx.tools.register(defineTool({
+    name: 'verymath_beamer_check',
+    description: 'Probe the local TeX toolchain for the math-beamer skill before compiling Beamer decks: latexmk (build entry), xelatex (required by Chinese/bilingual ctex templates), and the forest/ctex LaTeX packages located via kpsewhich. Nothing is installed or compiled. Call before the first math-beamer compile; when it reports unavailable, deliver .tex sources only and surface the install hint instead of compiling.',
+    parameters: {},
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          available: { type: 'boolean' },
+          tools: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                name: { type: 'string' },
+                kind: { type: 'string' },
+                available: { type: 'boolean' },
+                executable: { type: 'string' },
+              },
+            },
+          },
+          hint: { type: 'string' },
+        },
+      },
+      render: (_args, value) => {
+        const result = value as BeamerCheckJson
+        const lines = result.tools.map((tool) => `- ${tool.name} (${tool.kind}): ${tool.available ? `ok${tool.executable !== undefined ? ` ${tool.executable}` : ''}` : 'missing'}`)
+        const status = result.available ? 'TeX toolchain ready for math-beamer' : 'TeX toolchain NOT ready for math-beamer'
+        return [{ type: 'text', text: [status, ...lines, result.hint !== undefined ? `hint: ${result.hint}` : ''].filter(Boolean).join('\n') }]
+      },
+    },
+    async execute() {
+      const tools = await probeBeamerToolchain()
+      const latexmk = tools.find(tool => tool.name === 'latexmk')
+      const xelatex = tools.find(tool => tool.name === 'xelatex')
+      const forest = tools.find(tool => tool.name === 'forest')
+      const available = latexmk?.available === true && xelatex?.available === true && forest?.available === true
+      const missingBinaries = tools.filter(tool => !tool.available && tool.kind === 'binary')
+      const missingStyles = tools.filter(tool => !tool.available && tool.kind === 'style')
+      let hint: string | undefined
+      if (!available) {
+        const parts: string[] = []
+        if (missingBinaries.length > 0) {
+          parts.push(`Install a TeX distribution (macOS: MacTeX or brew install --cask mactex-no-gui; Linux: texlive-full) to provide ${missingBinaries.map(tool => tool.name).join(', ')}.`)
+        }
+        if (missingStyles.length > 0) {
+          parts.push(`LaTeX package(s) ${missingStyles.map(tool => tool.name).join(', ')} not found via kpsewhich (tlmgr install ${missingStyles.map(tool => tool.name).join(' ')}).`)
+        }
+        parts.push('Until then, deliver .tex sources only — do not compile, per the math-beamer gate discipline.')
+        hint = parts.join(' ')
+      }
+      return { available, tools, ...(hint !== undefined ? { hint } : {}) }
     },
   }))
 }

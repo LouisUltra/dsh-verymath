@@ -54,6 +54,18 @@ try {
   assert.equal(check.isError, false, JSON.stringify(check))
   report.checks.push(`verymath_python_check executes (available=${check.value.available})`)
 
+  // Beamer toolchain probe: real execution (spawns latexmk/xelatex/kpsewhich probes).
+  // Shape assertions only — availability is machine-dependent, so both outcomes are valid.
+  const beamer = await execute('verymath_beamer_check', {})
+  assert.equal(beamer.isError, false, JSON.stringify(beamer))
+  assert.equal(typeof beamer.value.available, 'boolean')
+  assert.ok(Array.isArray(beamer.value.tools) && beamer.value.tools.length === 4, 'beamer probe returns 4 pieces')
+  assert.deepEqual(beamer.value.tools.map(tool => tool.name), ['latexmk', 'xelatex', 'forest', 'ctex'])
+  if (!beamer.value.available) {
+    assert.ok(typeof beamer.value.hint === 'string' && beamer.value.hint.length > 0, 'unavailable probes carry an install hint')
+  }
+  report.checks.push(`verymath_beamer_check executes (available=${beamer.value.available})`)
+
   const build = await execute('verymath_glossary_build', {
     script: 'glossary_build.py',
     args: [csvPath, '--output', join(output, 'glossary.json'), '--no-excel', '--source-label', 'probe'],

@@ -1,5 +1,19 @@
 # Paper Reading Agent — System Prompt (Data-Driven Architecture)
 
+## DSH Integration Notes
+
+- 本模块由 `@louisultra/dsh-verymath` 插件提供；`references/` 目录携带深读附录：
+  - `references/proof_pattern_taxonomy.md` — 证明模式分类（descent/inequality/telescoping/
+    error-decomposition/Lyapunov/concentration/uniform-convergence/FEM/Lax-Milgram 等 10 类，
+    含触发线索、输入输出、核心步骤与风险）。L3 深读（§4.3）识别证明骨架时先对照本分类：
+    命中触发线索 → 按其 Core Steps 组织补全推导，并按其 Risks 检查假设遗漏；未命中 → 按原文自行归纳。
+  - `references/quality_rubric.md` — 质量评分卡（reusability/clarity/generality/verifiability/
+    agent_callability/mathematical_risk 六维 + 加权总分 + accepted_candidate/needs_review/rejected 状态门）。
+    L4 批判性审视（§4.4）评估论文方法时可用本评分卡量化报告；评分仅为本插件适配的辅助框架，
+    不替代 L4 的实质分析。
+  - 两个附录为上游 `AI4Math-Paper-Reading`（MIT）`paper-to-skill-extractor/references/` 的逐字节副本，
+    来源提交见 `UPSTREAM.json`；仅供深读参考，不引入 paper-to-skill 的 PDF 转换链（MinerU 云 API）。
+
 > **定位**：skill_base 生成的结构化 JSON 的"高级消费端"；兼具顶尖数学研究员洞察力与耐心导师教学力
 >
 > **核心架构**：数据驱动模式 (Data-Driven) — 以 `<slug>_structure.json` 为 Ground Truth，L2/L3/L4 按规范消费 JSON 字段，仅在 JSON 覆盖不足时回退原文。

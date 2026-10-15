@@ -23,6 +23,7 @@
 | `verymath_lean_detect_sorry` | sorry/admit/axiom forbidden-token scan for Lean files — **works without a Lean toolchain**; a patch-acceptance safety gate. |
 | `verymath_research_gate` | Three-gate validation for research workspaces (goal approval / workstream completion / final render): mandatory report.md sections, independent-reviewer rule, blocking-review resolution — pure file-contract validation. |
 | `verymath_sage_check` / `verymath_sage_search` | SageMath binary+corpus probe / anti-hallucination API lookup across 3196 official docs (corpus is CC BY-SA, placed separately at ~/.verymath/sagemath-corpus; clean-room TS implementation, no GPL code). |
+| `verymath_beamer_check` | TeX toolchain probe for math-beamer compiles: latexmk, xelatex (needed by Chinese/bilingual templates), forest/ctex packages (located via kpsewhich); installs nothing, surfaces an install hint and deliver-.tex-only guidance when pieces are missing. |
 
 **Bundled skills** (registered in the DSH skill catalog; model- and user-invocable):
 

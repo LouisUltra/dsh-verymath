@@ -17,6 +17,9 @@ This package contains code and skill content adapted from third-party sources.
 
 - Source: https://github.com/VeryMath/AI4Math-Paper-Reading
 - Directories adapted: `skills/math-paper-reading/` (agent_router.md, skill_*.md);
+  `skills/math-paper-reading/references/` (proof_pattern_taxonomy.md, quality_rubric.md —
+  verbatim copies of the upstream `paper-to-skill-extractor/references/` files, bundled as
+  deep-read appendix references per the council P3 verdict);
   `skills/graph-theory-paper-reading/SKILL.md` (verbatim + DSH notes);
   `skills/after-ocr/` (SKILL.md, scripts/, references/, tests/ verbatim + DSH notes)
 - License: MIT (see the upstream repository)

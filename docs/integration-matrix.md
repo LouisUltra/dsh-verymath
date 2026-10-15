@@ -210,7 +210,7 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 
 ### 4. 其余仓库最终状态
 - math-beamer：TeX Live 2025 本机已装，seminar-minimal-zh 现场编译出 PDF（exit 0）→
-  **下一个接入对象**（待 beamer_check 工具）
+  **已接入**（0.3.1：bundle + `verymath_beamer_check` 探测工具，探测 latexmk/xelatex/forest/ctex）
 - paper-to-skill：MinerU 云 API 是唯一转换路径（隐私考量维持暂缓）；mineru 4.0.12 本地模式存在（重）
 - agent-laboratory-workflow：维持暂缓（conda 重部署+patch 脆弱）
 - co-mathematician / textbook-copilot：维持概念提炼结论

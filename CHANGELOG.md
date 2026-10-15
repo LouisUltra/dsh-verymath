@@ -3,6 +3,28 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.1] - 2026-10-16
+
+### Added
+
+- `verymath_beamer_check`: TeX toolchain probe for the math-beamer skill
+  (latexmk, xelatex, forest/ctex packages via kpsewhich; per-piece detail +
+  install hint, installs nothing) — closes the README's promised next step.
+- Paper-to-skill appendix (council P3): `proof_pattern_taxonomy.md` +
+  `quality_rubric.md` copied verbatim into `math-paper-reading/references/`
+  as deep-read references; L3 consults the proof-pattern taxonomy, L4 can
+  score methods with the quality rubric. The full paper-to-skill chain
+  stays unbundled (MinerU cloud-API privacy).
+
+### Fixed
+
+- MATLAB desktop-attachment status: the earlier "existing/auto modes crash"
+  claim was a test-client framing artifact (Content-Length framing vs the
+  MCP newline-delimited JSON stdio contract), not a server bug. Clean
+  reproduction with the official dsh-mcp-client shows desktop attach works
+  on v0.14.0 and v0.12.0; docs corrected (`docs/matlab-connection-status.md`).
+  The matlab-runner skill now documents the desktop-attach execution path.
+
 ### Added (late 0.3.0 round)
 
 - Sage execution path verified: miniforge `sage=10.9` env installed; the

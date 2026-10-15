@@ -23,6 +23,7 @@
 | `verymath_lean_detect_sorry` | Lean 文件的 sorry/admit/axiom 禁用词扫描——**无需 Lean 工具链**，patch 验收安全门。 |
 | `verymath_research_gate` | 研究工作区三道闸门校验（目标批准/工作流完成/最终渲染）：report.md 强制三节、独立审阅人、阻断性评审解决状态——纯文件契约校验。 |
 | `verymath_sage_check` / `verymath_sage_search` | SageMath 二进制+语料探测 / 3196 篇官方文档的**反幻觉 API 查询**（语料 CC BY-SA，独立放置于 ~/.verymath/sagemath-corpus；干净房间 TS 实现，无 GPL 代码）。 |
+| `verymath_beamer_check` | math-beamer 编译前的 TeX 工具链探测：latexmk、xelatex（中文模板需要）、forest/ctex 宏包（kpsewhich 定位）；不安装不编译，缺件时给安装提示并要求只交付 .tex 源码。 |
 
 **随包技能**（注册进 DSH 技能目录，模型与用户均可触发）：
 
