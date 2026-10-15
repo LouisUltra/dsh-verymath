@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `verymath_beamer_check`: TeX toolchain probe for the math-beamer skill
   (latexmk, xelatex, forest/ctex packages via kpsewhich; per-piece detail +
   install hint, installs nothing) — closes the README's promised next step.
-- Paper-to-skill appendix (council P3): `proof_pattern_taxonomy.md` +
+- Paper-to-skill appendix (review decision): `proof_pattern_taxonomy.md` +
   `quality_rubric.md` copied verbatim into `math-paper-reading/references/`
   as deep-read references; L3 consults the proof-pattern taxonomy, L4 can
   score methods with the quality rubric. The full paper-to-skill chain

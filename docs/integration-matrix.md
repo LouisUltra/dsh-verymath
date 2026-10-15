@@ -1,7 +1,7 @@
-# VeryMath → dsh-verymath 接入矩阵（工作草稿 v1）
+# VeryMath → dsh-verymath 接入矩阵
 
-> 状态：Phase2 逆向分析进行中（4×council-glm 并行）。本文件记录**已实证**的事实，
-> 评审结论回来后合并成 v2 终稿。每条事实标注证据来源（命令/文件路径）。
+> 本文件记录接入决策与**已实证**的事实，每条事实标注证据来源（命令/文件路径）。
+> 逆向分析阶段的多模型并行评审结论已合并进本文；原始评审材料存于开发机的 research/reports/（不随包分发）。
 
 ## 已实证事实（2026-10-15 主线验证）
 
@@ -31,7 +31,7 @@
   b) 或者 references 走 `sage_ref_search.py` 按需查询但文件留在外部路径（DSH_HOME 配置指向）。
 - Evolving examples 12MB —— 同样按需，不随包。
 
-## 方向 × 覆盖现状（issue #152 六方向）
+## 方向 × 覆盖现状（issue #152 六方向，含教材；issue 表格本身五行不含教材）
 
 | 方向 | 上游仓库 | 现状 | 本轮目标 |
 | --- | --- | --- | --- |
@@ -83,7 +83,7 @@
 - 结论：三个脚本可直接包成 verymath_evolve_validate / verymath_evolve_summarize 工具，
   interactive_session 的 run/tail/stop 留给 DSH Jobs（或先 skill 内 shell 引导）。
 
-### council task-3 已回（研究工作流方向）—— 核心结论
+### 评审结论：研究工作流方向
 
 - **Evolving = 最佳首个试点**：1 包 4 脚本零声明依赖、合成测试覆盖进程生命周期（假 CLI 全链路）、
   validate_project/summarize_run 与 verymath_paper_validate 工具模式同构、run/tail/stop ↔ DSH Jobs 一一映射。
@@ -95,7 +95,7 @@
   CJK 数学别名评分表（skills.py:30-41）、PDF 材料提取的进程隔离+限额纪律（materials.py:170-186）。
 - Evolving SKILL.md 自带跨技能路由出口："演化结果产生定理主张 → 路由到 proof-blueprint-review 或 lean-formalization"。
 
-### council task-1 已回（写作与优化方向）—— 核心结论
+### 评审结论：写作与优化方向
 
 **Writing（MIT, commit 418eb2e）**：
 - `paper-writing`（8步写作流 + 6子技能 + 5模板）→ **skill，优先级高**：零依赖零脚本；需扁平化重构
@@ -118,7 +118,7 @@
 - **benchmark 数字不可信**（宣称 100 问题 100% 通过率但无复现脚本，AI 生成痕迹）——接入文案不引用。
 - 黄金联动线：osqp 的 outputs/<run_id>/verification.json 作为 paper-writing "experiment 型断言"标准证据。
 
-### council task-4 已回（论文阅读深挖 + 独立工具）—— 核心结论
+### 评审结论：论文阅读深挖 + 独立工具
 
 **接入（P1）**：
 - `graph-theory-paper-reading` → 第 3 个捆绑技能目录（零代码接入，VeryMathSkillProvider 自动扫描；
@@ -132,14 +132,14 @@
 
 **不接**：
 - paper-to-skill 9 技能链（conda+MinerU 云 API 隐私+下载审批超 MVP）；仅摘 proof_pattern_taxonomy.md +
-  quality_rubric.md 做深读附录（P3）。
+  quality_rubric.md 做深读附录。
 - matlab-runner（无 MATLAB 学生触发即 MCP_UNAVAILABLE，死重+误导；借鉴其错误九分类/调用预算到工具层文档）。
 - textbook-copilot（独立 app，Apache-2.0 许可差异；read-pages.mjs 零 Python PDF 读取器可后摘）。
 
 **已接入部分的行为缺口（E 专项，7 项）**：requirements-ai.txt 缺失、upsert 未进 SKILL 工具表、
 exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cache 污染、math-paper-reading 引用不存在的 examples/。
 
-### council task-2 已回（计算与形式化方向）—— 核心结论（4/4 齐了）
+### 评审结论：计算与形式化方向
 
 **Computational-Mathematics（MIT）→ 高优先第一批**：
 - `least-squares` 整技能随包（零脚本零运行时，12 级降级链，环境检测指引与 verymath_python_check 无缝衔接）。
@@ -155,12 +155,12 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
   版本从 lean-toolchain 文件读（上游 tool_status.py:33-41）。
 - GB 级工具链不随包——上游本就是"检测+引导+批准后安装"设计；共享工作区 ~/.ai4math/lean-workspace 概念带入。
 
-**Sagemath-skill（GPLv3 ⚠）→ P3 完全不集成（当前证据下最优解）**：
+**Sagemath-skill（GPLv3 ⚠）→ 完全不集成（当前证据下最优解）**：
 - GPLv3 传染 + 语料 47.5MB 膨胀 npm 包 + Windows 强制 WSL + 上游零测试 + 技能契约依赖全量语料。
 - 附条件升级路径：目录隔离+子进程调用组合（需法务确认 mere-aggregation）；或独立 GPL 发行渠道。
 - `verymath_sage_check` 探针可 TS 独立重写（不携带 GPL 文件），但属法务确认项，MVP 不碰。
 
-## 待评审输入（4 个 council-glm 报告将回答）
+## 评审输入（多模型并行评审已回答）
 
 1. Writing/Optimization 各子技能的依赖与测试可行性（B/D/E）
 2. Lean 接入形态：包 doctor 为 verymath_lean_check 工具 vs 技能内嵌
@@ -169,7 +169,7 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 5. paper-to-skill/after-ocr/graph-theory 的优先级与体积
 6. matlab-runner 对无 MATLAB 学生的真实价值
 
-## 决策待定项（Phase3 需收敛）
+## 决策待定项（已收敛）
 
 - [ ] SageMath：集成（隔离方式）/ 只留安装指引 / 完全不集成
 - [ ] 大体积 references 的分发模型（随包 / 按需下载 / 外部路径）
@@ -177,16 +177,16 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 - [ ] Auto-Research 与我们已接入 paper-to-skill 的关系（issue #152 表格里 paper-to-skill 属论文阅读方向）
 
 ---
-> 评审报告回来后本文件升级为 v2 终稿；council 输出存于 research/reports/
+> 决策均已收敛并落地；原始评审材料存于开发机 research/reports/（不随包）
 
 
 ---
 
-## FINAL STATUS (2026-10-15, user-directed completion round)
+## 最终状态（2026-10-15 完成轮）
 
-## 四个用户质询的最终处置
+## 各项决策的最终处置
 
-### 1. Sagemath（用户选路线 a：TS 干净重写）✅ 完成
+### 1. Sagemath（选定的路线：TS 干净重写）✅ 完成
 - `src/core/sage.ts`：干净房间实现评分契约（无 GPL 代码），语料独立于包（~/.verymath/sagemath-corpus，CC BY-SA）
 - `verymath_sage_check`（corpus+binary 双探测）+ `verymath_sage_search`（反幻觉查询）
 - 实测：3196 行 manifest 30ms 加载、搜索 25ms、真语料摘录；E2E 通过（corpus 可用、binary 缺失如实降级）
@@ -216,10 +216,10 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 - co-mathematician / textbook-copilot：维持概念提炼结论
 
 ## 技能/工具最终清单
-- 15 bundled skills（math-glossary, math-paper-reading, graph-theory-paper-reading, after-ocr,
+- 16 bundled skills（math-glossary, math-paper-reading, graph-theory-paper-reading, after-ocr,
   paper-writing, discover-math-problems, proof-blueprint-review, open-problem-research-pipeline,
-  least-squares, invariant-computation, mixed-integer-programming, osqp-solver,
+  least-squares, invariant-computation, mixed-integer-programming, osqp-solver, math-beamer,
   lean-formalization, lean-setup, matlab-runner）
 - 14 model tools（glossary ×3, python_check, osqp ×2, ocr_scan, lean_detect_sorry,
-  sage ×2, paper_validate, paper_graph）
+  sage ×2, paper_validate, paper_graph, research_gate, beamer_check）
 - 外部集成：MATLAB MCP server（5 tools）、Sage corpus（3196 docs）

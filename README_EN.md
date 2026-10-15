@@ -96,7 +96,7 @@ This package is MIT licensed (`LICENSE`). Skill content and Python scripts are a
 - **Paper dependency graph as a tool**: upstream `skill_base`/`skill_pathway_proof` explicitly forbid model-side manual graph traversal but ship no merge/topology scripts (the model regenerates one each time). This plugin implements a deterministic TypeScript engine (`verymath_paper_graph`); the paper-reading critical path no longer requires Python.
 - **Glossary read/write loop**: `verymath_glossary_upsert` maintains the upstream contract invariants (term_id derivation, ordering, contiguous idx) that upstream leaves to hand-edits.
 - **Disambiguation**: queries return examples and support subfield filtering, implementing the upstream usage-guide strategies that could not execute in DSH before.
-- **Honest scope**: this plugin performs structural validation (dependency integrity, cycles, dangling/isolated nodes) and does not verify mathematical proof correctness — consistent with the upstream `skill_base` capability boundary.
+- **Validation scope**: this plugin performs structural validation (dependency integrity, cycles, dangling/isolated nodes) and does not verify mathematical proof correctness — consistent with the upstream `skill_base` capability boundary.
 
 ## Known limitations
 

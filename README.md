@@ -45,8 +45,8 @@
 | `lean-formalization` | Lean 4 形式化、证明修复、sorry 补全与 patch 审查（编码代理优先，GB 级工具链留在用户机器）。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib 工作区的检测、安装引导与两级就绪度报告。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
-> 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill 技能本体（GPLv3；已按路线 a 以
-> 干净房间 TS 实现查询能力，语料独立分发）、paper-to-skill 全链（MinerU 云 API 隐私考量；本地 mineru 可选）、
+> 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill 技能本体（GPLv3；查询能力已按
+> 评审结论以干净房间 TS 重实现，语料独立分发）、paper-to-skill 全链（MinerU 云 API 隐私考量；本地 mineru 可选）、
 > agent-laboratory-workflow（外部 LLM API+重部署）、scientific-computing-reproduction（Codex 生态耦合，零依赖脚本按需摘取）、
 > co-mathematician（独立 App，仅提炼概念）、textbook-copilot（Apache-2.0 独立应用）。
 
@@ -96,7 +96,7 @@ npm run check       # 全部
 - **论文依赖图工具化**：上游 `skill_base`/`skill_pathway_proof` 明文要求"严禁大模型手工遍历拼接 JSON"，但上游仓库并未提供合并/拓扑脚本（模型每次现场生成）。本插件用 TypeScript 实现了确定性引擎（`verymath_paper_graph`），论文阅读关键路径不再依赖 Python。
 - **术语读写闭环**：`verymath_glossary_upsert` 自动维护上游合同的不变量（term_id 派生、排序、连续 idx），上游只能靠模型手改 JSON。
 - **消歧支持**：查询返回例句、支持按子领域过滤，对应上游 usage-guide 的消歧策略（上游 DSH 化后原本无法执行）。
-- **诚实边界**：本插件做结构层验证（依赖完整性、环检测、断链/孤立节点），不验证数学证明的正确性——这与上游 `skill_base` 的能力边界声明一致。
+- **验证边界**：本插件做结构层验证（依赖完整性、环检测、断链/孤立节点），不验证数学证明的正确性——这与上游 `skill_base` 的能力边界声明一致。
 
 ## 已知限制
 
