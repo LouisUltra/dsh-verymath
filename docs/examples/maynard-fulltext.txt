@@ -1,0 +1,1300 @@
+ 
+
+ [1311.4600] Small gaps between primes 
+
+ Small gaps between primes 
+
+ James Maynard
+
+ Address:  Centre de recherches mathématiques,
+Université de Montréal,
+Pavillon André-Aisenstadt,
+2920 Chemin de la tour, Room 5357,
+Montréal (Québec) H3T 1J4
+
+ Email address: maynardj@dms.umontreal.ca 
+
+ Abstract. 
+
+ We introduce a refinement of the GPY sieve method for studying prime k k -tuples and small gaps between primes. This refinement avoids previous limitations of the method, and allows us to show that for each k k , the prime k k -tuples conjecture holds for a positive proportion of admissible k k -tuples. In particular, lim inf n ( p n + m − p n ) < ∞ \liminf_{n}(p_{n+m}-p_{n})<\infty for every integer m m . We also show that lim inf ( p n + 1 − p n ) ≤ 600 \liminf(p_{n+1}-p_{n})\leq 600 , and, if we assume the Elliott-Halberstam conjecture, that lim inf n ( p n + 1 − p n ) ≤ 12 \liminf_{n}(p_{n+1}-p_{n})\leq 12 and lim inf n ( p n + 2 − p n ) ≤ 600 \liminf_{n}(p_{n+2}-p_{n})\leq 600 . 
+
+ 1. Introduction 
+
+ We say that a set ℋ = { h 1 , … , h k } \mathcal{H}=\{h_{1},\dotsc,h_{k}\} of distinct non-negative integers is ‘admissible’ if, for every prime p p , there is an integer a p a_{p} such that a p ≢ h ( mod p ) a_{p}\nequiv h\pmod{p} for all h ∈ ℋ h\in\mathcal{H} . We are interested in the following conjecture. 
+
+ Conjecture (Prime k k -tuples conjecture) . 
+
+ Let ℋ = { h 1 , … , h k } \mathcal{H}=\{h_{1},\dots,h_{k}\} be admissible. Then there are infinitely many integers n n such that all of n + h 1 n+h_{1} , … \dotsc , n + h k n+h_{k} are prime. 
+
+ When k > 1 k>1 no case of the prime k k -tuples conjecture is currently known. Work on approximations to the prime k k -tuples conjecture has been very successful in showing the existence of small gaps between primes, however. In their celebrated paper [ 5 ] , Goldston, Pintz and Yıldırım introduced a new method for counting tuples of primes, and this allowed them to show that 
+
+ (1.1) 
+
+ lim inf n p n + 1 − p n log ⁡ p n = 0 . \liminf_{n}\frac{p_{n+1}-p_{n}}{\log{p_{n}}}=0. 
+
+ The recent breakthrough of Zhang [ 9 ] managed to extend this work to prove 
+
+ (1.2) 
+
+ lim inf n ( p n + 1 − p n ) ≤ 70 000 000 , \liminf_{n}(p_{n+1}-p_{n})\leq$70\,000\,000$, 
+
+ thereby establishing for the first time the existence of infinitely many bounded gaps between primes. Moreover, it follows from Zhang’s theorem the that number of admissible sets of size 2 contained in [ 1 , x ] 2 [1,x]^{2} which satisfy the prime 2 2 -tuples conjecture is ≫ x 2 \gg x^{2} for large x x . Thus, in this sense, a positive proportion of admissible sets of size 2 satisfy the prime 2-tuples conjecture. The recent polymath project [ 7 ] has succeeded in reducing the bound ( 1.2 ) to 4680, by optimizing Zhang’s arguments and introducing several new refinements. 
+
+ The above results have used the ‘GPY method’ to study prime tuples and small gaps between primes, and this method relies heavily on the distribution of primes in arithmetic progressions. Given θ > 0 \theta>0 , we say the primes have ‘level of distribution θ \theta ’ 1 1 
+ 1 
+
+ We note that different authors have given slightly different names or definitions to this concept. For the purposes of this paper, ( 1.3 ) will be our definition of the primes having level of distribution θ \theta . if, for every A > 0 A>0 , we have 
+
+ (1.3) 
+
+ ∑ q ≤ x θ max ( a , q ) = 1 | π ( x ; q , a ) − π ⁡ ( x ) φ ⁡ ( q ) | ≪ A x ( log ⁡ x ) A . \sum_{q\leq x^{\theta}}\max_{(a,q)=1}\Bigl|\pi(x;q,a)-\frac{\pi(x)}{\varphi(q)}\Bigr|\ll_{A}\frac{x}{(\log{x})^{A}}. 
+
+ The Bombieri-Vinogradov theorem establishes that the primes have level of distribution θ \theta for every θ < 1 / 2 \theta<1/2 , and Elliott and Halberstam [ 1 ] conjectured that this could be extended to every θ < 1 \theta<1 . Friedlander and Granville [ 2 ] have shown that ( 1.3 ) cannot hold with x θ x^{\theta} replaced with x / ( log ⁡ x ) B x/(\log{x})^{B} for any fixed B B , and so the Elliott-Halberstam conjecture is essentially the strongest possible result of this type. 
+
+ The original work of Goldston, Pintz and Yıldırım showed the existence of bounded gaps between primes if ( 1.3 ) holds for some θ > 1 / 2 \theta>1/2 . Moreover, under the Elliott-Halberstam conjecture one had lim inf n ( p n + 1 − p n ) ≤ 16 \liminf_{n}(p_{n+1}-p_{n})\leq 16 . The key breakthrough of Zhang’s work was in establishing that a slightly weakened form of ( 1.3 ) holds for some θ > 1 / 2 \theta>1/2 . 
+
+ If one looks for bounded length intervals containing two or more primes, then the GPY method fails to prove such strong results. Unconditionally we are only able to improve upon the trivial bound from the prime number theorem by a constant factor [ 4 ] , and even assuming the Elliott-Halberstam conjecture, the best available result [ 5 ] is 
+
+ (1.4) 
+
+ lim inf n p n + 2 − p n log ⁡ p n = 0 . \liminf_{n}\frac{p_{n+2}-p_{n}}{\log{p_{n}}}=0. 
+
+ The aim of this paper is to introduce a refinement of the GPY method which removes the barrier of θ = 1 / 2 \theta=1/2 to establishing bounded gaps between primes, and allows us to show the existence of arbitrarily many primes in bounded length intervals. This answers the second and third questions posed in [ 5 ] on extensions of the GPY method (the first having been answered by Zhang’s result). Our new method also has the benefit that it produces numerically superior results to previous approaches. 
+
+ Theorem 1.1 . 
+
+ Let m ∈ ℕ m\in\mathbb{N} . We have 
+
+ lim inf n ( p n + m − p n ) ≪ m 3 ​ e 4 ​ m . \liminf_{n}(p_{n+m}-p_{n})\ll m^{3}e^{4m}. 
+
+ Terence Tao (private communication) has independently proven Theorem 1.1 (with a slightly weaker bound) at much the same time. He uses a similar method; the steps are more-or-less the same but the calculations are done differently. We will indicate some of the differences in our proofs as we go along. 
+
+ We see that the bound in Theorem 1.1 is quite far from the conjectural bound of approximately m ​ log ⁡ m m\log{m} predicted by the prime m m -tuples conjecture. 
+
+ Our proof naturally generalizes (but with a weaker upper bound) to many subsequences of the primes which have a level of distribution θ > 0 \theta>0 . For example, we can show corresponding results where the primes are contained in short intervals [ N , N + N 7 / 12 + ϵ ] [N,N+N^{7/12+\epsilon}] for any ϵ > 0 \epsilon>0 or in an arithmetic progression modulo q ≪ ( log ⁡ N ) A q\ll(\log{N})^{A} . In particular, our method gives results for simultaneously prime values of linear functions, which might have specific interest. Given k k distinct linear functions L i ​ ( n ) = a i ​ n + b i L_{i}(n)=a_{i}n+b_{i} ( 1 ≤ i ≤ k 1\leq i\leq k ) with positive integer coefficients such that the product function Π ⁡ ( n ) = ∏ i = 1 k L i ​ ( n ) \Pi(n)=\prod_{i=1}^{k}L_{i}(n) has no fixed prime divisor, the method presented here shows that there are infinitely many integers n n such that at least ( 1 / 4 + o k → ∞ ​ ( 1 ) ) ​ log ⁡ k (1/4+o_{k\rightarrow\infty}(1))\log{k} of the L i ​ ( n ) L_{i}(n) are prime. 
+
+ Theorem 1.2 . 
+
+ Let m ∈ ℕ m\in\mathbb{N} . Let r ∈ ℕ r\in\mathbb{N} be sufficiently large depending on m m , and let 𝒜 = { a 1 , a 2 , … , a r } \mathcal{A}=\{a_{1},a_{2},\dotsc,a_{r}\} be a set of r r distinct integers. Then we have 
+
+ # ⁡ { { h 1 , … , h m } ⊆ 𝒜 : for infinitely many  n  all of  n + h 1 ,  … ,  n + h m  are prime } # { { h 1 , … , h m } ⊆ 𝒜 } ≫ m 1 . \frac{\#\{\{h_{1},\dotsc,h_{m}\}\subseteq\mathcal{A}:\text{for infinitely many $n$ all of $n+h_{1}$, $\dotsc$, $n+h_{m}$ are prime}\}}{\#\{\{h_{1},\dotsc,h_{m}\}\subseteq\mathcal{A}\}}\gg_{m}1. 
+
+ Thus a positive proportion of admissible m m -tuples satisfy the prime m m -tuples conjecture for every m m , in an appropriate sense. 
+
+ Theorem 1.3 . 
+
+ We have 
+
+ lim inf n ( p n + 1 − p n ) ≤ 600 . \liminf_{n}(p_{n+1}-p_{n})\leq 600. 
+
+ We emphasize that the above result does not incorporate any of the technology used by Zhang to establish the existence of bounded gaps between primes. The proof is essentially elementary, relying only on the Bombieri-Vinogradov theorem. Naturally, if we assume that the primes have a higher level of distribution, then we can obtain stronger results. 
+
+ Theorem 1.4 . 
+
+ Assume that the primes have level of distribution θ \theta for every θ < 1 \theta<1 . Then 
+
+ lim inf n ( p n + 1 − p n ) \displaystyle\liminf_{n}(p_{n+1}-p_{n}) 
+ ≤ 12 , \displaystyle\leq 12, 
+
+ lim inf n ( p n + 2 − p n ) \displaystyle\liminf_{n}(p_{n+2}-p_{n}) 
+ ≤ 600 . \displaystyle\leq 600. 
+
+ Although the constant 12 12 of Theorem 1.4 appears to be optimal with our method in its current form, the constant 600 600 appearing in Theorem 1.3 and Theorem 1.4 is certainly not optimal. By performing further numerical calculations our method could produce a better bound, and also most of the ideas of Zhang’s work (and the refinements produced by the polymath project) should be able to be combined with this method to reduce the constant further. We comment that the assumption of the Elliott-Halberstam conjecture allows us to improve the bound on Theorem 1.1 to O ⁡ ( m 3 ​ e 2 ​ m ) O(m^{3}e^{2m}) . 
+
+ 2. An improved GPY sieve method 
+
+ We first give an explanation of the key idea behind our new approach. The basic idea of the GPY method is, for a fixed admissible set ℋ = { h 1 , … , h k } \mathcal{H}=\{h_{1},\dotsc,h_{k}\} , to consider the sum 
+
+ (2.1) 
+
+ S ⁡ ( N , ρ ) \displaystyle S(N,\rho) 
+ = ∑ N ≤ n < 2 ​ N ( ∑ i = 1 k χ ℙ ​ ( n + h i ) − ρ ) ​ w n . \displaystyle=\sum_{N\leq n<2N}\Bigl(\sum_{i=1}^{k}\chi_{\mathbb{P}}(n+h_{i})-\rho\Bigr)w_{n}. 
+
+ Here χ ℙ \chi_{\mathbb{P}} is the characteristic function of the primes, ρ > 0 \rho>0 and w n w_{n} are non-negative weights. If we can show that S ⁡ ( N , ρ ) > 0 S(N,\rho)>0 then at least one term in the sum over n n must have a positive contribution. By the non-negativity of w n w_{n} , this means that there must be some integer n ∈ [ N , 2 ​ N ] n\in[N,2N] such that at least ⌊ ρ + 1 ⌋ \lfloor\rho+1\rfloor of the n + h i n+h_{i} are prime. (Here ⌊ x ⌋ \lfloor x\rfloor denotes the largest integer less than or equal to x x .) Thus if S ⁡ ( N , ρ ) > 0 S(N,\rho)>0 for all large N N , there are infinitely many integers n n for which at least ⌊ ρ + 1 ⌋ \lfloor\rho+1\rfloor of the n + h i n+h_{i} are prime (and so there are infinitely many bounded length intervals containing ⌊ ρ + 1 ⌋ \lfloor\rho+1\rfloor primes). 
+
+ The weights w n w_{n} are typically chosen to mimic Selberg sieve weights. Estimating ( 2.1 ) can be interpreted as a ‘ k k -dimensional’ sieve problem. The standard Selberg k k -dimensional weights (which can be shown to be essentially optimal in other contexts) are 
+
+ (2.2) 
+
+ w n = ( ∑ d | ∏ i = 1 k ( n + h i ) d < R λ d ) 2 , λ d = μ ⁡ ( d ) ​ ( log ⁡ R / d ) k . w_{n}=\Bigl(\sum_{\begin{subarray}{c}d|\prod_{i=1}^{k}(n+h_{i})\\
+d<R\end{subarray}}\lambda_{d}\Bigr)^{2},\qquad\lambda_{d}=\mu(d)(\log{R/d})^{k}. 
+
+ With this choice we find that we just fail to prove the existence of bounded gaps between primes if we assume the Elliott-Halberstam conjecture. The key new idea in the paper of Goldston, Pintz and Yıldırım [ 5 ] was to consider more general sieve weights of the form 
+
+ (2.3) 
+
+ λ d = μ ⁡ ( d ) ​ F ​ ( log ⁡ R / d ) , \lambda_{d}=\mu(d)F(\log{R/d}), 
+
+ for a suitable smooth function F F . Goldston, Pintz and Yıldırım chose F ⁡ ( x ) = x k + l F(x)=x^{k+l} for suitable l ∈ ℕ l\in\mathbb{N} , which has been shown to be essentially optimal when k k is large. This allows us to gain a factor of approximately 2 2 for large k k over the previous choice of sieve weights. As a result we just fail to prove bounded gaps using the fact that the primes have exponent of distribution θ \theta for any θ < 1 / 2 \theta<1/2 , but succeed in doing so if we assume they have level of distribution θ > 1 / 2 \theta>1/2 . 
+
+ The new ingredient in our method is to consider a more general form of the sieve weights 
+
+ (2.4) 
+
+ w n = ( ∑ d i | n + h i ​ ∀ i λ d 1 , … , d k ) 2 . w_{n}=\Bigl(\sum_{d_{i}|n+h_{i}\forall i}\lambda_{d_{1},\dotsc,d_{k}}\Bigr)^{2}. 
+
+ Using such weights with λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} is the key feature of our method. It allows us to improve on the previous choice of sieve weights by an arbitrarily large factor, provided that k k is sufficiently large. It is the extra flexibility gained by allowing the weights to depend on the divisors of each factor individually which gives this improvement. 
+
+ The idea to use such weights is not entirely new. Selberg [ 8 , Page 245] suggested the possible use of similar weights in his work on approximations to the twin prime problem, and Goldston and Yıldırım [ 6 ] considered similar weights in earlier work on the GPY method, but with the support restricted to d i < R 1 / k d_{i}<R^{1/k} for all i i . 
+
+ We comment that our choice of λ d 1 , … , d k \lambda_{d_{1},\dots,d_{k}} will look like 
+
+ (2.5) 
+
+ λ d 1 , … , d k ≈ ( ∏ i = 1 k μ ⁡ ( d i ) ) ​ f ​ ( d 1 , … , d k ) , \lambda_{d_{1},\dots,d_{k}}\approx\Bigl(\prod_{i=1}^{k}\mu(d_{i})\Bigr)f(d_{1},\dots,d_{k}), 
+
+ for a suitable smooth function f f . For our precise choice of λ d 1 , … , d k \lambda_{d_{1},\dots,d_{k}} (given in Proposition 4.1 ) we find it convenient to give a slightly different form of λ d 1 , … , d k \lambda_{d_{1},\dots,d_{k}} , but weights of the form ( 2.5 ) should produce essentially the same results. 
+
+ 3. Notation 
+
+ We shall view k k as a fixed integer, and ℋ = { h 1 , … , h k } \mathcal{H}=\{h_{1},\dots,h_{k}\} as a fixed admissible set. In particular, any constants implied by the asymptotic notation o o , O O or ≪ \ll may depend on k k and ℋ \mathcal{H} . We will let N N denote a large integer, and all asymptotic notation should be interpreted as referring to the limit N → ∞ N\rightarrow\infty . 
+
+ All sums, products and suprema will be assumed to be taken over variables lying in the natural numbers ℕ = { 1 , 2 , … } \mathbb{N}=\{1,2,\dots\} unless specified otherwise. The exception to this is when sums or products are over a variable p p , which instead will be assumed to lie in the prime numbers ℙ = { 2 , 3 , … , } \mathbb{P}=\{2,3,\dots,\} . 
+
+ Throughout the paper, φ \varphi will denote the Euler totient function, τ r ​ ( n ) \tau_{r}(n) the number of ways of writing n n as a product of r r natural numbers and μ \mu the Moebius function. We will let ϵ \epsilon be a fixed positive real number, and we may assume without further comment that ϵ \epsilon is sufficiently small at various stages of our argument. We let p n p_{n} denote the n t ​ h n^{th} prime, and # ​ 𝒜 \#\mathcal{A} denote the number of elements of a finite set 𝒜 \mathcal{A} . We use ⌊ x ⌋ \lfloor x\rfloor to denote the largest integer n ≤ x n\leq x , and ⌈ x ⌉ \lceil x\rceil the smallest integer n ≥ x n\geq x . We let ( a , b ) (a,b) be the greatest common divisor of integers a a and b b . Finally, [ a , b ] [a,b] will denote the closed interval on the real line with endpoints a a and b b , except for in Section 5 where it will denote the least common multiple of integers a a and b b instead. 
+
+ 4. Outline of the proof 
+
+ We will find it convenient to choose our weights w n w_{n} to be zero unless n n lies in a fixed residue class v 0 ( mod W ) v_{0}\pmod{W} , where W = ∏ p ≤ D 0 p W=\prod_{p\leq D_{0}}p . This is a technical modification which removes some minor complications in dealing with the effect of small prime factors. The precise choice of D 0 D_{0} is unimportant, but it will suffice to choose 
+
+ (4.1) 
+
+ D 0 = log ⁡ log ⁡ log ⁡ N , D_{0}=\log\log\log{N}, 
+
+ so certainly W ≪ ( log ⁡ log ⁡ N ) 2 W\ll(\log\log{N})^{2} by the prime number theorem. By the Chinese remainder theorem, we can choose v 0 v_{0} such that v 0 + h i v_{0}+h_{i} is coprime to W W for each i i since ℋ \mathcal{H} is admissible. When n ≡ v 0 ( mod W ) n\equiv v_{0}\pmod{W} , we choose our weights w n w_{n} of the form ( 2.4 ). We now wish to estimate the sums 
+
+ (4.2) 
+
+ S 1 \displaystyle S_{1} 
+ = ∑ N ≤ n < 2 ​ N n ≡ v 0 ( mod W ) ( ∑ d i | n + h i ​ ∀ i λ d 1 , … , d k ) 2 , \displaystyle=\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv v_{0}\pmod{W}\end{subarray}}\left(\sum_{d_{i}|n+h_{i}\forall i}\lambda_{d_{1},\dotsc,d_{k}}\right)^{2}, 
+
+ (4.3) 
+
+ S 2 \displaystyle S_{2} 
+ = ∑ N ≤ n < 2 ​ N n ≡ v 0 ( mod W ) ( ∑ i = 1 k χ ℙ ​ ( n + h i ) ) ​ ( ∑ d i | n + h i ​ ∀ i λ d 1 , … , d k ) 2 . \displaystyle=\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv v_{0}\pmod{W}\end{subarray}}\Bigl(\sum_{i=1}^{k}\chi_{\mathbb{P}}(n+h_{i})\Bigr)\left(\sum_{d_{i}|n+h_{i}\forall i}\lambda_{d_{1},\dotsc,d_{k}}\right)^{2}. 
+
+ We evaluate these sums using the following proposition. 
+
+ Proposition 4.1 . 
+
+ Let the primes have exponent of distribution θ > 0 \theta>0 , and let R = N θ / 2 − δ R=N^{\theta/2-\delta} for some small fixed δ > 0 \delta>0 . Let λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} be defined in terms of a fixed smooth function F F by 
+
+ λ d 1 , … , d k = ( ∏ i = 1 k μ ⁡ ( d i ) ​ d i ) ​ ∑ r 1 , … , r k d i | r i ​ ∀ i ( r i , W ) = 1 ​ ∀ i μ ​ ( ∏ i = 1 k r i ) 2 ∏ i = 1 k φ ⁡ ( r i ) ​ F ​ ( log ⁡ r 1 log ⁡ R , … , log ⁡ r k log ⁡ R ) , \lambda_{d_{1},\dotsc,d_{k}}=\Bigl(\prod_{i=1}^{k}\mu(d_{i})d_{i}\Bigr)\sum_{\begin{subarray}{c}r_{1},\dotsc,r_{k}\\
+d_{i}|r_{i}\forall i\\
+(r_{i},W)=1\forall i\end{subarray}}\frac{\mu(\prod_{i=1}^{k}r_{i})^{2}}{\prod_{i=1}^{k}\varphi(r_{i})}F\left(\frac{\log{r_{1}}}{\log{R}},\dotsc,\frac{\log{r_{k}}}{\log{R}}\right), 
+
+ whenever ( ∏ i = 1 k d i , W ) = 1 (\prod_{i=1}^{k}d_{i},W)=1 , and let λ d 1 , … , d k = 0 \lambda_{d_{1},\dotsc,d_{k}}=0 otherwise. Moreover, let F F be supported on ℛ k = { ( x 1 , … , x k ) ∈ [ 0 , 1 ] k : ∑ i = 1 k x i ≤ 1 } \mathcal{R}_{k}=\{(x_{1},\dotsc,x_{k})\in[0,1]^{k}:\sum_{i=1}^{k}x_{i}\leq 1\} .
+Then we have 
+
+ S 1 \displaystyle S_{1} 
+ = ( 1 + o ⁡ ( 1 ) ) ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ I k ​ ( F ) , \displaystyle=\frac{(1+o(1))\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}}I_{k}(F), 
+
+ S 2 \displaystyle S_{2} 
+ = ( 1 + o ⁡ ( 1 ) ) ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k + 1 W k + 1 ​ log ⁡ N ​ ∑ m = 1 k J k ( m ) ​ ( F ) , \displaystyle=\frac{(1+o(1))\varphi(W)^{k}N(\log{R})^{k+1}}{W^{k+1}\log{N}}\sum_{m=1}^{k}J_{k}^{(m)}(F), 
+
+ provided I k ​ ( F ) ≠ 0 I_{k}(F)\neq 0 and J k ( m ) ​ ( F ) ≠ 0 J_{k}^{(m)}(F)\neq 0 for each m m , where 
+
+ I k ​ ( F ) \displaystyle I_{k}(F) 
+ = ∫ 0 1 ⋯ ​ ∫ 0 1 F ​ ( t 1 , … , t k ) 2 ​ d ​ t 1 ​ … ​ d ​ t k , \displaystyle=\int_{0}^{1}\dotsi\int_{0}^{1}F(t_{1},\dotsc,t_{k})^{2}dt_{1}\dotsc dt_{k}, 
+
+ J k ( m ) ​ ( F ) \displaystyle J_{k}^{(m)}(F) 
+ = ∫ 0 1 ⋯ ​ ∫ 0 1 ( ∫ 0 1 F ⁡ ( t 1 , … , t k ) ​ d ​ t m ) 2 ​ d ​ t 1 ​ … ​ d ​ t m − 1 ​ d ​ t m + 1 ​ … ​ d ​ t k . \displaystyle=\int_{0}^{1}\dotsi\int_{0}^{1}\left(\int_{0}^{1}F(t_{1},\dotsc,t_{k})dt_{m}\right)^{2}dt_{1}\dotsc dt_{m-1}dt_{m+1}\dotsc dt_{k}. 
+
+ We recall that if S 2 S_{2} is large compared to S 1 S_{1} , then using the GPY method we can show that there are infinitely many integers n n such that several of the n + h i n+h_{i} are prime. The following proposition makes this precise. 
+
+ Proposition 4.2 . 
+
+ Let the primes have level of distribution θ > 0 \theta>0 . Let δ > 0 \delta>0 and ℋ = { h 1 , … , h k } \mathcal{H}=\{h_{1},\dotsc,h_{k}\} be an admissible set. Let I k ​ ( F ) I_{k}(F) and J k ( m ) ​ ( F ) J_{k}^{(m)}(F) be given as in Proposition 4.1 , and let 𝒮 k \mathcal{S}_{k} denote the set of Riemann-integrable functions F : [ 0 , 1 ] k → ℝ F:[0,1]^{k}\rightarrow\mathbb{R} supported on ℛ k = { ( x 1 , … , x k ) ∈ [ 0 , 1 ] k : ∑ i = 1 k x i ≤ 1 } \mathcal{R}_{k}=\{(x_{1},\dotsc,x_{k})\in[0,1]^{k}:\sum_{i=1}^{k}x_{i}\leq 1\} with I k ​ ( F ) ≠ 0 I_{k}(F)\neq 0 and J k ( m ) ​ ( F ) ≠ 0 J_{k}^{(m)}(F)\neq 0 for each m m . Let 
+
+ M k = sup F ∈ 𝒮 k ∑ m = 1 k J k ( m ) ​ ( F ) I k ​ ( F ) , r k = ⌈ θ ​ M k 2 ⌉ . M_{k}=\sup_{F\in\mathcal{S}_{k}}\frac{\sum_{m=1}^{k}J_{k}^{(m)}(F)}{I_{k}(F)},\qquad\qquad r_{k}=\Bigl\lceil\frac{\theta M_{k}}{2}\Bigr\rceil. 
+
+ Then there are infinitely many integers n n such that at least r k r_{k} of the n + h i n+h_{i} ( 1 ≤ i ≤ k 1\leq i\leq k ) are prime. In particular, lim inf n ( p n + r k − 1 − p n ) ≤ max 1 ≤ i , j ≤ k ⁡ ( h i − h j ) \liminf_{n}(p_{n+r_{k}-1}-p_{n})\leq\max_{1\leq i,j\leq k}(h_{i}-h_{j}) . 
+
+ Proof of Proposition 4.2 . 
+
+ We let S = S 2 − ρ ​ S 1 S=S_{2}-\rho S_{1} , and recall that from Section 2 that if we can show S > 0 S>0 for all large N N , then there are infinitely many integers n n such that at least ⌊ ρ + 1 ⌋ \lfloor\rho+1\rfloor of the n + h i n+h_{i} are prime. 
+
+ We put R = N θ / 2 − δ R=N^{\theta/2-\delta} for a small δ > 0 \delta>0 . By the definition of M k M_{k} , we can choose F 0 ∈ 𝒮 k F_{0}\in\mathcal{S}_{k} such that ∑ m = 1 k J k ( m ) ​ ( F 0 ) > ( M k − δ ) ​ I k ​ ( F 0 ) > 0 \sum_{m=1}^{k}J_{k}^{(m)}(F_{0})>(M_{k}-\delta)I_{k}(F_{0})>0 . Since F 0 F_{0} is Riemann-integrable, there is a smooth function F 1 F_{1} such that ∑ m = 1 k J k ( m ) ​ ( F 1 ) > ( M k − 2 ​ δ ) ​ I k ​ ( F 1 ) > 0 \sum_{m=1}^{k}J_{k}^{(m)}(F_{1})>(M_{k}-2\delta)I_{k}(F_{1})>0 . Using Proposition 4.1 , we can then choose λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} such that 
+
+ S \displaystyle S 
+ = φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ ( log ⁡ R log ⁡ N ​ ∑ j = 1 k J k ( m ) ​ ( F 1 ) − ρ ​ I k ​ ( F 1 ) + o ⁡ ( 1 ) ) \displaystyle=\frac{\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}}\Bigl(\frac{\log{R}}{\log{N}}\sum_{j=1}^{k}J_{k}^{(m)}(F_{1})-\rho I_{k}(F_{1})+o(1)\Bigr) 
+
+ (4.4) 
+
+ ≥ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k ​ I k ​ ( F 1 ) W k + 1 ​ ( ( θ 2 − δ ) ​ ( M k − 2 ​ δ ) − ρ + o ⁡ ( 1 ) ) . \displaystyle\geq\frac{\varphi(W)^{k}N(\log{R})^{k}I_{k}(F_{1})}{W^{k+1}}\Bigl(\Bigl(\frac{\theta}{2}-\delta\Bigr)\Bigl(M_{k}-2\delta\Bigr)-\rho+o(1)\Bigr). 
+
+ If ρ = θ ​ M k / 2 − ϵ \rho=\theta M_{k}/2-\epsilon then, by choosing δ \delta suitably small (depending on ϵ \epsilon ), we see that S > 0 S>0 for all large N N . Thus there are infinitely many integers n n for which at least ⌊ ρ + 1 ⌋ \lfloor\rho+1\rfloor of the n + h i n+h_{i} are prime. Since ⌊ ρ + 1 ⌋ = ⌈ θ ​ M k / 2 ⌉ \lfloor\rho+1\rfloor=\lceil\theta M_{k}/2\rceil if ϵ \epsilon is suitably small, we obtain Proposition 4.2 .
+∎ 
+
+ Thus, if the primes have a fixed level of distribution θ \theta , to show the existence of many of the n + h i n+h_{i} being prime for infinitely many n ∈ ℕ n\in\mathbb{N} we only require a suitable lower bound for M k M_{k} . The following proposition establishes such a bound for different values of k k . 
+
+ Proposition 4.3 . 
+
+ Let k ∈ ℕ k\in\mathbb{N} , and M k M_{k} be as given by Proposition 4.2 . Then 
+
+ (1) 
+
+ We have M 5 > 2 M_{5}>2 . 
+
+ (2) 
+
+ We have M 105 > 4 M_{105}>4 . 
+
+ (3) 
+
+ If k k is sufficiently large, we have M k > log ⁡ k − 2 ​ log ⁡ log ⁡ k − 2 M_{k}>\log{k}-2\log\log{k}-2 . 
+
+ We now prove Theorems 1.1 , 1.2 , 1.3 and 1.4 from Propositions 4.2 and 4.3 . 
+
+ First we consider Theorem 1.3 . We take k = 105 k=105 . By Proposition 4.3 , we have M 105 > 4 M_{105}>4 . By the Bombieri-Vinogradov theorem, the primes have level of distribution θ = 1 / 2 − ϵ \theta=1/2-\epsilon for every ϵ > 0 \epsilon>0 . Thus, if we take ϵ \epsilon sufficiently small, we have θ ​ M 105 / 2 > 1 \theta M_{105}/2>1 . Therefore, by Proposition 4.2 , we have lim inf ( p n + 1 − p n ) ≤ max 1 ≤ i , j ≤ 105 ⁡ ( h i − h j ) \liminf(p_{n+1}-p_{n})\leq\max_{1\leq i,j\leq 105}(h_{i}-h_{j}) for any admissible set ℋ = { h 1 , … , h 105 } \mathcal{H}=\{h_{1},\dotsc,h_{105}\} . By computations performed by Thomas Engelsma (unpublished), we can choose 2 2 
+ 2 
+
+ Explicitly, we can take ℋ = { \mathcal{H}=\{ 0, 10, 12, 24, 28, 30, 34, 42, 48, 52, 54, 64, 70, 72, 78, 82, 90, 94, 100, 112, 114, 118, 120, 124, 132, 138, 148, 154, 168, 174, 178, 180, 184, 190, 192, 202, 204, 208, 220, 222, 232, 234, 250, 252, 258, 262, 264, 268, 280, 288, 294, 300, 310, 322, 324, 328, 330, 334, 342, 352, 358, 360, 364, 372, 378, 384, 390, 394, 400, 402, 408, 412, 418, 420, 430, 432, 442, 444, 450, 454, 462, 468, 472, 478, 484, 490, 492, 498, 504, 510, 528, 532, 534, 538, 544, 558, 562, 570, 574, 580, 582, 588, 594, 598, 600 } . \}. This set was obtained from the website http://math.mit.edu/~primegaps/ maintained by Andrew Sutherland. ℋ \mathcal{H} such that 0 ≤ h 1 < … < h 105 0\leq h_{1}<\dotsc<h_{105} and h 105 − h 1 = 600 h_{105}-h_{1}=600 . This gives Theorem 1.3 . 
+
+ If we assume the Elliott-Halberstam conjecture then the primes have level of distribution θ = 1 − ϵ \theta=1-\epsilon . First we take k = 105 k=105 , and see that θ ​ M 105 / 2 > 2 \theta M_{105}/2>2 for ϵ \epsilon sufficiently small (since M 105 > 4 M_{105}>4 ). Therefore, by Proposition 4.2 , lim inf n ( p n + 2 − p n ) ≤ max 1 ≤ i , j ≤ 105 ⁡ ( h i − h j ) \liminf_{n}(p_{n+2}-p_{n})\leq\max_{1\leq i,j\leq 105}(h_{i}-h_{j}) . Thus, choosing the same admissible set ℋ \mathcal{H} as above, we see lim inf n ( p n + 2 − p n ) ≤ 600 \liminf_{n}(p_{n+2}-p_{n})\leq 600 under the Elliott-Halberstam conjecture. 
+
+ Next we take k = 5 k=5 and ℋ = { 0 , 2 , 6 , 8 , 12 } \mathcal{H}=\{0,2,6,8,12\} , with θ = 1 − ϵ \theta=1-\epsilon again. By Proposition 4.3 we have M 5 > 2 M_{5}>2 , and so θ ​ M 5 / 2 > 1 \theta M_{5}/2>1 for ϵ \epsilon sufficiently small. Thus, by Proposition 4.2 , lim inf n ( p n + 1 − p n ) ≤ 12 \liminf_{n}(p_{n+1}-p_{n})\leq 12 under the Elliott-Halberstam conjecture. This completes the proof of Theorem 1.4 . 
+
+ Finally, we consider the case when k k is large. For the rest of this section, any constants implied by asymptotic notation will be independent of k k . By the Bombieri-Vinogradov theorem, we can take θ = 1 / 2 − ϵ \theta=1/2-\epsilon . Thus, by Proposition 4.3 , we have for k k sufficiently large 
+
+ (4.5) 
+
+ θ ​ M k 2 ≥ ( 1 4 − ϵ 2 ) ​ ( log ⁡ k − 2 ​ log ⁡ log ⁡ k − 2 ) . \frac{\theta M_{k}}{2}\geq\Bigl(\frac{1}{4}-\frac{\epsilon}{2}\Bigr)\Bigl(\log{k}-2\log\log{k}-2\Bigr). 
+
+ We choose ϵ = 1 / k \epsilon=1/k , and see that θ ​ M k / 2 > m \theta M_{k}/2>m if k ≥ C ​ m 2 ​ e 4 ​ m k\geq Cm^{2}e^{4m} for some absolute constant C C (independent of m m and k k ). Thus, for any admissible set ℋ = { h 1 , … , h k } \mathcal{H}=\{h_{1},\dotsc,h_{k}\} with k ≥ C ​ m 2 ​ e 4 ​ m k\geq Cm^{2}e^{4m} , at least m + 1 m+1 of the n + h i n+h_{i} must be prime for infinitely many integers n n . We can choose our set ℋ \mathcal{H} to be the set { p π ⁡ ( k ) + 1 , … , p π ⁡ ( k ) + k } \{p_{\pi(k)+1},\dotsc,p_{\pi(k)+k}\} of the first k k primes which are greater than k k . This is admissible, since no element is a multiple of a prime less than k k (and there are k k elements, so it cannot cover all residue classes modulo any prime greater than k k .) This set has diameter p π ⁡ ( k ) + k − p π ⁡ ( k ) + 1 ≪ k ​ log ⁡ k p_{\pi(k)+k}-p_{\pi(k)+1}\ll k\log{k} . Thus lim inf n ( p n + m − p n ) ≪ k ​ log ⁡ k ≪ m 3 ​ e 4 ​ m \liminf_{n}(p_{n+m}-p_{n})\ll k\log{k}\ll m^{3}e^{4m} if we take k = ⌈ C ​ m 2 ​ e 4 ​ m ⌉ k=\lceil Cm^{2}e^{4m}\rceil . This gives Theorem 1.1 . 
+
+ We can now establish Theorem 1.2 by a simple counting argument. Given m m , we let k = ⌈ C ​ m 2 ​ e 4 ​ m ⌉ k=\lceil Cm^{2}e^{4m}\rceil as above. Therefore if { h 1 , … , h k } \{h_{1},\dotsc,h_{k}\} is admissible, then there exists a subset { h 1 ′ , … , h m ′ } ⊆ { h 1 , … , h k } \{h_{1}^{\prime},\dotsc,h_{m}^{\prime}\}\subseteq\{h_{1},\dotsc,h_{k}\} with the property that there are infinitely many integers n n for which all of the n + h i ′ n+h^{\prime}_{i} are prime ( 1 ≤ i ≤ m 1\leq i\leq m ). 
+
+ We let 𝒜 2 \mathcal{A}_{2} denote the set formed by starting with the given set 𝒜 = { a 1 , … , a r } \mathcal{A}=\{a_{1},\dotsc,a_{r}\} , and for each prime p ≤ k p\leq k in turn removing all elements of the residue class modulo p p which contains the fewest integers. We see that # 𝒜 2 ≥ r ∏ p ≤ k ( 1 − 1 / p ) ≫ m r \#\mathcal{A}_{2}\geq r\prod_{p\leq k}(1-1/p)\gg_{m}r . Moreover, any subset of 𝒜 2 \mathcal{A}_{2} of size k k must be admissible, since it cannot cover all residue classes modulo p p for any prime p ≤ k p\leq k . We let s = # ​ 𝒜 2 s=\#\mathcal{A}_{2} , and since r r is taken sufficiently large in terms of m m , we may assume that s > k s>k . 
+
+ We see there are ( s k ) \binom{s}{k} sets ℋ ⊆ 𝒜 2 \mathcal{H}\subseteq\mathcal{A}_{2} of size k k . Each of these is admissible, and so contains at least one subset { h 1 ′ , … , h m ′ } ⊆ 𝒜 2 \{h_{1}^{\prime},\dotsc,h_{m}^{\prime}\}\subseteq\mathcal{A}_{2} which satisfies the prime m m -tuples conjecture. Any admissible set ℬ ⊆ 𝒜 2 \mathcal{B}\subseteq\mathcal{A}_{2} of size m m is contained in ( s − m k − m ) \binom{s-m}{k-m} sets ℋ ⊆ 𝒜 2 \mathcal{H}\subseteq\mathcal{A}_{2} of size k k . Thus there are at least ( s k ) ( s − m k − m ) − 1 ≫ m s m ≫ m r m \binom{s}{k}\binom{s-m}{k-m}^{-1}\gg_{m}s^{m}\gg_{m}r^{m} admissible sets ℬ ⊆ 𝒜 2 \mathcal{B}\subseteq\mathcal{A}_{2} of size m m which satisfy the prime m m -tuples conjecture. Since there are ( r m ) ≤ r m \binom{r}{m}\leq r^{m} sets { h 1 , … , h m } ⊆ 𝒜 \{h_{1},\dotsc,h_{m}\}\subseteq\mathcal{A} , Theorem 1.2 holds. 
+
+ We are left to establish Propositions 4.1 and 4.3 . 
+
+ 5. Selberg sieve manipulations 
+
+ In this section we perform initial manipulations towards establishing Proposition 4.1 . These arguments are multidimensional generalizations of the sieve arguments of [ 3 ] . In particular, our approach is based on the elementary combinatorial ideas of Selberg. The aim is to introduce a change of variables to rewrite our sums S 1 S_{1} and S 2 S_{2} in a simpler form. 
+
+ Throughout the rest of the paper we assume that the primes have a fixed level of distribution θ \theta , and R = N θ / 2 − δ R=N^{\theta/2-\delta} . We restrict the support of λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} to tuples for which the product d = ∏ i = 1 k d i d=\prod_{i=1}^{k}d_{i} is less than R R and also satisfies ( d , W ) = 1 (d,W)=1 and μ ​ ( d ) 2 = 1 \mu(d)^{2}=1 . We note that the condition μ ​ ( d ) 2 = 1 \mu(d)^{2}=1 implies that ( d i , d j ) = 1 (d_{i},d_{j})=1 for all i ≠ j i\neq j . 
+
+ Lemma 5.1 . 
+
+ Let 
+
+ y r 1 , … , r k = ( ∏ i = 1 k μ ⁡ ( r i ) ​ φ ​ ( r i ) ) ​ ∑ d 1 , … , d k r i | d i ​ ∀ i λ d 1 , … , d k ∏ i = 1 k d i . y_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\mu(r_{i})\varphi(r_{i})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+r_{i}|d_{i}\forall i\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}}{\prod_{i=1}^{k}d_{i}}. 
+
+ Let y m ​ a ​ x = sup r 1 , … , r k | y r 1 , … , r k | y_{max}=\sup_{r_{1},\dotsc,r_{k}}|y_{r_{1},\dotsc,r_{k}}| . Then 
+
+ S 1 = N W ​ ∑ r 1 , … , r k y r 1 , … , r k 2 ∏ i = 1 k φ ⁡ ( r i ) + O ⁡ ( y m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 ) . S_{1}=\frac{N}{W}\sum_{r_{1},\dotsc,r_{k}}\frac{y_{r_{1},\dotsc,r_{k}}^{2}}{\prod_{i=1}^{k}\varphi(r_{i})}+O\Bigl(\frac{y_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}\Bigr). 
+
+ Proof. 
+
+ We expand out the square, and swap the order of summation to give 
+
+ (5.1) 
+
+ S 1 = ∑ N ≤ n < 2 ​ N n ≡ v 0 ( mod W ) ( ∑ d i | n + h i ​ ∀ i λ d 1 , … , d k ) 2 = ∑ d 1 , … , d k e 1 , … , e k λ d 1 , … , d k ​ λ e 1 , … , e k ​ ∑ N ≤ n < 2 ​ N n ≡ v 0 ( mod W ) [ d i , e i ] | n + h i ​ ∀ i 1 . S_{1}=\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv v_{0}\pmod{W}\end{subarray}}\Bigl(\sum_{d_{i}|n+h_{i}\forall i}\lambda_{d_{1},\dotsc,d_{k}}\Bigr)^{2}=\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\end{subarray}}\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv v_{0}\pmod{W}\\
+[d_{i},e_{i}]|n+h_{i}\forall i\end{subarray}}1. 
+
+ We recall that here, and throughout this section, we are using [ a , b ] [a,b] to denote the least common multiple of a a and b b . 
+
+ By the Chinese remainder theorem, the inner sum can be written as a sum over a single residue class modulo q = W ​ ∏ i = 1 k [ d i , e i ] q=W\prod_{i=1}^{k}[d_{i},e_{i}] , provided that the integers W , [ d 1 , e 1 ] , … , [ d k , e k ] W,[d_{1},e_{1}],\dotsc,[d_{k},e_{k}] are pairwise coprime. In this case the inner sum is N / q + O ⁡ ( 1 ) N/q+O(1) . If the integers are not pairwise coprime then the inner sum is empty. This gives 
+
+ (5.2) 
+
+ S 1 = N W ​ ∑ ′ d 1 , … , d k e 1 , … , e k ′ ​ λ d 1 , … , d k ​ λ e 1 , … , e k ∏ i = 1 k [ d i , e i ] + O ⁡ ( ∑ ′ d 1 , … , d k e 1 , … , e k ′ ​ | λ d 1 , … , d k ​ λ e 1 , … , e k | ) , \displaystyle S_{1}=\frac{N}{W}\sideset{}{{}^{\prime}}{\sum}_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}}{\prod_{i=1}^{k}[d_{i},e_{i}]}+O\Bigl(\sideset{}{{}^{\prime}}{\sum}_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\end{subarray}}|\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}|\Bigr), 
+
+ where ∑ ′ \sum^{\prime} is used to denote the restriction that we require W , [ d 1 , e 1 ] , … , [ d k , e k ] W,[d_{1},e_{1}],\dotsc,[d_{k},e_{k}] to be pairwise coprime. To ease notation we will put λ m ​ a ​ x = sup d 1 , … , d k | λ d 1 , … , d k | \lambda_{max}=\sup_{d_{1},\dotsc,d_{k}}|\lambda_{d_{1},\dotsc,d_{k}}| . We now see that since λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} is non-zero only when ∏ i = 1 k d i < R \prod_{i=1}^{k}d_{i}<R , the error term contributes 
+
+ (5.3) 
+
+ ≪ λ m ​ a ​ x 2 ​ ( ∑ d < R τ k ​ ( d ) ) 2 ≪ λ m ​ a ​ x 2 ​ R 2 ​ ( log ⁡ R ) 2 ​ k , \ll\lambda_{max}^{2}\Bigl(\sum_{d<R}\tau_{k}(d)\Bigr)^{2}\ll\lambda_{max}^{2}R^{2}(\log{R})^{2k}, 
+
+ which will be negligible. 
+
+ In the main sum we wish to remove the dependencies between the d i d_{i} and the e j e_{j} variables. We use the identity 
+
+ (5.4) 
+
+ 1 [ d i , e i ] = 1 d i ​ e i ​ ∑ u i | d i , e i φ ⁡ ( u i ) \frac{1}{[d_{i},e_{i}]}=\frac{1}{d_{i}e_{i}}\sum_{u_{i}|d_{i},e_{i}}\varphi(u_{i}) 
+
+ to rewrite the main term as 
+
+ (5.5) 
+
+ N W ​ ∑ u 1 , … , u k ( ∏ i = 1 k φ ⁡ ( u i ) ) ​ ∑ ′ d 1 , … , d k e 1 , … , e k u i | d i , e i ​ ∀ i ′ ​ λ d 1 , … , d k ​ λ e 1 , … , e k ( ∏ i = 1 k d i ) ​ ( ∏ i = 1 k e i ) . \frac{N}{W}\sum_{u_{1},\dotsc,u_{k}}\Bigl(\prod_{i=1}^{k}\varphi(u_{i})\Bigr)\sideset{}{{}^{\prime}}{\sum}_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\\
+u_{i}|d_{i},e_{i}\forall i\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}}{(\prod_{i=1}^{k}d_{i})(\prod_{i=1}^{k}e_{i})}. 
+
+ We recall that λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} is supported on integers d 1 , … , d k d_{1},\dotsc,d_{k} with ( d i , W ) = 1 (d_{i},W)=1 for each i i and ( d i , d j ) = 1 (d_{i},d_{j})=1 for all i ≠ j i\neq j . Thus we may drop the requirement that W W is coprime to each of the [ d i , e i ] [d_{i},e_{i}] from the summation, since these terms have no contribution. Similarly, we may drop the requirement that the d i d_{i} variables are all pairwise coprime, and the requirement that the e i e_{i} variables are all pairwise coprime. Thus the only remaining restriction coming from the pairwise coprimality of W , [ d 1 , e 1 ] , … , [ d k , e k ] W,[d_{1},e_{1}],\dotsc,[d_{k},e_{k}] is that ( d i , e j ) = 1 (d_{i},e_{j})=1 for all i ≠ j i\neq j . 
+
+ We can remove the requirement that ( d i , e j ) = 1 (d_{i},e_{j})=1 by multiplying our expression by ∑ s i , j | d i , e j μ ⁡ ( s i , j ) \sum_{s_{i,j}|d_{i},e_{j}}\mu(s_{i,j}) . We do this for all i , j i,j with i ≠ j i\neq j . This transforms the main term to 
+
+ (5.6) 
+
+ N W ​ ∑ u 1 , … , u k ( ∏ i = 1 k φ ⁡ ( u i ) ) ​ ∑ s 1 , 2 , … , s k , k − 1 ( ∏ 1 ≤ i , j ≤ k i ≠ j μ ⁡ ( s i , j ) ) ​ ∑ d 1 , … , d k e 1 , … , e k u i | d i , e i ​ ∀ i s i , j | d i , e j ​ ∀ i ≠ j λ d 1 , … , d k ​ λ e 1 , … , e k ( ∏ i = 1 k d i ) ​ ( ∏ i = 1 k e i ) . \frac{N}{W}\sum_{u_{1},\dotsc,u_{k}}\Bigl(\prod_{i=1}^{k}\varphi(u_{i})\Bigr)\sum_{s_{1,2},\dotsc,s_{k,k-1}}\Bigl(\prod_{\begin{subarray}{c}1\leq i,j\leq k\\
+i\neq j\end{subarray}}\mu(s_{i,j})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\\
+u_{i}|d_{i},e_{i}\forall i\\
+s_{i,j}|d_{i},e_{j}\forall i\neq j\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}}{(\prod_{i=1}^{k}d_{i})(\prod_{i=1}^{k}e_{i})}. 
+
+ We can restrict the s i , j s_{i,j} to be coprime to u i u_{i} and u j u_{j} , because terms with s i , j s_{i,j} not coprime to u i u_{i} or u j u_{j} make no contribution to our sum. This is because λ d 1 , … , d k = 0 \lambda_{d_{1},\dots,d_{k}}=0 unless ( d i , d j ) = 1 (d_{i},d_{j})=1 . Similarly we can further restrict our sum so that s i , j s_{i,j} is coprime to s i , a s_{i,a} and s b , j s_{b,j} for all a ≠ j a\neq j and b ≠ i b\neq i . We denote the summation over s 1 , 2 , … , s k , k − 1 s_{1,2},\dotsc,s_{k,k-1} with these restrictions by ∑ ∗ \sum^{*} . 
+
+ We now introduce a change of variables to make the estimation of the sum more straightforward. We let 
+
+ (5.7) 
+
+ y r 1 , … , r k = ( ∏ i = 1 k μ ⁡ ( r i ) ​ φ ​ ( r i ) ) ​ ∑ d 1 , … , d k r i | d i ​ ∀ i λ d 1 , … , d k ∏ i = 1 k d i . y_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\mu(r_{i})\varphi(r_{i})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+r_{i}|d_{i}\forall i\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}}{\prod_{i=1}^{k}d_{i}}. 
+
+ This change is invertible. For d 1 , … , d k d_{1},\dotsc,d_{k} with ∏ i = 1 k d i \prod_{i=1}^{k}d_{i} square-free we find that 
+
+ ∑ r 1 , … , r k d i | r i ​ ∀ i y r 1 , … , r k ∏ i = 1 k φ ⁡ ( r i ) \displaystyle\sum_{\begin{subarray}{c}r_{1},\dotsc,r_{k}\\
+d_{i}|r_{i}\forall i\end{subarray}}\frac{y_{r_{1},\dotsc,r_{k}}}{\prod_{i=1}^{k}\varphi(r_{i})} 
+ = ∑ r 1 , … , r k d i | r i ​ ∀ i ( ∏ i = 1 k μ ⁡ ( r i ) ) ​ ∑ e 1 , … , e k r i | e i ​ ∀ i λ e 1 , … , e k ∏ i = 1 k e i \displaystyle=\sum_{\begin{subarray}{c}r_{1},\dotsc,r_{k}\\
+d_{i}|r_{i}\forall i\end{subarray}}\Bigl(\prod_{i=1}^{k}\mu(r_{i})\Bigr)\sum_{\begin{subarray}{c}e_{1},\dotsc,e_{k}\\
+r_{i}|e_{i}\forall i\end{subarray}}\frac{\lambda_{e_{1},\dotsc,e_{k}}}{\prod_{i=1}^{k}e_{i}} 
+
+ (5.8) 
+
+ = ∑ e 1 , … , e k λ e 1 , … , e k ∏ i = 1 k e i ​ ∑ r 1 , … , r k d i | r i ​ ∀ i r i | e i ​ ∀ i ∏ i = 1 k μ ⁡ ( r i ) = λ d 1 , … , d k ∏ i = 1 k μ i ​ ( d i ) ​ d i . \displaystyle=\sum_{e_{1},\dotsc,e_{k}}\frac{\lambda_{e_{1},\dotsc,e_{k}}}{\prod_{i=1}^{k}e_{i}}\sum_{\begin{subarray}{c}r_{1},\dotsc,r_{k}\\
+d_{i}|r_{i}\forall i\\
+r_{i}|e_{i}\forall i\end{subarray}}\prod_{i=1}^{k}\mu(r_{i})=\frac{\lambda_{d_{1},\dotsc,d_{k}}}{\prod_{i=1}^{k}\mu_{i}(d_{i})d_{i}}. 
+
+ Thus any choice of y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} supported on r 1 , … , r k r_{1},\dotsc,r_{k} , with the product r = ∏ i = 1 k r i r=\prod_{i=1}^{k}r_{i} square-free and satisfying r < R r<R and ( r , W ) = 1 (r,W)=1 , will give a suitable choice of λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} . We let y m ​ a ​ x = sup r 1 , … , r k | y r 1 , … , r k | y_{max}=\sup_{r_{1},\dotsc,r_{k}}|y_{r_{1},\dotsc,r_{k}}| . Now, since d / φ ⁡ ( d ) = ∑ e | d 1 / φ ⁡ ( e ) d/\varphi(d)=\sum_{e|d}1/\varphi(e) for square-free d d , we find by taking r ′ = ∏ i = 1 k r i / d i r^{\prime}=\prod_{i=1}^{k}r_{i}/d_{i} that 
+
+ λ m ​ a ​ x \displaystyle\lambda_{max} 
+ ≤ sup d 1 , … , d k ∏ i = 1 k d i ​  square-free y m ​ a ​ x ​ ( ∏ i = 1 k d i ) ​ ∑ r 1 , … , r k d i | r i ​ ∀ i ∏ i = 1 k r i < R ∏ i = 1 k r i ​  square-free ( ∏ i = 1 k μ ​ ( r i ) 2 φ ⁡ ( r i ) ) \displaystyle\leq\sup_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+\prod_{i=1}^{k}d_{i}\text{ square-free}\end{subarray}}y_{max}\Bigl(\prod_{i=1}^{k}d_{i}\Bigr)\sum_{\begin{subarray}{c}r_{1},\dotsc,r_{k}\\
+d_{i}|r_{i}\forall i\\
+\prod_{i=1}^{k}r_{i}<R\\
+\prod_{i=1}^{k}r_{i}\text{ square-free}\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{\mu(r_{i})^{2}}{\varphi(r_{i})}\Bigr) 
+
+ ≤ y m ​ a ​ x ​ sup d 1 , … , d k ∏ i = 1 k d i ​  square-free ( ∏ i = 1 k d i φ ⁡ ( d i ) ) ​ ∑ r ′ < R / ∏ i = 1 k d i ( r ′ , ∏ i = 1 k d i ) = 1 μ ​ ( r ′ ) 2 ​ τ k ​ ( r ′ ) φ ⁡ ( r ′ ) \displaystyle\leq y_{max}\sup_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+\prod_{i=1}^{k}d_{i}\text{ square-free}\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{d_{i}}{\varphi(d_{i})}\Bigr)\sum_{\begin{subarray}{c}r^{\prime}<R/\prod_{i=1}^{k}d_{i}\\
+(r^{\prime},\prod_{i=1}^{k}d_{i})=1\end{subarray}}\frac{\mu(r^{\prime})^{2}\tau_{k}(r^{\prime})}{\varphi(r^{\prime})} 
+
+ ≤ y m ​ a ​ x ​ sup d 1 , … , d k ∑ d | ∏ i = 1 k d i μ ​ ( d ) 2 φ ⁡ ( d ) ​ ∑ r ′ < R / ∏ i = 1 k d i ( r ′ , ∏ i = 1 k d i ) = 1 μ ​ ( r ′ ) 2 ​ τ k ​ ( r ′ ) φ ⁡ ( r ′ ) \displaystyle\leq y_{max}\sup_{d_{1},\dotsc,d_{k}}\sum_{d|\prod_{i=1}^{k}d_{i}}\frac{\mu(d)^{2}}{\varphi(d)}\sum_{\begin{subarray}{c}r^{\prime}<R/\prod_{i=1}^{k}d_{i}\\
+(r^{\prime},\prod_{i=1}^{k}d_{i})=1\end{subarray}}\frac{\mu(r^{\prime})^{2}\tau_{k}(r^{\prime})}{\varphi(r^{\prime})} 
+
+ (5.9) 
+
+ ≤ y m ​ a ​ x ​ ∑ u < R μ ​ ( u ) 2 ​ τ k ​ ( u ) φ ⁡ ( u ) ≪ y m ​ a ​ x ​ ( log ⁡ R ) k . \displaystyle\leq y_{max}\sum_{u<R}\frac{\mu(u)^{2}\tau_{k}(u)}{\varphi(u)}\ll y_{max}(\log{R})^{k}. 
+
+ In the last line we have taken u = d ​ r ′ u=dr^{\prime} , and used the fact τ k ​ ( d ​ r ′ ) ≥ τ k ​ ( r ′ ) \tau_{k}(dr^{\prime})\geq\tau_{k}(r^{\prime}) . Hence the error term O ⁡ ( λ m ​ a ​ x 2 ​ R 2 ​ ( log ⁡ N ) 2 ​ k ) O(\lambda_{max}^{2}R^{2}(\log{N})^{2k}) is of size O ⁡ ( y m ​ a ​ x 2 ​ R 2 ​ ( log ⁡ N ) 4 ​ k ) O(y_{max}^{2}R^{2}(\log{N})^{4k}) . 
+
+ Substituting our change of variables ( 5.7 ) into the main term ( 5.6 ), and using the above estimate for the error term, we obtain 
+
+ S 1 \displaystyle S_{1} 
+ = N W ​ ∑ u 1 , … , u k ( ∏ i = 1 k φ ⁡ ( u i ) ) ​ ∑ ∗ s 1 , 2 , … , s k , k − 1 ∗ ​ ( ∏ 1 ≤ i , j ≤ k i ≠ j μ ⁡ ( s i , j ) ) ​ ( ∏ i = 1 k μ ⁡ ( a i ) ​ μ ​ ( b i ) φ ⁡ ( a i ) ​ φ ​ ( b i ) ) ​ y a 1 , … , a k ​ y b 1 , … , b k \displaystyle=\frac{N}{W}\sum_{u_{1},\dotsc,u_{k}}\Bigl(\prod_{i=1}^{k}\varphi(u_{i})\Bigr)\sideset{}{{}^{*}}{\sum}_{s_{1,2},\dotsc,s_{k,k-1}}\Bigl(\prod_{\begin{subarray}{c}1\leq i,j\leq k\\
+i\neq j\end{subarray}}\mu(s_{i,j})\Bigr)\Bigl(\prod_{i=1}^{k}\frac{\mu(a_{i})\mu(b_{i})}{\varphi(a_{i})\varphi(b_{i})}\Bigr)y_{a_{1},\dotsc,a_{k}}y_{b_{1},\dotsc,b_{k}} 
+
+ (5.10) 
+
+ + O ⁡ ( y m ​ a ​ x 2 ​ R 2 ​ ( log ⁡ R ) 4 ​ k ) , \displaystyle\qquad+O\Bigl(y_{max}^{2}R^{2}(\log{R})^{4k}\Bigr), 
+
+ where a j = u j ​ ∏ i ≠ j s j , i a_{j}=u_{j}\prod_{i\neq j}s_{j,i} and b j = u j ​ ∏ i ≠ j s i , j b_{j}=u_{j}\prod_{i\neq j}s_{i,j} . In these expressions we have used the fact that we have restricted s i , j s_{i,j} to be coprime to the other terms in the expression for a i a_{i} and b j b_{j} . For the same reason we may rewrite μ ⁡ ( a j ) \mu(a_{j}) as μ ⁡ ( u j ) ​ ∏ i ≠ j μ ⁡ ( s i , j ) \mu(u_{j})\prod_{i\neq j}\mu(s_{i,j}) , and similarly for φ ⁡ ( a j ) \varphi(a_{j}) , μ ⁡ ( b j ) \mu(b_{j}) and φ ⁡ ( b j ) \varphi(b_{j}) . This gives us 
+
+ (5.11) 
+
+ S 1 \displaystyle S_{1} 
+ = N W ​ ∑ u 1 , … , u k ( ∏ i = 1 k μ ​ ( u i ) 2 φ ⁡ ( u i ) ) ​ ∑ ∗ s 1 , 2 , … , s k , k − 1 ∗ ​ ( ∏ 1 ≤ i , j ≤ k i ≠ j μ ⁡ ( s i , j ) φ ​ ( s i , j ) 2 ) ​ y a 1 , … , a k ​ y b 1 , … , b k + O ⁡ ( y m ​ a ​ x 2 ​ R 2 ​ ( log ⁡ R ) 4 ​ k ) . \displaystyle=\frac{N}{W}\sum_{u_{1},\dotsc,u_{k}}\Bigl(\prod_{i=1}^{k}\frac{\mu(u_{i})^{2}}{\varphi(u_{i})}\Bigr)\sideset{}{{}^{*}}{\sum}_{s_{1,2},\dotsc,s_{k,k-1}}\Bigl(\prod_{\begin{subarray}{c}1\leq i,j\leq k\\
+i\neq j\end{subarray}}\frac{\mu(s_{i,j})}{\varphi(s_{i,j})^{2}}\Bigr)y_{a_{1},\dotsc,a_{k}}y_{b_{1},\dotsc,b_{k}}+O\Bigl(y_{max}^{2}R^{2}(\log{R})^{4k}\Bigr). 
+
+ We see that there is no contribution from s i , j s_{i,j} with ( s i , j , W ) ≠ 1 (s_{i,j},W)\neq 1 because of the restricted support of y y . Thus we only need to consider s i , j = 1 s_{i,j}=1 or s i , j > D 0 s_{i,j}>D_{0} . The contribution when s i , j > D 0 s_{i,j}>D_{0} is 
+
+ (5.12) 
+
+ ≪ y m ​ a ​ x 2 ​ N W ​ ( ∑ u < R ( u , W ) = 1 μ ​ ( u ) 2 φ ⁡ ( u ) ) k ​ ( ∑ s i , j > D 0 μ ​ ( s i , j ) 2 φ ​ ( s i , j ) 2 ) ​ ( ∑ s ≥ 1 μ ​ ( s ) 2 φ ​ ( s ) 2 ) k 2 − k − 1 ≪ y m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 . \displaystyle\ll\frac{y_{max}^{2}N}{W}\Bigl(\sum_{\begin{subarray}{c}u<R\\
+(u,W)=1\end{subarray}}\frac{\mu(u)^{2}}{\varphi(u)}\Bigr)^{k}\Bigl(\sum_{s_{i,j}>D_{0}}\frac{\mu(s_{i,j})^{2}}{\varphi(s_{i,j})^{2}}\Bigr)\Bigl(\sum_{s\geq 1}\frac{\mu(s)^{2}}{\varphi(s)^{2}}\Bigr)^{k^{2}-k-1}\ll\frac{y_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}. 
+
+ Thus we may restrict our attention to the case when s i , j = 1 s_{i,j}=1 ∀ i ≠ j \forall i\neq j . This gives 
+
+ (5.13) 
+
+ S 1 = N W ​ ∑ u 1 , … , u k y u 1 , … , u k 2 ∏ i = 1 k φ ⁡ ( u i ) + O ⁡ ( y m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 + y m ​ a ​ x 2 ​ R 2 ​ ( log ⁡ R ) 4 ​ k ) . S_{1}=\frac{N}{W}\sum_{u_{1},\dotsc,u_{k}}\frac{y_{u_{1},\dotsc,u_{k}}^{2}}{\prod_{i=1}^{k}\varphi(u_{i})}+O\left(\frac{y_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}+y_{max}^{2}R^{2}(\log{R})^{4k}\right). 
+
+ We recall that R 2 = N θ − 2 ​ δ ≤ N 1 − 2 ​ δ R^{2}=N^{\theta-2\delta}\leq N^{1-2\delta} and W ≪ N δ W\ll N^{\delta} , and so the first error term dominates. This gives the result.
+∎ 
+
+ We now consider S 2 S_{2} . We write S 2 = ∑ m = 1 k S 2 ( m ) S_{2}=\sum_{m=1}^{k}S_{2}^{(m)} , where 
+
+ (5.14) 
+
+ S 2 ( m ) = ∑ N ≤ n < 2 ​ N n ≡ v 0 ( mod W ) χ ℙ ​ ( n + h m ) ​ ( ∑ d 1 , … , d k d i | n + h i ​ ∀ i λ d 1 , … , d k ) 2 . S_{2}^{(m)}=\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv v_{0}\pmod{W}\end{subarray}}\chi_{\mathbb{P}}(n+h_{m})\Bigl(\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+d_{i}|n+h_{i}\forall i\end{subarray}}\lambda_{d_{1},\dotsc,d_{k}}\Bigr)^{2}. 
+
+ We now estimate S 2 ( m ) S_{2}^{(m)} in a similar way to our treatment of S 1 S_{1} . 
+
+ Lemma 5.2 . 
+
+ Let 
+
+ y r 1 , … , r k ( m ) = ( ∏ i = 1 k μ ⁡ ( r i ) ​ g ​ ( r i ) ) ​ ∑ d 1 , … , d k r i | d i ​ ∀ i d m = 1 λ d 1 , … , d k ∏ i = 1 k φ ⁡ ( d i ) , y^{(m)}_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\mu(r_{i})g(r_{i})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+r_{i}|d_{i}\forall i\\
+d_{m}=1\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}}{\prod_{i=1}^{k}\varphi(d_{i})}, 
+
+ where g g is the totally multiplicative function defined on primes by g ⁡ ( p ) = p − 2 g(p)=p-2 . Let y m ​ a ​ x ( m ) = sup r 1 , … , r k | y r 1 , … , r k ( m ) | y^{(m)}_{max}=\sup_{r_{1},\dotsc,r_{k}}|y^{(m)}_{r_{1},\dotsc,r_{k}}| . Then for any fixed A > 0 A>0 we have 
+
+ S 2 ( m ) = N φ ⁡ ( W ) ​ log ⁡ N ​ ∑ r 1 , … , r k ( y r 1 , … , r k ( m ) ) 2 ∏ i = 1 k g ⁡ ( r i ) + O ⁡ ( ( y m ​ a ​ x ( m ) ) 2 ​ φ ​ ( W ) k − 2 ​ N ​ ( log ⁡ N ) k − 2 W k − 1 ​ D 0 ) + O ⁡ ( y m ​ a ​ x 2 ​ N ( log ⁡ N ) A ) . S_{2}^{(m)}=\frac{N}{\varphi(W)\log{N}}\sum_{r_{1},\dotsc,r_{k}}\frac{(y^{(m)}_{r_{1},\dotsc,r_{k}})^{2}}{\prod_{i=1}^{k}g(r_{i})}+O\Bigl(\frac{(y^{(m)}_{max})^{2}\varphi(W)^{k-2}N(\log{N})^{k-2}}{W^{k-1}D_{0}}\Bigr)+O\Bigl(\frac{y_{max}^{2}N}{(\log{N})^{A}}\Bigr). 
+
+ Proof. 
+
+ We first expand out the square and swap the order of summation to give 
+
+ (5.15) 
+
+ S 2 ( m ) = ∑ d 1 , … , d k e 1 , … , e k λ d 1 , … , d k ​ λ e 1 , … , e k ​ ∑ N ≤ n < 2 ​ N n ≡ v 0 ( mod W ) [ d i , e i ] | n + h i ​ ∀ i χ ℙ ​ ( n + h m ) . S_{2}^{(m)}=\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\end{subarray}}\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv v_{0}\pmod{W}\\
+[d_{i},e_{i}]|n+h_{i}\forall i\end{subarray}}\chi_{\mathbb{P}}(n+h_{m}). 
+
+ As with S 1 S_{1} , the inner sum can be written as a sum over a single residue class modulo q = W ​ ∏ i = 1 k [ d i , e i ] q=W\prod_{i=1}^{k}[d_{i},e_{i}] , provided that W , [ d 1 , e 1 ] , … , [ d k , e k ] W,[d_{1},e_{1}],\dotsc,[d_{k},e_{k}] are pairwise coprime. The integer n + h m n+h_{m} will lie in a residue class coprime to the modulus if and only if d m = e m = 1 d_{m}=e_{m}=1 . In this case the inner sum will contribute X N / φ ⁡ ( q ) + O ⁡ ( E ⁡ ( N , q ) ) X_{N}/\varphi(q)+O(E(N,q)) , where 
+
+ (5.16) 
+
+ E ⁡ ( N , q ) \displaystyle E(N,q) 
+ = 1 + sup ( a , q ) = 1 | ∑ N ≤ n < 2 ​ N n ≡ a ( mod q ) χ ℙ ​ ( n ) − 1 φ ⁡ ( q ) ​ ∑ N ≤ n < 2 ​ N χ ℙ ​ ( n ) | , \displaystyle=1+\sup_{(a,q)=1}\Bigl|\sum_{\begin{subarray}{c}N\leq n<2N\\
+n\equiv a\pmod{q}\end{subarray}}\chi_{\mathbb{P}}(n)-\frac{1}{\varphi(q)}\sum_{N\leq n<2N}\chi_{\mathbb{P}}(n)\Bigr|, 
+
+ (5.17) 
+
+ X N \displaystyle X_{N} 
+ = ∑ N ≤ n < 2 ​ N χ ℙ ​ ( n ) . \displaystyle=\sum_{N\leq n<2N}\chi_{\mathbb{P}}(n). 
+
+ If either one pair of W , [ d 1 , e 1 ] , … , [ d k , e k ] W,[d_{1},e_{1}],\dotsc,[d_{k},e_{k}] share a common factor, or if either d m d_{m} or e m e_{m} are not 1 1 , then the contribution of the inner sum is zero. Thus we obtain 
+
+ (5.18) 
+
+ S 2 ( m ) = X N φ ⁡ ( W ) ​ ∑ ′ d 1 , … , d k e 1 , … , e k e m = d m = 1 ′ ​ λ d 1 , … , d k ​ λ e 1 , … , e k ∏ i = 1 k φ ⁡ ( [ d i , e i ] ) + O ⁡ ( ∑ d 1 , … , d k e 1 , … , e k | λ d 1 , … , d k ​ λ e 1 , … , e k | ​ E ​ ( N , q ) ) , S_{2}^{(m)}=\frac{X_{N}}{\varphi(W)}\sideset{}{{}^{\prime}}{\sum}_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\\
+e_{m}=d_{m}=1\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}}{\prod_{i=1}^{k}\varphi([d_{i},e_{i}])}+O\Bigl(\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\end{subarray}}|\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}|E(N,q)\Bigr), 
+
+ where we have written q = W ​ ∏ i = 1 k [ d i , e i ] q=W\prod_{i=1}^{k}[d_{i},e_{i}] . 
+
+ We first deal with the contribution from the error terms. From the support of λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} , we see that we only need to consider square-free q q with q < R 2 ​ W q<R^{2}W . Given a square-free integer r r , there are at most τ 3 ​ k ​ ( r ) \tau_{3k}(r) choices of d 1 , … , d k , e 1 , … , e k d_{1},\dotsc,d_{k},e_{1},\dotsc,e_{k} for which W ​ ∏ i = 1 k [ d i , e i ] = r W\prod_{i=1}^{k}[d_{i},e_{i}]=r . We also recall from ( 5.9 ) that λ m ​ a ​ x ≪ y m ​ a ​ x ​ ( log ⁡ R ) k \lambda_{max}\ll y_{max}(\log{R})^{k} . Thus the error term contributes 
+
+ (5.19) 
+
+ ≪ y m ​ a ​ x 2 ​ ( log ⁡ R ) 2 ​ k ​ ∑ r < R 2 ​ W μ ​ ( r ) 2 ​ τ 3 ​ k ​ ( r ) ​ E ​ ( N , r ) . \ll y_{max}^{2}(\log{R})^{2k}\sum_{r<R^{2}W}\mu(r)^{2}\tau_{3k}(r)E(N,r). 
+
+ By Cauchy-Schwarz, the trivial bound E ⁡ ( N , q ) ≪ N / φ ⁡ ( q ) E(N,q)\ll N/\varphi(q) , and our hypothesis that the primes have level of distribution θ \theta , this contributes for any fixed A > 0 A>0 
+
+ (5.20) 
+
+ ≪ y m ​ a ​ x 2 ​ ( log ⁡ R ) 2 ​ k ​ ( ∑ r < R 2 ​ W μ ​ ( r ) 2 ​ τ 3 ​ k 2 ​ ( r ) ​ N φ ⁡ ( r ) ) 1 / 2 ​ ( ∑ r < R 2 ​ W μ ​ ( r ) 2 ​ E ​ ( N , r ) ) 1 / 2 ≪ y m ​ a ​ x 2 ​ N ( log ⁡ N ) A . \ll y_{max}^{2}(\log{R})^{2k}\Bigl(\sum_{r<R^{2}W}\mu(r)^{2}\tau^{2}_{3k}(r)\frac{N}{\varphi(r)}\Bigr)^{1/2}\Bigl(\sum_{r<R^{2}W}\mu(r)^{2}E(N,r)\Bigr)^{1/2}\ll\frac{y_{max}^{2}N}{(\log{N})^{A}}. 
+
+ We now concentrate on the main sum. As in the treatment of S 1 S_{1} in the proof of Lemma 5.1 , we rewrite the conditions ( d i , e j ) = 1 (d_{i},e_{j})=1 by multiplying our expression by ∑ s i , j | d i , e j μ ⁡ ( s i , j ) \sum_{s_{i,j}|d_{i},e_{j}}\mu(s_{i,j}) . Again we may restrict s i , j s_{i,j} to be coprime to u i u_{i} , u j u_{j} , s i , a s_{i,a} and s b , j s_{b,j} for all a ≠ j a\neq j and b ≠ i b\neq i . We denote the summation subject to these restrictions by ∑ ∗ \sum^{*} . We also split the φ ⁡ ( [ d i , e i ] ) \varphi([d_{i},e_{i}]) terms by using the equation (valid for square-free d i , e i d_{i},e_{i} ) 
+
+ (5.21) 
+
+ 1 φ ⁡ ( [ d i , e i ] ) = 1 φ ⁡ ( d i ) ​ φ ​ ( e i ) ​ ∑ u i | d i , e i g ⁡ ( u i ) , \frac{1}{\varphi([d_{i},e_{i}])}=\frac{1}{\varphi(d_{i})\varphi(e_{i})}\sum_{u_{i}|d_{i},e_{i}}g(u_{i}), 
+
+ where g g is the totally multiplicative function defined on primes by g ⁡ ( p ) = p − 2 g(p)=p-2 . This gives us
+a main term of 
+
+ (5.22) 
+
+ X N φ ⁡ ( W ) ​ ∑ u 1 , … , u k ( ∏ i = 1 k g ⁡ ( u i ) ) ​ ∑ ∗ s 1 , 2 , … , s k , k − 1 ∗ ​ ( ∏ 1 ≤ i , j ≤ k i ≠ j μ ⁡ ( s i , j ) ) ​ ∑ d 1 , … , d k e 1 , … , e k u i | d i , e i ​ ∀ i s i , j | d i , e j ​ ∀ i ≠ j d m = e m = 1 λ d 1 , … , d k ​ λ e 1 , … , e k ∏ i = 1 k φ ⁡ ( d i ) ​ φ ​ ( e i ) . \frac{X_{N}}{\varphi(W)}\sum_{u_{1},\dotsc,u_{k}}\Bigl(\prod_{i=1}^{k}g(u_{i})\Bigr)\sideset{}{{}^{*}}{\sum}_{s_{1,2},\dotsc,s_{k,k-1}}\Bigl(\prod_{\begin{subarray}{c}1\leq i,j\leq k\\
+i\neq j\end{subarray}}\mu(s_{i,j})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+e_{1},\dotsc,e_{k}\\
+u_{i}|d_{i},e_{i}\forall i\\
+s_{i,j}|d_{i},e_{j}\forall i\neq j\\
+d_{m}=e_{m}=1\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}\lambda_{e_{1},\dotsc,e_{k}}}{\prod_{i=1}^{k}\varphi(d_{i})\varphi(e_{i})}. 
+
+ We have now separated the dependencies between the e e and d d variables, so again we make a substitution. We let 
+
+ (5.23) 
+
+ y r 1 , … , r k ( m ) = ( ∏ i = 1 k μ ⁡ ( r i ) ​ g ​ ( r i ) ) ​ ∑ d 1 , … , d k r i | d i ​ ∀ i d m = 1 λ d 1 , … , d k ∏ i = 1 k φ ⁡ ( d i ) . y^{(m)}_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\mu(r_{i})g(r_{i})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+r_{i}|d_{i}\forall i\\
+d_{m}=1\end{subarray}}\frac{\lambda_{d_{1},\dotsc,d_{k}}}{\prod_{i=1}^{k}\varphi(d_{i})}. 
+
+ We note y r 1 , … , r k ( m ) = 0 y^{(m)}_{r_{1},\dotsc,r_{k}}=0 unless r m = 1 r_{m}=1 . Substituting this into ( 5.22 ), we obtain a main term of 
+
+ (5.24) 
+
+ X N φ ⁡ ( W ) ​ ∑ u 1 , … , u k ( ∏ i = 1 k μ ​ ( u i ) 2 g ⁡ ( u i ) ) ​ ∑ ∗ s 1 , 2 , … , s k , k − 1 ∗ ​ ( ∏ 1 ≤ i , j ≤ k i ≠ j μ ⁡ ( s i , j ) g ​ ( s i , j ) 2 ) ​ y a 1 , … , a k ( m ) ​ y b 1 , … , b k ( m ) , \frac{X_{N}}{\varphi(W)}\sum_{u_{1},\dotsc,u_{k}}\Bigl(\prod_{i=1}^{k}\frac{\mu(u_{i})^{2}}{g(u_{i})}\Bigr)\sideset{}{{}^{*}}{\sum}_{s_{1,2},\dotsc,s_{k,k-1}}\Bigl(\prod_{\begin{subarray}{c}1\leq i,j\leq k\\
+i\neq j\end{subarray}}\frac{\mu(s_{i,j})}{g(s_{i,j})^{2}}\Bigr)y^{(m)}_{a_{1},\dotsc,a_{k}}y^{(m)}_{b_{1},\dotsc,b_{k}}, 
+
+ where a j = u j ​ ∏ i ≠ j s j , i a_{j}=u_{j}\prod_{i\neq j}s_{j,i} and b j = u j ​ ∏ i ≠ j s i , j b_{j}=u_{j}\prod_{i\neq j}s_{i,j} for each 1 ≤ j ≤ k 1\leq j\leq k . As before, we have replaced μ ⁡ ( a j ) \mu(a_{j}) with μ ⁡ ( u j ) ​ ∏ i ≠ j μ ⁡ ( s j , i ) \mu(u_{j})\prod_{i\neq j}\mu(s_{j,i}) (and similarly for g ⁡ ( a j ) g(a_{j}) , μ ⁡ ( b j ) \mu(b_{j}) and g ⁡ ( b j ) g(b_{j}) ). This is valid since terms with a j a_{j} or b j b_{j} not square-free make no contribution. 
+
+ We see the contribution from s i , j ≠ 1 s_{i,j}\neq 1 is of size 
+
+ ≪ ( y m ​ a ​ x ( m ) ) 2 ​ N φ ⁡ ( W ) ​ log ⁡ N ( ∑ u < R ( u , W ) = 1 μ ​ ( u ) 2 g ⁡ ( u ) ) k − 1 ( ∑ s μ ​ ( s ) 2 g ​ ( s ) 2 ) k ⁡ ( k − 1 ) − 1 ∑ s i , j > D 0 μ ​ ( s i , j ) 2 g ​ ( s i , j ) 2 \displaystyle\ll\frac{(y^{(m)}_{max})^{2}N}{\varphi(W)\log{N}}\Bigr(\sum_{\begin{subarray}{c}u<R\\
+(u,W)=1\end{subarray}}\frac{\mu(u)^{2}}{g(u)}\Bigr)^{k-1}\Bigl(\sum_{s}\frac{\mu(s)^{2}}{g(s)^{2}}\Bigr)^{k(k-1)-1}\sum_{s_{i,j}>D_{0}}\frac{\mu(s_{i,j})^{2}}{g(s_{i,j})^{2}} 
+
+ (5.25) 
+
+ ≪ ( y m ​ a ​ x ( m ) ) 2 ​ φ ​ ( W ) k − 2 ​ N ​ ( log ⁡ R ) k − 1 W k − 1 ​ D 0 ​ log ⁡ N . \displaystyle\ll\frac{(y^{(m)}_{max})^{2}\varphi(W)^{k-2}N(\log{R})^{k-1}}{W^{k-1}D_{0}\log{N}}. 
+
+ Thus we find that 
+
+ (5.26) 
+
+ S 2 ( m ) = X N φ ⁡ ( W ) ​ ∑ u 1 , … , u k ( y u 1 , … , u k ( m ) ) 2 ∏ i = 1 k g ⁡ ( u i ) + O ⁡ ( ( y m ​ a ​ x ( m ) ) 2 ​ φ ​ ( W ) k − 2 ​ N ​ ( log ⁡ R ) k − 2 D 0 ​ W k − 1 ) + O ⁡ ( y m ​ a ​ x 2 ​ N ( log ⁡ N ) A ) . S_{2}^{(m)}=\frac{X_{N}}{\varphi(W)}\sum_{u_{1},\dotsc,u_{k}}\frac{(y^{(m)}_{u_{1},\dotsc,u_{k}})^{2}}{\prod_{i=1}^{k}g(u_{i})}+O\Bigl(\frac{(y_{max}^{(m)})^{2}\varphi(W)^{k-2}N(\log{R})^{k-2}}{D_{0}W^{k-1}}\bigr)+O\Bigl(\frac{y_{max}^{2}N}{(\log{N})^{A}}\Bigr). 
+
+ Finally, by the prime number theorem, X N = N / log ⁡ N + O ⁡ ( N / ( log ⁡ N ) 2 ) X_{N}=N/\log{N}+O(N/(\log{N})^{2}) . This error term contributes 
+
+ (5.27) 
+
+ ≪ ( y m ​ a ​ x ( m ) ) 2 ​ N φ ⁡ ( W ) ​ ( log ⁡ N ) 2 ​ ( ∑ u < R ( u , W ) = 1 μ ​ ( u ) 2 g ⁡ ( u ) ) k − 1 ≪ ( y m ​ a ​ x ( m ) ) 2 ​ φ ​ ( W ) k − 2 ​ N ​ ( log ⁡ R ) k − 3 W k − 1 , \ll\frac{(y^{(m)}_{max})^{2}N}{\varphi(W)(\log{N})^{2}}\Bigl(\sum_{\begin{subarray}{c}u<R\\
+(u,W)=1\end{subarray}}\frac{\mu(u)^{2}}{g(u)}\Bigr)^{k-1}\ll\frac{(y^{(m)}_{max})^{2}\varphi(W)^{k-2}N(\log{R})^{k-3}}{W^{k-1}}, 
+
+ which can be absorbed into the first error term of ( 5.26 ). This completes the proof.
+∎ 
+
+ Remark . 
+
+ In our proof of Lemma 5.2 we only really require λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} to be supported on d 1 , … , d k d_{1},\dotsc,d_{k} satisfying ∏ i ≠ j d i < R \prod_{i\neq j}d_{i}<R for all j j instead of ∏ i = 1 k d i < R \prod_{i=1}^{k}d_{i}<R . For k ≥ 3 k\geq 3 , the numerical benefit of this extension is small and so we do not consider it further. 
+
+ Remark . 
+
+ As our result relies on the Bombieri-Vinogradov theorem, the implied constant in the error term is not effectively computable. However, if we restrict the λ d 1 , … , d k \lambda_{d_{1},\dotsc,d_{k}} to be supported on d i d_{i} which are coprime to the largest prime factor of a possible exceptional modulus of a primitive character then we can make this error term (and all others in this paper) effective at the cost of a negligible error. 
+
+ We now relate our new variables y r 1 , … , r k ( m ) y^{(m)}_{r_{1},\dotsc,r_{k}} to the y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} variables from S 1 S_{1} . 
+
+ Lemma 5.3 . 
+
+ If r m = 1 r_{m}=1 then 
+
+ y r 1 , … , r k ( m ) = ∑ a m y r 1 , … , r m − 1 , a m , r m + 1 , … , r k φ ⁡ ( a m ) + O ⁡ ( y m ​ a ​ x ​ φ ​ ( W ) ​ log ⁡ R W ​ D 0 ) . y^{(m)}_{r_{1},\dotsc,r_{k}}=\sum_{a_{m}}\frac{y_{r_{1},\dotsc,r_{m-1},a_{m},r_{m+1},\dotsc,r_{k}}}{\varphi(a_{m})}+O\Bigl(\frac{y_{max}\varphi(W)\log{R}}{WD_{0}}\Bigr). 
+
+ Proof. 
+
+ We assume throughout the proof that r m = 1 r_{m}=1 . We first substitute our expression ( 5.8 ) into the definition ( 5.23 ). This gives 
+
+ (5.28) 
+
+ y r 1 , … , r k ( m ) = ( ∏ i = 1 k μ ⁡ ( r i ) ​ g ​ ( r i ) ) ​ ∑ d 1 , … , d k r i | d i ​ ∀ i d m = 1 ( ∏ i = 1 k μ ⁡ ( d i ) ​ d i φ ⁡ ( d i ) ) ​ ∑ a 1 , … , a k d i | a i ​ ∀ i y a 1 , … , a k ∏ i = 1 k φ ⁡ ( a i ) . y^{(m)}_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\mu(r_{i})g(r_{i})\Bigr)\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+r_{i}|d_{i}\forall i\\
+d_{m}=1\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{\mu(d_{i})d_{i}}{\varphi(d_{i})}\Bigr)\sum_{\begin{subarray}{c}a_{1},\dotsc,a_{k}\\
+d_{i}|a_{i}\forall i\end{subarray}}\frac{y_{a_{1},\dotsc,a_{k}}}{\prod_{i=1}^{k}\varphi(a_{i})}. 
+
+ We swap the summation of the d d and a a variables to give 
+
+ (5.29) 
+
+ y r 1 , … , r k ( m ) = ( ∏ i = 1 k μ ⁡ ( r i ) ​ g ​ ( r i ) ) ​ ∑ a 1 , … , a k r i | a i ​ ∀ i y a 1 , … , a k ∏ i = 1 k φ ⁡ ( a i ) ​ ∑ d 1 , … , d k d i | a i , r i | d i ​ ∀ i d m = 1 ∏ i = 1 k μ ⁡ ( d i ) ​ d i φ ⁡ ( d i ) . y^{(m)}_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\mu(r_{i})g(r_{i})\Bigr)\sum_{\begin{subarray}{c}a_{1},\dotsc,a_{k}\\
+r_{i}|a_{i}\forall i\end{subarray}}\frac{y_{a_{1},\dotsc,a_{k}}}{\prod_{i=1}^{k}\varphi(a_{i})}\sum_{\begin{subarray}{c}d_{1},\dotsc,d_{k}\\
+d_{i}|a_{i},r_{i}|d_{i}\forall i\\
+d_{m}=1\end{subarray}}\prod_{i=1}^{k}\frac{\mu(d_{i})d_{i}}{\varphi(d_{i})}. 
+
+ We can now evaluate the sum over d 1 , … , d k d_{1},\dotsc,d_{k} explicitly. This gives 
+
+ (5.30) 
+
+ y r 1 , … , r k ( m ) \displaystyle y^{(m)}_{r_{1},\dotsc,r_{k}} 
+ = ( ∏ i = 1 k μ ⁡ ( r i ) ​ g ​ ( r i ) ) ​ ∑ a 1 , … , a k r i | a i ​ ∀ i y a 1 , … , a k ∏ i = 1 k φ ⁡ ( a i ) ​ ∏ i ≠ m μ ⁡ ( a i ) ​ r i φ ⁡ ( a i ) . \displaystyle=\Bigl(\prod_{i=1}^{k}\mu(r_{i})g(r_{i})\Bigr)\sum_{\begin{subarray}{c}a_{1},\dotsc,a_{k}\\
+r_{i}|a_{i}\forall i\end{subarray}}\frac{y_{a_{1},\dotsc,a_{k}}}{\prod_{i=1}^{k}\varphi(a_{i})}\prod_{i\neq m}\frac{\mu(a_{i})r_{i}}{\varphi(a_{i})}. 
+
+ We see that from the support of y a 1 , … , a k y_{a_{1},\dotsc,a_{k}} that we may restrict the summation over a j a_{j} to ( a j , W ) = 1 (a_{j},W)=1 . Thus either a j = r j a_{j}=r_{j} or a j > D 0 ​ r j a_{j}>D_{0}r_{j} . For j ≠ m j\neq m , the total contribution from a j ≠ r j a_{j}\neq r_{j} is 
+
+ ≪ y m ​ a ​ x ​ ( ∏ i = 1 k g ⁡ ( r i ) ​ r i ) ​ ( ∑ a j > D 0 ​ r j r j | a j μ ​ ( a j ) 2 φ ​ ( a j ) 2 ) ​ ( ∑ a m < R ( a m , W ) = 1 μ ​ ( a m ) 2 φ ⁡ ( a m ) ) ​ ∏ 1 ≤ i ≤ k i ≠ j , m ( ∑ r i | a i μ ​ ( a i ) 2 φ ​ ( a i ) 2 ) \displaystyle\ll y_{max}\Bigl(\prod_{i=1}^{k}g(r_{i})r_{i}\Bigr)\Bigl(\sum_{\begin{subarray}{c}a_{j}>D_{0}r_{j}\\
+r_{j}|a_{j}\end{subarray}}\frac{\mu(a_{j})^{2}}{\varphi(a_{j})^{2}}\Bigr)\Bigl(\sum_{\begin{subarray}{c}a_{m}<R\\
+(a_{m},W)=1\end{subarray}}\frac{\mu(a_{m})^{2}}{\varphi(a_{m})}\Bigr)\prod_{\begin{subarray}{c}1\leq i\leq k\\
+i\neq j,m\end{subarray}}\Bigl(\sum_{r_{i}|a_{i}}\frac{\mu(a_{i})^{2}}{\varphi(a_{i})^{2}}\Bigr) 
+
+ (5.31) 
+
+ ≪ ( ∏ i = 1 k g ⁡ ( r i ) ​ r i φ ​ ( r i ) 2 ) ​ y m ​ a ​ x ​ φ ​ ( W ) ​ log ⁡ R W ​ D 0 ≪ y m ​ a ​ x ​ φ ​ ( W ) ​ log ⁡ R W ​ D 0 . \displaystyle\ll\Bigl(\prod_{i=1}^{k}\frac{g(r_{i})r_{i}}{\varphi(r_{i})^{2}}\Bigr)\frac{y_{max}\varphi(W)\log{R}}{WD_{0}}\ll\frac{y_{max}\varphi(W)\log{R}}{WD_{0}}. 
+
+ Thus we find that the main contribution is when a j = r j a_{j}=r_{j} for all j ≠ m j\neq m . We have 
+
+ (5.32) 
+
+ y r 1 , … , r k ( m ) = ( ∏ i = 1 k g ⁡ ( r i ) ​ r i φ ​ ( r i ) 2 ) ​ ∑ a m y r 1 , … , r m − 1 , a m , r m + 1 , … , r k φ ⁡ ( a m ) + O ⁡ ( y m ​ a ​ x ​ φ ​ ( W ) ​ log ⁡ R W ​ D 0 ) . \displaystyle y^{(m)}_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\frac{g(r_{i})r_{i}}{\varphi(r_{i})^{2}}\Bigr)\sum_{a_{m}}\frac{y_{r_{1},\dotsc,r_{m-1},a_{m},r_{m+1},\dotsc,r_{k}}}{\varphi(a_{m})}+O\Bigl(\frac{y_{max}\varphi(W)\log{R}}{WD_{0}}\Bigr). 
+
+ We note that g ⁡ ( p ) ​ p / φ ​ ( p ) 2 = 1 + O ⁡ ( p − 2 ) g(p)p/\varphi(p)^{2}=1+O(p^{-2}) . Thus, since the contribution is zero unless ∏ i = 1 k r i \prod_{i=1}^{k}r_{i} is coprime to W W , we see that the product in the above expression may be replaced by 1 + O ⁡ ( D 0 − 1 ) 1+O(D_{0}^{-1}) . This gives the result.
+∎ 
+
+ 6. Smooth choice of y y 
+
+ We now choose suitable values for our y y variables, and complete the proof of Proposition 4.1 . 
+
+ We first give some comments to motivate our choice of the y y variables, which we believe should be close to optimal. We wish to choose y y so as to maximize the ratio of the main terms of S 2 S_{2} and S 1 S_{1} . If we use Lagrangian multipliers to maximize this ratio (treating all error terms as zero) we arrive at the condition that 
+
+ (6.1) 
+
+ λ ​ y r 1 , … , r k = ( ∏ i = 1 k φ ⁡ ( r i ) g ⁡ ( r i ) ) ​ ∑ m = 1 k g ⁡ ( r m ) φ ⁡ ( r m ) ​ y r 1 , … , r m − 1 , 1 , r m + 1 , … , r k ( m ) \lambda y_{r_{1},\dotsc,r_{k}}=\Bigl(\prod_{i=1}^{k}\frac{\varphi(r_{i})}{g(r_{i})}\Bigr)\sum_{m=1}^{k}\frac{g(r_{m})}{\varphi(r_{m})}y^{(m)}_{r_{1},\dotsc,r_{m-1},1,r_{m+1},\dotsc,r_{k}} 
+
+ for some fixed constant λ \lambda . The y y terms are supported on integers free of small prime factors, and for most integers r r free of small prime factors we have g ⁡ ( r ) ≈ φ ⁡ ( r ) ≈ r g(r)\approx\varphi(r)\approx r , and so the above condition reduces to 
+
+ (6.2) 
+
+ λ ​ y r 1 , … , r k ≈ ∑ m = 1 k y r 1 , … , r m − 1 , 1 , r m + 1 , … , r k ( m ) . \lambda y_{r_{1},\dotsc,r_{k}}\approx\sum_{m=1}^{k}y^{(m)}_{r_{1},\dotsc,r_{m-1},1,r_{m+1},\dotsc,r_{k}}. 
+
+ This condition looks smooth (it has no dependence on the prime factorization of the r i r_{i} ), and should be able to be satisfied if y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} is a smooth function of the r i r_{i} variables. Motivated by the above, when the product r = ∏ i = 1 k r i r=\prod_{i=1}^{k}r_{i} satisfies ( r , W ) = 1 (r,W)=1 and μ ​ ( r ) 2 = 1 \mu(r)^{2}=1 we choose 
+
+ (6.3) 
+
+ y r 1 , … , r k = F ⁡ ( log ⁡ r 1 log ⁡ R , … , log ⁡ r k log ⁡ R ) , y_{r_{1},\dotsc,r_{k}}=F\Bigl(\frac{\log{r_{1}}}{\log{R}},\dotsc,\frac{\log{r_{k}}}{\log{R}}\Bigr), 
+
+ for some smooth function F : ℝ k → ℝ F:\mathbb{R}^{k}\rightarrow\mathbb{R} , supported on ℛ k = { ( x 1 , … , x k ) ∈ [ 0 , 1 ] k : ∑ i = 1 k x i ≤ 1 } \mathcal{R}_{k}=\{(x_{1},\dotsc,x_{k})\in[0,1]^{k}:\sum_{i=1}^{k}x_{i}\leq 1\} . As previously required, we set y r 1 , … , r k = 0 y_{r_{1},\dotsc,r_{k}}=0 if the product r r is either not coprime to W W or is not square-free. With this choice of y y , we can obtain suitable asymptotic estimates for S 1 S_{1} and S 2 S_{2} . 
+
+ We will use the following Lemma to estimate our sums S 1 S_{1} and S 2 S_{2} with this choice of y y . 
+
+ Lemma 6.1 . 
+
+ Let A 1 , A 2 , L > 0 A_{1},A_{2},L>0 . Let γ \gamma be a multiplicative function satisfying 
+
+ 0 ≤ γ ⁡ ( p ) p ≤ 1 − A 1 , 0\leq\frac{\gamma(p)}{p}\leq 1-A_{1}, 
+
+ and 
+
+ − L ≤ ∑ w ≤ p ≤ z γ ⁡ ( p ) ​ log ⁡ p p − log ⁡ z / w ≤ A 2 -L\leq\sum_{w\leq p\leq z}\frac{\gamma(p)\log{p}}{p}-\log{z/w}\leq A_{2} 
+
+ for any 2 ≤ w ≤ z 2\leq w\leq z . Let g g be the totally multiplicative function defined on primes by g ⁡ ( p ) = γ ⁡ ( p ) / ( p − γ ⁡ ( p ) ) g(p)=\gamma(p)/(p-\gamma(p)) . Finally, let G : [ 0 , 1 ] → ℝ G:[0,1]\rightarrow\mathbb{R} be smooth, and let G m ​ a ​ x = sup t ∈ [ 0 , 1 ] ( | G ⁡ ( t ) | + | G ′ ​ ( t ) | ) G_{max}=\sup_{t\in[0,1]}(|G(t)|+|G^{\prime}(t)|) . Then 
+
+ ∑ d < z μ ​ ( d ) 2 ​ g ​ ( d ) ​ G ​ ( log ⁡ d log ⁡ z ) = 𝔖 ​ log ⁡ z ​ ∫ 0 1 G ⁡ ( x ) ​ 𝑑 x + O A 1 , A 2 ​ ( 𝔖 ​ L ​ G m ​ a ​ x ) , \sum_{d<z}\mu(d)^{2}g(d)G\Bigl(\frac{\log{d}}{\log{z}}\Bigr)=\mathfrak{S}\log{z}\int_{0}^{1}G(x)dx+O_{A_{1},A_{2}}(\mathfrak{S}LG_{max}), 
+
+ where 
+
+ 𝔖 = ∏ p ( 1 − γ ⁡ ( p ) p ) − 1 ​ ( 1 − 1 p ) . \mathfrak{S}=\prod_{p}\Bigl(1-\frac{\gamma(p)}{p}\Bigr)^{-1}\Bigl(1-\frac{1}{p}\Bigr). 
+
+ Here the constant implied by the ‘ O O ’ term is independent of G G and L L . 
+
+ Proof. 
+
+ This is [ 3 , Lemma 4] , with κ = 1 \kappa=1 and slight changes to the notation.
+∎ 
+
+ We now finish our estimations of S 1 S_{1} and S 2 ( m ) S_{2}^{(m)} , completing the proof of Proposition 4.1 . We first estimate S 1 S_{1} . 
+
+ Lemma 6.2 . 
+
+ Let y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} be given in terms of a smooth function F F by ( 6.3 ), with F F supported on ℛ k = { ( x 1 , … , x k ) ∈ [ 0 , 1 ] k : ∑ i = 1 k x i ≤ 1 } \mathcal{R}_{k}=\{(x_{1},\dotsc,x_{k})\in[0,1]^{k}:\sum_{i=1}^{k}x_{i}\leq 1\} . Let 
+
+ F m ​ a ​ x = sup ( t 1 , … , t k ) ∈ [ 0 , 1 ] k | F ⁡ ( t 1 , … , t k ) | + ∑ i = 1 k | ∂ F ∂ t i ​ ( t 1 , … , t k ) | . F_{max}=\sup_{(t_{1},\dotsc,t_{k})\in[0,1]^{k}}|F(t_{1},\dotsc,t_{k})|+\sum_{i=1}^{k}|\frac{\partial F}{\partial t_{i}}(t_{1},\dotsc,t_{k})|. 
+
+ Then we have 
+
+ S 1 = φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ I k ​ ( F ) + O ⁡ ( F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 ) , S_{1}=\frac{\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}}I_{k}(F)+O\Bigl(\frac{F_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}\Bigr), 
+
+ where 
+
+ I k ​ ( F ) = ∫ 0 1 ⋯ ​ ∫ 0 1 F ​ ( t 1 , … , t k ) 2 ​ d ​ t 1 ​ … ​ d ​ t k . I_{k}(F)=\int_{0}^{1}\dotsi\int_{0}^{1}F(t_{1},\dotsc,t_{k})^{2}dt_{1}\dotsc dt_{k}. 
+
+ Proof. 
+
+ We substitute our choice ( 6.3 ) of y y into our expression of S 1 S_{1} in terms of y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} given by Lemma 5.1 . This gives 
+
+ (6.4) 
+
+ S 1 = N W ​ ∑ u 1 , … , u k ( u i , u j ) = 1 ​ ∀ i ≠ j ( u i , W ) = 1 ​ ∀ i ( ∏ i = 1 k μ ​ ( u i ) 2 φ ⁡ ( u i ) ) ​ F ​ ( log ⁡ u 1 log ⁡ R , … , log ⁡ u k log ⁡ R ) 2 + O ⁡ ( F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 ) . S_{1}=\frac{N}{W}\sum_{\begin{subarray}{c}u_{1},\dotsc,u_{k}\\
+(u_{i},u_{j})=1\forall i\neq j\\
+(u_{i},W)=1\forall i\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{\mu(u_{i})^{2}}{\varphi(u_{i})}\Bigr)F\Bigl(\frac{\log{u_{1}}}{\log{R}},\dotsc,\frac{\log{u_{k}}}{\log{R}}\Bigr)^{2}+O\Bigl(\frac{F_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}\Bigr). 
+
+ We note that two integers a a and b b with ( a , W ) = ( b , W ) = 1 (a,W)=(b,W)=1 but ( a , b ) ≠ 1 (a,b)\neq 1 must have a common prime factor which is greater than D 0 D_{0} . Thus we can drop the requirement that ( u i , u j ) = 1 (u_{i},u_{j})=1 , at the cost of an error of size 
+
+ ≪ F m ​ a ​ x 2 ​ N W ​ ∑ p > D 0 ∑ u 1 , … , u k < R p | u i , u j ( u i , W ) = 1 ​ ∀ i ∏ i = 1 k μ ​ ( u i ) 2 φ ⁡ ( u i ) \displaystyle\ll\frac{F_{max}^{2}N}{W}\sum_{p>D_{0}}\sum_{\begin{subarray}{c}u_{1},\dotsc,u_{k}<R\\
+p|u_{i},u_{j}\\
+(u_{i},W)=1\forall i\end{subarray}}\prod_{i=1}^{k}\frac{\mu(u_{i})^{2}}{\varphi(u_{i})} 
+
+ (6.5) 
+
+ ≪ F m ​ a ​ x 2 ​ N W ​ ∑ p > D 0 1 ( p − 1 ) 2 ​ ( ∑ u < R ( u , W ) = 1 μ ​ ( u ) 2 φ ⁡ ( u ) ) k ≪ F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 . \displaystyle\ll\frac{F_{max}^{2}N}{W}\sum_{p>D_{0}}\frac{1}{(p-1)^{2}}\Bigl(\sum_{\begin{subarray}{c}u<R\\
+(u,W)=1\end{subarray}}\frac{\mu(u)^{2}}{\varphi(u)}\Bigr)^{k}\ll\frac{F_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}. 
+
+ Thus we are left to evaluate the sum 
+
+ (6.6) 
+
+ ∑ u 1 , … , u k ( u i , W ) = 1 ​ ∀ i ( ∏ i = 1 k μ ​ ( u i ) 2 φ ⁡ ( u i ) ) ​ F ​ ( log ⁡ u 1 log ⁡ R , … , log ⁡ u k log ⁡ R ) 2 . \sum_{\begin{subarray}{c}u_{1},\dotsc,u_{k}\\
+(u_{i},W)=1\forall i\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{\mu(u_{i})^{2}}{\varphi(u_{i})}\Bigr)F\Bigl(\frac{\log{u_{1}}}{\log{R}},\dotsc,\frac{\log{u_{k}}}{\log{R}}\Bigr)^{2}. 
+
+ We can now estimate this sum by k k applications of Lemma 6.1 , dealing with the sum over each u i u_{i} in turn. For each application we take 
+
+ (6.7) 
+
+ γ ⁡ ( p ) \displaystyle\gamma(p) 
+ = { 1 , p ∤ W , 0 , otherwise, \displaystyle=\begin{cases}1,\qquad&p\nmid W,\\
+0,&\text{otherwise,}\end{cases} 
+
+ (6.8) 
+
+ L \displaystyle L 
+ ≪ 1 + ∑ p | W log ⁡ p p ≪ log ⁡ D 0 , \displaystyle\ll 1+\sum_{p|W}\frac{\log{p}}{p}\ll\log{D_{0}}, 
+
+ and A 1 A_{1} and A 2 A_{2} fixed constants of suitable size. This gives 
+
+ ∑ u 1 , … , u k ( u i , W ) = 1 ​ ∀ i ( ∏ i = 1 k μ ​ ( u i ) 2 φ ⁡ ( u i ) ) ​ F ​ ( log ⁡ u 1 log ⁡ R , … , log ⁡ u k log ⁡ R ) 2 \displaystyle\sum_{\begin{subarray}{c}u_{1},\dotsc,u_{k}\\
+(u_{i},W)=1\forall i\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{\mu(u_{i})^{2}}{\varphi(u_{i})}\Bigr)F\Bigl(\frac{\log{u_{1}}}{\log{R}},\dotsc,\frac{\log{u_{k}}}{\log{R}}\Bigr)^{2} 
+ = φ ​ ( W ) k ​ ( log ⁡ R ) k W k ​ I k ​ ( F ) \displaystyle=\frac{\varphi(W)^{k}(\log{R})^{k}}{W^{k}}I_{k}(F) 
+
+ (6.9) 
+
+ + O ⁡ ( F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ ( log ⁡ D 0 ) ​ ( log ⁡ R ) k − 1 W k ) . \displaystyle\qquad+O\Bigl(\frac{F_{max}^{2}\varphi(W)^{k}(\log{D_{0}})(\log{R})^{k-1}}{W^{k}}\Bigr). 
+
+ We now combine ( 6.9 ) with ( 6.4 ) and ( 6.5 ) to obtain the result.
+∎ 
+
+ Lemma 6.3 . 
+
+ Let y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} , F F and F m ​ a ​ x F_{max} be as described in Lemma 6.2 . Then we have 
+
+ S 2 ( m ) = φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k + 1 W k + 1 ​ log ⁡ N ​ J k ( m ) ​ ( F ) + O ⁡ ( F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 ) , S_{2}^{(m)}=\frac{\varphi(W)^{k}N(\log{R})^{k+1}}{W^{k+1}\log{N}}J^{(m)}_{k}(F)+O\Bigl(\frac{F_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}\Bigr), 
+
+ where 
+
+ J k ( m ) ( F ) = ∫ 0 1 ⋯ ∫ 0 1 ( ∫ 0 1 F ( t 1 , … , t k ) d t m ) 2 d t 1 … d t m − 1 d t m + 1 … d t k . J^{(m)}_{k}(F)=\int_{0}^{1}\dotsi\int_{0}^{1}\Bigr(\int_{0}^{1}F(t_{1},\dotsc,t_{k})dt_{m}\Bigr)^{2}dt_{1}\dotsc dt_{m-1}dt_{m+1}\dotsc dt_{k}. 
+
+ Proof. 
+
+ The estimation of S 2 ( m ) S_{2}^{(m)} is similar to the estimation of S 1 S_{1} . We first estimate y r 1 , … , r k ( m ) y^{(m)}_{r_{1},\dotsc,r_{k}} . We recall that y r 1 , … , r k ( m ) = 0 y^{(m)}_{r_{1},\dotsc,r_{k}}=0 unless r m = 1 r_{m}=1 and r = ∏ i = 1 k r i r=\prod_{i=1}^{k}r_{i} satisfies ( r , W ) = 1 (r,W)=1 and μ ​ ( r ) 2 = 1 \mu(r)^{2}=1 , in which case y r 1 , … , r k ( m ) y^{(m)}_{r_{1},\dotsc,r_{k}} is given in terms of y r 1 , … , r k y_{r_{1},\dotsc,r_{k}} by Lemma 5.3 . We first concentrate on this case when y r 1 , … , r k ( m ) ≠ 0 y^{(m)}_{r_{1},\dotsc,r_{k}}\neq 0 . We substitute our choice ( 6.3 ) of y y into our expression from Lemma 5.3 . This gives 
+
+ y r 1 , … , r k ( m ) \displaystyle y^{(m)}_{r_{1},\dotsc,r_{k}} 
+ = ∑ ( u , W ​ ∏ i = 1 k r i ) = 1 μ ​ ( u ) 2 φ ⁡ ( u ) ​ F ​ ( log ⁡ r 1 log ⁡ R , … , log ⁡ r m − 1 log ⁡ R , log ⁡ u log ⁡ R , log ⁡ r m + 1 log ⁡ R , … , log ⁡ r k log ⁡ R ) \displaystyle=\sum_{(u,W\prod_{i=1}^{k}r_{i})=1}\frac{\mu(u)^{2}}{\varphi(u)}F\Bigl(\frac{\log{r_{1}}}{\log{R}},\dotsc,\frac{\log{r_{m-1}}}{\log{R}},\frac{\log{u}}{\log{R}},\frac{\log{r_{m+1}}}{\log{R}},\dotsc,\frac{\log{r_{k}}}{\log{R}}\Bigr) 
+
+ (6.10) 
+
+ + O ⁡ ( F m ​ a ​ x ​ φ ​ ( W ) ​ log ⁡ R W ​ D 0 ) . \displaystyle\qquad+O\Bigl(\frac{F_{max}\varphi(W)\log{R}}{WD_{0}}\Bigr). 
+
+ We can see from this that y m ​ a ​ x ( m ) ≪ φ ⁡ ( W ) ​ F m ​ a ​ x ​ ( log ⁡ R ) / W y^{(m)}_{max}\ll\varphi(W)F_{max}(\log{R})/W . We now estimate the sum over u u in ( 6.10 ). We apply Lemma 6.1 with 
+
+ (6.11) 
+
+ γ ⁡ ( p ) \displaystyle\gamma(p) 
+ = { 1 , p ∤ W ​ ∏ i = 1 k r i , 0 , otherwise, \displaystyle=\begin{cases}1,\qquad&p\nmid W\prod_{i=1}^{k}r_{i},\\
+0,&\text{otherwise,}\end{cases} 
+
+ (6.12) 
+
+ L \displaystyle L 
+ ≪ 1 + ∑ p | W ​ ∏ i = 1 k r i log ⁡ p p ≪ ∑ p < log ⁡ R log ⁡ p p + ∑ p | W ​ ∏ i = 1 k r i p > log ⁡ R log ⁡ log ⁡ R log ⁡ R ≪ log ⁡ log ⁡ N , \displaystyle\ll 1+\sum_{p|W\prod_{i=1}^{k}r_{i}}\frac{\log{p}}{p}\ll\sum_{p<\log{R}}\frac{\log{p}}{p}+\sum_{\begin{subarray}{c}p|W\prod_{i=1}^{k}r_{i}\\
+p>\log{R}\end{subarray}}\frac{\log{\log{R}}}{\log{R}}\ll\log{\log{N}}, 
+
+ and with A 1 , A 2 A_{1},A_{2} suitable fixed constants. This gives us 
+
+ (6.13) 
+
+ y r 1 , … , r k ( m ) \displaystyle y^{(m)}_{r_{1},\dotsc,r_{k}} 
+ = ( log ⁡ R ) ​ φ ⁡ ( W ) W ​ ( ∏ i = 1 k φ ⁡ ( r i ) r i ) ​ F r 1 , … , r k ( m ) + O ⁡ ( F m ​ a ​ x ​ φ ​ ( W ) ​ log ⁡ R W ​ D 0 ) , \displaystyle=(\log{R})\frac{\varphi(W)}{W}\bigl(\prod_{i=1}^{k}\frac{\varphi(r_{i})}{r_{i}}\bigr)F^{(m)}_{r_{1},\dotsc,r_{k}}+O\Bigl(\frac{F_{max}\varphi(W)\log{R}}{WD_{0}}\Bigr), 
+
+ where 
+
+ (6.14) 
+
+ F r 1 , … , r k ( m ) = ∫ 0 1 F ⁡ ( log ⁡ r 1 log ⁡ R , … , log ⁡ r m − 1 log ⁡ R , t m , log ⁡ r m + 1 log ⁡ R , … , log ⁡ r k log ⁡ R ) ​ d ​ t m . F^{(m)}_{r_{1},\dotsc,r_{k}}=\int_{0}^{1}F\Bigl(\frac{\log{r_{1}}}{\log{R}},\dotsc,\frac{\log{r_{m-1}}}{\log{R}},t_{m},\frac{\log{r_{m+1}}}{\log{R}},\dotsc,\frac{\log{r_{k}}}{\log{R}}\Bigr)dt_{m}. 
+
+ Thus we have shown that if r m = 1 r_{m}=1 and r = ∏ i = 1 k r i r=\prod_{i=1}^{k}r_{i} satisfies ( r , W ) = 1 (r,W)=1 and μ ​ ( r ) 2 = 1 \mu(r)^{2}=1 then y r 1 , … , r k ( m ) y^{(m)}_{r_{1},\dotsc,r_{k}} is given by ( 6.13 ), and otherwise y r 1 , … , r k ( m ) = 0 y^{(m)}_{r_{1},\dotsc,r_{k}}=0 . We now substitute this into our expression from Lemma 5.2 , namely 
+
+ (6.15) 
+
+ S 2 ( m ) = N φ ⁡ ( W ) ​ log ⁡ N ​ ∑ r 1 , … , r k ( y r 1 , … , r k ( m ) ) 2 ∏ i = 1 k g ⁡ ( r i ) + O ⁡ ( ( y m ​ a ​ x ( m ) ) 2 ​ φ ​ ( W ) k − 2 ​ N ​ ( log ⁡ N ) k − 2 W k − 1 ​ D 0 ) + O ⁡ ( y m ​ a ​ x 2 ​ N ( log ⁡ N ) A ) . S_{2}^{(m)}=\frac{N}{\varphi(W)\log{N}}\sum_{r_{1},\dotsc,r_{k}}\frac{(y^{(m)}_{r_{1},\dotsc,r_{k}})^{2}}{\prod_{i=1}^{k}g(r_{i})}+O\Bigl(\frac{(y^{(m)}_{max})^{2}\varphi(W)^{k-2}N(\log{N})^{k-2}}{W^{k-1}D_{0}}\Bigr)+O\Bigl(\frac{y_{max}^{2}N}{(\log{N})^{A}}\Bigr). 
+
+ We obtain 
+
+ (6.16) 
+
+ S 2 ( m ) \displaystyle S_{2}^{(m)} 
+ = φ ⁡ ( W ) ​ N ​ ( log ⁡ R ) 2 W 2 ​ log ⁡ N ∑ r 1 , … , r k ( r i , W ) = 1 ​ ∀ i ( r i , r j ) = 1 ​ ∀ i ≠ j r m = 1 ( ∏ i = 1 k μ ​ ( r i ) 2 ​ φ ​ ( r i ) 2 g ⁡ ( r i ) ​ r i 2 ) ( F r 1 , … , r k ( m ) ) 2 + O ( F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k W k + 1 ​ D 0 ) . \displaystyle=\frac{\varphi(W)N(\log{R})^{2}}{W^{2}\log{N}}\sum_{\begin{subarray}{c}r_{1},\dotsc,r_{k}\\
+(r_{i},W)=1\forall i\\
+(r_{i},r_{j})=1\forall i\neq j\\
+r_{m}=1\end{subarray}}\Bigl(\prod_{i=1}^{k}\frac{\mu(r_{i})^{2}\varphi(r_{i})^{2}}{g(r_{i})r_{i}^{2}}\Bigr)(F^{(m)}_{r_{1},\dotsc,r_{k}})^{2}+O\Bigl(\frac{F_{max}^{2}\varphi(W)^{k}N(\log{R})^{k}}{W^{k+1}D_{0}}\Bigl). 
+
+ We remove the condition that ( r i , r j ) = 1 (r_{i},r_{j})=1 in the same way we did when considering S 1 S_{1} . Instead of ( 6.5 ), this introduces an error which is of size 
+
+ (6.17) 
+
+ ≪ φ ⁡ ( W ) ​ N ​ ( log ⁡ R ) 2 ​ F m ​ a ​ x 2 W 2 ​ log ⁡ N ​ ( ∑ p > D 0 φ ​ ( p ) 4 g ​ ( p ) 2 ​ p 4 ) ​ ( ∑ r < R ( r , W ) = 1 μ ​ ( r ) 2 ​ φ ​ ( r ) 2 g ⁡ ( r ) ​ r 2 ) k − 1 ≪ F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ N ) k W k + 1 ​ D 0 . \displaystyle\ll\frac{\varphi(W)N(\log{R})^{2}F_{max}^{2}}{W^{2}\log{N}}\Bigl(\sum_{p>D_{0}}\frac{\varphi(p)^{4}}{g(p)^{2}p^{4}}\Bigr)\Bigl(\sum_{\begin{subarray}{c}r<R\\
+(r,W)=1\end{subarray}}\frac{\mu(r)^{2}\varphi(r)^{2}}{g(r)r^{2}}\Bigr)^{k-1}\ll\frac{F_{max}^{2}\varphi(W)^{k}N(\log{N})^{k}}{W^{k+1}D_{0}}. 
+
+ Thus we are left to evaluate the sum 
+
+ (6.18) 
+
+ ∑ r 1 , … , r m − 1 , r m + 1 , … , r k ( r i , W ) = 1 ​ ∀ i ( ∏ 1 ≤ i ≤ k i ≠ j μ ​ ( r i ) 2 ​ φ ​ ( r i ) 2 g ⁡ ( r i ) ​ r i 2 ) ​ ( F r 1 , … , r k ( m ) ) 2 . \sum_{\begin{subarray}{c}r_{1},\dotsc,r_{m-1},r_{m+1},\dotsc,r_{k}\\
+(r_{i},W)=1\forall i\end{subarray}}\Bigl(\prod_{\begin{subarray}{c}1\leq i\leq k\\
+i\neq j\end{subarray}}\frac{\mu(r_{i})^{2}\varphi(r_{i})^{2}}{g(r_{i})r_{i}^{2}}\Bigr)(F^{(m)}_{r_{1},\dotsc,r_{k}})^{2}. 
+
+ We estimate this by applying Lemma 6.1 to each summation variable in turn. In each case we take 
+
+ (6.19) 
+
+ γ ⁡ ( p ) \displaystyle\gamma(p) 
+ = { 1 − p 2 − 3 ​ p + 1 p 3 − p 2 − 2 ​ p + 1 , p ∤ W 0 ,  otherwise, \displaystyle=\begin{cases}1-\frac{p^{2}-3p+1}{p^{3}-p^{2}-2p+1},\qquad&p\nmid W\\
+0,&\text{ otherwise,}\end{cases} 
+
+ (6.20) 
+
+ L \displaystyle L 
+ ≪ 1 + ∑ p | W log ⁡ p p ≪ log ⁡ D 0 , \displaystyle\ll 1+\sum_{p|W}\frac{\log{p}}{p}\ll\log{D_{0}}, 
+
+ and A 1 , A 2 A_{1},A_{2} suitable fixed constants. This gives 
+
+ (6.21) 
+
+ S 2 ( m ) = φ ​ ( W ) k ​ N ​ ( log ⁡ R ) k + 1 W k + 1 ​ log ⁡ N ​ J k ( m ) + O ⁡ ( F m ​ a ​ x 2 ​ φ ​ ( W ) k ​ N ​ ( log ⁡ N ) k W k + 1 ​ D 0 ) , S_{2}^{(m)}=\frac{\varphi(W)^{k}N(\log{R})^{k+1}}{W^{k+1}\log{N}}J^{(m)}_{k}+O\Bigl(\frac{F_{max}^{2}\varphi(W)^{k}N(\log{N})^{k}}{W^{k+1}D_{0}}\Bigr), 
+
+ where 
+
+ (6.22) 
+
+ J k ( m ) = ∫ 0 1 ⋯ ​ ∫ 0 1 ( ∫ 0 1 F ⁡ ( t 1 , … , t k ) ​ d ​ t m ) 2 ​ d ​ t 1 ​ … ​ d ​ t m − 1 ​ d ​ t m + 1 ​ … ​ d ​ t k , J^{(m)}_{k}=\int_{0}^{1}\dotsi\int_{0}^{1}\Bigl(\int_{0}^{1}F(t_{1},\dotsc,t_{k})dt_{m}\Bigr)^{2}dt_{1}\dotsc dt_{m-1}dt_{m+1}\dotsc dt_{k}, 
+
+ as required.
+∎ 
+
+ Remark . 
+
+ If F ⁡ ( t 1 , … , t k ) = G ⁡ ( ∑ i = 1 k t i ) F(t_{1},\dotsc,t_{k})=G(\sum_{i=1}^{k}t_{i}) for some function G G , then I k ​ ( F ) I_{k}(F) and J k ( m ) ​ ( F ) J_{k}^{(m)}(F) simplify to I k ​ ( F ) = ∫ 0 1 G ​ ( t ) 2 ​ t k − 1 ​ 𝑑 t / ( k − 1 ) ! I_{k}(F)=\int_{0}^{1}G(t)^{2}t^{k-1}dt/(k-1)! and J k ( m ) ​ ( F ) = ∫ 0 1 ( ∫ t 1 G ⁡ ( v ) ​ 𝑑 v ) 2 ​ t k − 2 ​ 𝑑 t / ( k − 2 ) ! J_{k}^{(m)}(F)=\int_{0}^{1}(\int_{t}^{1}G(v)dv)^{2}t^{k-2}dt/(k-2)! for each m m , which is equivalent to the results obtained using the original GPY method using weights given by ( 2.3 ). 
+
+ Remark . 
+
+ Tao gives an alternative approach to arrive at his equivalent of Proposition 4.1 . His approach is to define λ d 1 , … , d k \lambda_{d_{1},\dots,d_{k}} in terms of a suitable smooth function f ⁡ ( t 1 , … , t k ) f(t_{1},\dotsc,t_{k}) as in ( 2.5 ). He then estimates the corresponding sums directly using Fourier integrals. This is somewhat similar to the original paper of Goldston, Pintz and Yıldırım [ 5 ] . Our function F F corresponds to f ⁡ ( t 1 , … , t k ) f(t_{1},\dotsc,t_{k}) differentiated with respect to each coordinate. 
+
+ 7. Choice of smooth weight for large k k 
+
+ In this section we establish part ( 3 ) (3) of Proposition 4.3 . Our argument here is closely related to that of Tao, who uses a probability theory proof. 
+
+ We let 𝒮 k \mathcal{S}_{k} denote the set of Riemann-integrable functions F : [ 0 , 1 ] k → ℝ F:[0,1]^{k}\rightarrow\mathbb{R} supported on ℛ k = { ( x 1 , … , x k ) ∈ [ 0 , 1 ] k : ∑ i = 1 k x i ≤ 1 } \mathcal{R}_{k}=\{(x_{1},\dotsc,x_{k})\in[0,1]^{k}:\sum_{i=1}^{k}x_{i}\leq 1\} with I k ​ ( F ) ≠ 0 I_{k}(F)\neq 0 and J k ( m ) ​ ( F ) ≠ 0 J_{k}^{(m)}(F)\neq 0 for each m m . We would like to obtain a lower bound for 
+
+ (7.1) 
+
+ M k = sup F ∈ 𝒮 k ∑ m = 1 k J k ( m ) ​ ( F ) I k ​ ( F ) . M_{k}=\sup_{F\in\mathcal{S}_{k}}\frac{\sum_{m=1}^{k}J_{k}^{(m)}(F)}{I_{k}(F)}. 
+
+ Remark . 
+
+ Let ℒ k \mathcal{L}_{k} denote the linear operator defined by 
+
+ (7.2) 
+
+ ℒ k ​ F ​ ( u 1 , … , u k ) = ∑ m = 1 k ∫ 0 1 − ∑ i ≠ m u i F ⁡ ( u 1 , … , u m − 1 , t m , u m + 1 , … , u k ) ​ d ​ t m \mathcal{L}_{k}F(u_{1},\dotsc,u_{k})=\sum_{m=1}^{k}\int_{0}^{1-\sum_{i\neq m}u_{i}}F(u_{1},\dotsc,u_{m-1},t_{m},u_{m+1},\dotsc,u_{k})dt_{m} 
+
+ whenever ( u 1 , … , u k ) ∈ ℛ k (u_{1},\dotsc,u_{k})\in\mathcal{R}_{k} , and zero otherwise. We expect that if F F maximizes the ratio ∑ m = 1 k J k ( m ) ​ ( F ) / I k ​ ( F ) \sum_{m=1}^{k}J_{k}^{(m)}(F)/I_{k}(F) , then F F is an eigenfunction for ℒ k \mathcal{L}_{k} , and the corresponding eigenvalue is the value of ratio at F F . Unfortunately the author has not been able to solve the eigenvalue equation for ℒ k \mathcal{L}_{k} when k > 2 k>2 . 
+
+ We obtain a lower bound for M k M_{k} by constructing a function F = F k F=F_{k} which makes the ratio ∑ m = 1 k J k ( m ) ​ ( F ) / I k ​ ( F ) \sum_{m=1}^{k}J_{k}^{(m)}(F)/I_{k}(F) large provided k k is large. We choose F F to be of the form 
+
+ (7.3) 
+
+ F ⁡ ( t 1 , … , t k ) = { ∏ i = 1 k g ( k t i ) , if  ∑ i = 1 k t i ≤ 1 , 0 , otherwise, F(t_{1},\dots,t_{k})=\begin{cases}\prod_{i=1}^{k}g(kt_{i}),\qquad&\text{if $\sum_{i=1}^{k}t_{i}\leq 1$,}\\
+0,&\text{otherwise,}\end{cases} 
+
+ for some smooth function g : [ 0 , ∞ ] → ℝ g:[0,\infty]\rightarrow\mathbb{R} , supported on [ 0 , T ] [0,T] . We see that with this choice F F is symmetric, and so J k ( m ) ​ ( F ) J^{(m)}_{k}(F) is independent of m m . Thus we only need to consider J k = J k ( 1 ) ​ ( F ) J_{k}=J_{k}^{(1)}(F) . Similarly we write I k = I k ​ ( F ) I_{k}=I_{k}(F) . 
+
+ The key observation is that if the center of mass ∫ 0 ∞ u ​ g ​ ( u ) 2 ​ 𝑑 u / ∫ 0 ∞ g ​ ( u ) 2 ​ 𝑑 u \int_{0}^{\infty}ug(u)^{2}du/\int_{0}^{\infty}g(u)^{2}du of g 2 g^{2} is strictly less than 1, then for large k k we expect that the constraints ∑ i = 1 k t i ≤ 1 \sum_{i=1}^{k}t_{i}\leq 1 to be able to be dropped at the cost of only a small error. This is because (by concentration of measure) the main contribution to the unrestricted integrals I k ′ = ∫ 0 ∞ ⋯ ​ ∫ 0 ∞ ∏ i = 1 k g ​ ( k ​ t i ) 2 ​ d ​ t 1 ​ … ​ d ​ t k I^{\prime}_{k}=\int_{0}^{\infty}\dotsi\int_{0}^{\infty}\prod_{i=1}^{k}g(kt_{i})^{2}dt_{1}\dotsc dt_{k} and J k ′ = ∫ 0 ∞ ⋯ ​ ∫ 0 ∞ ( ∫ 0 ∞ ∏ i = 1 k g ⁡ ( k ​ t i ) ​ d ​ t 1 ) 2 ​ d ​ t 2 ​ … ​ d ​ t k J^{\prime}_{k}=\int_{0}^{\infty}\dotsi\int_{0}^{\infty}(\int_{0}^{\infty}\prod_{i=1}^{k}g(kt_{i})dt_{1})^{2}dt_{2}\dotsc dt_{k} should come primarily from when ∑ i = 1 k t i \sum_{i=1}^{k}t_{i} is close to the center of mass. Therefore we would expect the contribution when ∑ i = 1 k t i > 1 \sum_{i=1}^{k}t_{i}>1 to be small if the center of mass is less than 1, and so I k I_{k} and J k J_{k} are well approximated by I k ′ I_{k}^{\prime} and J k ′ J_{k}^{\prime} in this case. 
+
+ To ease notation we let γ = ∫ u ≥ 0 g ​ ( u ) 2 ​ 𝑑 u \gamma=\int_{u\geq 0}g(u)^{2}du , and restrict our attention to g g such that γ > 0 \gamma>0 . We have 
+
+ (7.4) 
+
+ I k = ∫⋯∫ ℛ k F ​ ( t 1 , … , t k ) 2 ​ d ​ t 1 ​ … ​ d ​ t k ≤ ( ∫ 0 ∞ g ​ ( k ​ t ) 2 ​ 𝑑 t ) k = k − k ​ γ k . I_{k}=\idotsint\limits_{\mathcal{R}_{k}}F(t_{1},\dotsc,t_{k})^{2}dt_{1}\dotsc dt_{k}\leq\Bigl(\int_{0}^{\infty}g(kt)^{2}dt\Bigr)^{k}=k^{-k}\gamma^{k}. 
+
+ We now consider J k J_{k} . Since squares are non-negative, we obtain a lower bound for J k J_{k} if we restrict the outer integral to ∑ i = 2 k t i < 1 − T / k \sum_{i=2}^{k}t_{i}<1-T/k . This has the advantage that, by the support of g g , there are no further restrictions on the inner integral. Thus 
+
+ (7.5) 
+
+ J k ≥ ∫⋯∫ t 2 , … , t k ≥ 0 ∑ i = 2 k t i ≤ 1 − T / k ( ∫ 0 T / k ( ∏ i = 1 k g ⁡ ( k ​ t i ) ) ​ d ​ t 1 ) 2 ​ d ​ t 2 ​ … ​ d ​ t k . J_{k}\geq\idotsint\limits_{\begin{subarray}{c}t_{2},\dotsc,t_{k}\geq 0\\
+\sum_{i=2}^{k}t_{i}\leq 1-T/k\end{subarray}}\Bigl(\int_{0}^{T/k}\Bigl(\prod_{i=1}^{k}g(kt_{i})\Bigr)dt_{1}\Bigr)^{2}dt_{2}\dotsc dt_{k}. 
+
+ We write the right hand side of ( 7.5 ) as J k ′ − E k J^{\prime}_{k}-E_{k} , where 
+
+ J k ′ \displaystyle J^{\prime}_{k} 
+ = ∫⋯∫ t 2 , … , t k ≥ 0 ( ∫ 0 T / k ( ∏ i = 1 k g ⁡ ( k ​ t i ) ) ​ d ​ t 1 ) 2 ​ d ​ t 2 ​ … ​ d ​ t k \displaystyle=\idotsint\limits_{t_{2},\dotsc,t_{k}\geq 0}\Bigl(\int_{0}^{T/k}\Bigl(\prod_{i=1}^{k}g(kt_{i})\Bigr)dt_{1}\Bigr)^{2}dt_{2}\dotsc dt_{k} 
+
+ (7.6) 
+
+ = ( ∫ 0 ∞ g ⁡ ( k ​ t 1 ) ​ d ​ t 1 ) 2 ​ ( ∫ 0 ∞ g ​ ( k ​ t ) 2 ​ 𝑑 t ) k − 1 = k − k − 1 ​ γ k − 1 ​ ( ∫ 0 ∞ g ⁡ ( u ) ​ 𝑑 u ) 2 , \displaystyle=\Bigl(\int_{0}^{\infty}g(kt_{1})dt_{1}\Bigr)^{2}\Bigl(\int_{0}^{\infty}g(kt)^{2}dt\Bigr)^{k-1}=k^{-k-1}\gamma^{k-1}\Bigl(\int_{0}^{\infty}g(u)du\Bigr)^{2}, 
+
+ E k \displaystyle E_{k} 
+ = ∫⋯∫ t 2 , … , t k ≥ 0 ∑ i = 2 k t i > 1 − T / k ( ∫ 0 T / k ( ∏ i = 1 k g ⁡ ( k ​ t i ) ) ​ d ​ t 1 ) 2 ​ d ​ t 2 ​ … ​ d ​ t k \displaystyle=\idotsint\limits_{\begin{subarray}{c}t_{2},\dotsc,t_{k}\geq 0\\
+\sum_{i=2}^{k}t_{i}>1-T/k\end{subarray}}\Bigl(\int_{0}^{T/k}\Bigl(\prod_{i=1}^{k}g(kt_{i})\Bigr)dt_{1}\Bigr)^{2}dt_{2}\dotsc dt_{k} 
+
+ (7.7) 
+
+ = k − k − 1 ​ ( ∫ 0 ∞ g ⁡ ( u ) ​ 𝑑 u ) 2 ​ ∫⋯∫ u 2 , … , u k ≥ 0 ∑ i = 2 k u i > k − T ( ∏ i = 2 k g ​ ( u i ) 2 ) ​ d ​ u 2 ​ … ​ d ​ u k . \displaystyle=k^{-k-1}\Bigl(\int_{0}^{\infty}g(u)du\Bigr)^{2}\idotsint\limits_{\begin{subarray}{c}u_{2},\dotsc,u_{k}\geq 0\\
+\sum_{i=2}^{k}u_{i}>k-T\end{subarray}}\Bigl(\prod_{i=2}^{k}g(u_{i})^{2}\Bigr)du_{2}\dotsc du_{k}. 
+
+ First we wish to show the error integral E k E_{k} is small. We do this by comparison with a second moment. We expect the bound ( 7.13 ) for E k E_{k} to be small if the center of mass of g 2 g^{2} is strictly less than ( k − T ) / ( k − 1 ) (k-T)/(k-1) . Therefore we introduce the restriction on g g that 
+
+ (7.8) 
+
+ μ = ∫ 0 ∞ u ​ g ​ ( u ) 2 ​ 𝑑 u ∫ 0 ∞ g ​ ( u ) 2 ​ 𝑑 u < 1 − T k . \mu=\frac{\int_{0}^{\infty}ug(u)^{2}du}{\int_{0}^{\infty}g(u)^{2}du}<1-\frac{T}{k}. 
+
+ To simplify notation, we put η = ( k − T ) / ( k − 1 ) − μ > 0 \eta=(k-T)/(k-1)-\mu>0 . If ∑ i = 2 k u i > k − T \sum_{i=2}^{k}u_{i}>k-T then ∑ i = 2 k u i > ( k − 1 ) ​ ( μ + η ) \sum_{i=2}^{k}u_{i}>(k-1)(\mu+\eta) , and so we have 
+
+ (7.9) 
+
+ 1 ≤ η − 2 ​ ( 1 k − 1 ​ ∑ i = 2 k u i − μ ) 2 . 1\leq\eta^{-2}\Bigl(\frac{1}{k-1}\sum_{i=2}^{k}u_{i}-\mu\Bigr)^{2}. 
+
+ Since the right hand side of ( 7.9 ) is non-negative for all u i u_{i} , we obtain an upper bound for E k E_{k} if we multiply the integrand by η − 2 ​ ( ∑ i = 2 k u i / ( k − 1 ) − μ ) 2 \eta^{-2}(\sum_{i=2}^{k}u_{i}/(k-1)-\mu)^{2} , and then drop the requirement that ∑ i = 1 k u i > k − T \sum_{i=1}^{k}u_{i}>k-T . This gives us 
+
+ (7.10) 
+
+ E k \displaystyle E_{k} 
+ ≤ η − 2 ​ k − k − 1 ​ ( ∫ 0 ∞ g ⁡ ( u ) ​ 𝑑 u ) 2 ​ ∫ 0 ∞ ⋯ ​ ∫ 0 ∞ ( ∑ i = 2 k u i k − 1 − μ ) 2 ​ ( ∏ i = 2 k g ​ ( u i ) 2 ) ​ d ​ u 2 ​ … ​ d ​ u k . \displaystyle\leq\eta^{-2}k^{-k-1}\Bigl(\int_{0}^{\infty}g(u)du\Bigr)^{2}\int_{0}^{\infty}\dotsi\int_{0}^{\infty}\Bigl(\frac{\sum_{i=2}^{k}u_{i}}{k-1}-\mu\Bigr)^{2}\Bigl(\prod_{i=2}^{k}g(u_{i})^{2}\Bigr)du_{2}\dotsc du_{k}. 
+
+ We expand out the inner square. All the terms which are not of the form u j 2 u_{j}^{2} we can calculate explicitly as an expression in μ \mu and γ \gamma . We find 
+
+ (7.11) 
+
+ ∫ 0 ∞ ⋯ ​ ∫ 0 ∞ ( 2 ​ ∑ 2 ≤ i < j ≤ k u i ​ u j ( k − 1 ) 2 − 2 ​ μ ​ ∑ i = 2 k u i k − 1 + μ 2 ) ​ ( ∏ i = 2 k g ​ ( u i ) 2 ) ​ d ​ u 2 ​ … ​ d ​ u k \displaystyle\int_{0}^{\infty}\dotsi\int_{0}^{\infty}\Bigl(\frac{2\sum_{2\leq i<j\leq k}u_{i}u_{j}}{(k-1)^{2}}-\frac{2\mu\sum_{i=2}^{k}u_{i}}{k-1}+\mu^{2}\Bigr)\Bigl(\prod_{i=2}^{k}g(u_{i})^{2}\Bigr)du_{2}\dotsc du_{k} 
+ = − μ 2 ​ γ k − 1 k − 1 . \displaystyle=\frac{-\mu^{2}\gamma^{k-1}}{k-1}. 
+
+ For the u j 2 u_{j}^{2} terms we see that u j 2 ​ g ​ ( u j ) 2 ≤ T ​ u j ​ g ​ ( u j ) 2 u_{j}^{2}g(u_{j})^{2}\leq Tu_{j}g(u_{j})^{2} from the support of g g . Thus 
+
+ (7.12) 
+
+ ∫ 0 ∞ ⋯ ​ ∫ 0 ∞ u j 2 ​ ( ∏ i = 2 k g ​ ( u i ) 2 ) ​ d ​ u 2 ​ … ​ d ​ u k \displaystyle\int_{0}^{\infty}\dotsi\int_{0}^{\infty}u_{j}^{2}\Bigl(\prod_{i=2}^{k}g(u_{i})^{2}\Bigr)du_{2}\dotsc du_{k} 
+ ≤ T ​ γ k − 2 ​ ∫ 0 ∞ u j ​ g ​ ( u j ) 2 ​ d ​ u j = μ ​ T ​ γ k − 1 . \displaystyle\leq T\gamma^{k-2}\int_{0}^{\infty}u_{j}g(u_{j})^{2}du_{j}=\mu T\gamma^{k-1}. 
+
+ This gives 
+
+ (7.13) 
+
+ E k \displaystyle E_{k} 
+ ≤ η − 2 ​ k − k − 1 ​ ( ∫ 0 ∞ g ⁡ ( u ) ​ 𝑑 u ) 2 ​ ( μ ​ T ​ γ k − 1 k − 1 − μ 2 ​ γ k − 1 k − 1 ) ≤ η − 2 ​ μ ​ T ​ k − k − 1 ​ γ k − 1 k − 1 ​ ( ∫ 0 ∞ g ⁡ ( u ) ​ 𝑑 u ) 2 . \displaystyle\leq\eta^{-2}k^{-k-1}\Bigl(\int_{0}^{\infty}g(u)du\Bigr)^{2}\Bigl(\frac{\mu T\gamma^{k-1}}{k-1}-\frac{\mu^{2}\gamma^{k-1}}{k-1}\Bigr)\leq\frac{\eta^{-2}\mu Tk^{-k-1}\gamma^{k-1}}{k-1}\Bigl(\int_{0}^{\infty}g(u)du\Bigr)^{2}. 
+
+ Since ( k − 1 ) ​ η 2 ≥ k ​ ( 1 − T / k − μ ) 2 (k-1)\eta^{2}\geq k(1-T/k-\mu)^{2} and μ ≤ 1 \mu\leq 1 , we find that putting together ( 7.4 ), ( 7.5 ), ( 7.6 ) and ( 7.13 ), we obtain 
+
+ (7.14) 
+
+ k ​ J k I k ≥ ( ∫ 0 ∞ g ⁡ ( u ) ​ 𝑑 u ) 2 ∫ 0 ∞ g ​ ( u ) 2 ​ 𝑑 u ​ ( 1 − T k ​ ( 1 − T / k − μ ) 2 ) . \frac{kJ_{k}}{I_{k}}\geq\frac{(\int_{0}^{\infty}g(u)du)^{2}}{\int_{0}^{\infty}g(u)^{2}du}\Bigl(1-\frac{T}{k(1-T/k-\mu)^{2}}\Bigr). 
+
+ To maximize our lower bound ( 7.14 ), we wish to maximize ∫ 0 T g ⁡ ( u ) ​ 𝑑 u \int_{0}^{T}g(u)du subject to the constraints that ∫ 0 T g ​ ( u ) 2 ​ 𝑑 u = γ \int_{0}^{T}g(u)^{2}du=\gamma and ∫ 0 T u ​ g ​ ( u ) 2 ​ 𝑑 u = μ ​ γ \int_{0}^{T}ug(u)^{2}du=\mu\gamma . Thus we wish to maximize the expression 
+
+ (7.15) 
+
+ ∫ 0 T g ⁡ ( u ) ​ 𝑑 u − α ⁡ ( ∫ 0 T g ​ ( u ) 2 ​ 𝑑 u − γ ) − β ⁡ ( ∫ 0 T u ​ g ​ ( u ) 2 ​ 𝑑 u − μ ​ γ ) \int_{0}^{T}g(u)du-\alpha\Bigl(\int_{0}^{T}g(u)^{2}du-\gamma\Bigr)-\beta\Bigl(\int_{0}^{T}ug(u)^{2}du-\mu\gamma\Bigr) 
+
+ with respect to α , β \alpha,\beta and the function g g . By the Euler-Lagrange equation, this occurs when ∂ ∂ g ​ ( g ⁡ ( t ) − α ​ g ​ ( t ) 2 − β ​ t ​ g ​ ( t ) 2 ) = 0 \frac{\partial}{\partial g}(g(t)-\alpha g(t)^{2}-\beta tg(t)^{2})=0 for all t ∈ [ 0 , T ] t\in[0,T] . Thus we see that 
+
+ (7.16) 
+
+ g ⁡ ( t ) = 1 2 ​ α + 2 ​ β ​ t for  0 ≤ t ≤ T . g(t)=\frac{1}{2\alpha+2\beta t}\qquad\text{for $0\leq t\leq T$}. 
+
+ Since the ratio we wish to maximize is unaffected if we multiply g g by a positive constant, we restrict our attention to functions g g is of the form 1 / ( 1 + A ​ t ) 1/(1+At) for t ∈ [ 0 , T ] t\in[0,T] and for some constant A > 0 A>0 . With this choice of g g we find that 
+
+ (7.17) 
+
+ ∫ 0 T g ⁡ ( u ) ​ 𝑑 u \displaystyle\int_{0}^{T}g(u)du 
+ = log ⁡ ( 1 + A ​ T ) A , ∫ 0 T g ​ ( u ) 2 ​ 𝑑 u = 1 A ​ ( 1 − 1 1 + A ​ T ) , \displaystyle=\frac{\log(1+AT)}{A},\qquad\int_{0}^{T}g(u)^{2}du=\frac{1}{A}\Bigl(1-\frac{1}{1+AT}\Bigr), 
+
+ (7.18) 
+
+ ∫ 0 T u ​ g ​ ( u ) 2 ​ 𝑑 u \displaystyle\int_{0}^{T}ug(u)^{2}du 
+ = 1 A 2 ​ ( log ⁡ ( 1 + A ​ T ) − 1 + 1 1 + A ​ T ) . \displaystyle=\frac{1}{A^{2}}\Bigl(\log(1+AT)-1+\frac{1}{1+AT}\Bigr). 
+
+ We choose T T such that 1 + A ​ T = e A 1+AT=e^{A} (which is close to optimal). With this choice we find that μ = 1 / ( 1 − e − A ) − A − 1 \mu=1/(1-e^{-A})-A^{-1} and T ≤ e A / A T\leq e^{A}/A . Thus 1 − T / k − μ ≥ A − 1 ​ ( 1 − A / ( e A − 1 ) − e A / k ) 1-T/k-\mu\geq A^{-1}(1-A/(e^{A}-1)-e^{A}/k) . Substituting ( 7.17 ) into ( 7.14 ), and then using these expressions, we find that 
+
+ (7.19) 
+
+ k ​ J k I k ≥ A 1 − e − A ​ ( 1 − T k ​ ( 1 − T / k − μ ) 2 ) ≥ A ⁡ ( 1 − A ​ e A k ​ ( 1 − A / ( e A − 1 ) − e A / k ) 2 ) , \frac{kJ_{k}}{I_{k}}\geq\frac{A}{1-e^{-A}}\Bigl(1-\frac{T}{k(1-T/k-\mu)^{2}}\Bigr)\geq A\Bigl(1-\frac{Ae^{A}}{k(1-A/(e^{A}-1)-e^{A}/k)^{2}}\Bigr), 
+
+ provided the right hand side is positive. Finally, we choose A = log ⁡ k − 2 ​ log ⁡ log ⁡ k > 0 A=\log{k}-2\log\log{k}>0 . For k k sufficiently large we have 
+
+ (7.20) 
+
+ 1 − T k − μ ≥ A − 1 ​ ( 1 − ( log ⁡ k ) 3 k − 1 ( log ⁡ k ) 2 ) > 0 , 1-\frac{T}{k}-\mu\geq A^{-1}\Bigl(1-\frac{(\log{k})^{3}}{k}-\frac{1}{(\log{k})^{2}}\Bigr)>0, 
+
+ and so μ < 1 − T / k \mu<1-T/k , as required by our constraint ( 7.8 ). This choice of A A gives 
+
+ (7.21) 
+
+ M k ≥ k ​ J k I k ≥ ( log ⁡ k − 2 ​ log ​ log ⁡ k ) ​ ( 1 − log ⁡ k ( log ⁡ k ) 2 + O ⁡ ( 1 ) ) ≥ log ⁡ k − 2 ​ log ​ log ⁡ k − 2 M_{k}\geq\frac{kJ_{k}}{I_{k}}\geq(\log{k}-2\log\log{k})\Bigl(1-\frac{\log{k}}{(\log{k})^{2}+O(1)}\Bigr)\geq\log{k}-2\log\log{k}-2 
+
+ when k k is sufficiently large. 
+
+ 8. Choice of weight for small k k 
+
+ In this section we establish parts ( 1 ) (1) and ( 2 ) (2) of Proposition 4.3 . In order to get a suitable lower bound for M k M_{k} when k k is small, we will consider approximations to the optimal function F F of the form 
+
+ (8.1) 
+
+ F ⁡ ( t 1 , … , t k ) = { P ( t 1 , … , t k ) , if  ​ ( t 1 , … , t k ) ∈ ℛ k 0 , otherwise, F(t_{1},\dotsc,t_{k})=\begin{cases}P(t_{1},\dotsc,t_{k}),\qquad&\text{if }(t_{1},\dotsc,t_{k})\in\mathcal{R}_{k}\\
+0,&\text{otherwise,}\end{cases} 
+
+ for polynomials P P . By the symmetry of ∑ m = 1 k J k ( m ) ​ ( F ) \sum_{m=1}^{k}J_{k}^{(m)}(F) and I k ​ ( F ) I_{k}(F) , we restrict our attention to polynomials which are symmetric functions of t 1 , … , t k t_{1},\dotsc,t_{k} . (If F F satisfies ℒ k ​ F = λ ​ F \mathcal{L}_{k}F=\lambda F then F σ = F ⁡ ( σ ⁡ ( t 1 ) , … , σ ⁡ ( t k ) ) F_{\sigma}=F(\sigma(t_{1}),\dots,\sigma(t_{k})) also satisfies this for every permutation σ \sigma of t 1 , … , t k t_{1},\dots,t_{k} . Thus the symmetric function which is the average of F σ F_{\sigma} over all such permutations would satisfy this eigenfunction equation, and so we expect there to be an optimal function which is symmetric.) Any such polynomial can be written as a polynomial expression in the power sum polynomials P j = ∑ i = 1 k t i j P_{j}=\sum_{i=1}^{k}t_{i}^{j} . 
+
+ Lemma 8.1 . 
+
+ Let P j = ∑ i = 1 k t i j P_{j}=\sum_{i=1}^{k}t_{i}^{j} denote the j t ​ h j^{th} symmetric power sum polynomial. Then we have 
+
+ ∫⋯∫ ℛ k ( 1 − P 1 ) a ​ P j b ​ d ​ t 1 ​ … ​ d ​ t k = a ! ( k + j ​ b + a ) ! ​ G b , j ​ ( k ) , \idotsint\limits_{\mathcal{R}_{k}}(1-P_{1})^{a}P_{j}^{b}dt_{1}\dotsc dt_{k}=\frac{a!}{(k+jb+a)!}G_{b,j}(k), 
+
+ where 
+
+ G b , j ​ ( x ) = b ! ​ ∑ r = 1 b ( x r ) ​ ∑ b 1 , … , b r ≥ 1 ∑ i = 1 r b i = b ∏ i = 1 r ( j ​ b i ) ! b i ! G_{b,j}(x)=b!\sum_{r=1}^{b}\binom{x}{r}\sum_{\begin{subarray}{c}b_{1},\dotsc,b_{r}\geq 1\\
+\sum_{i=1}^{r}b_{i}=b\end{subarray}}\prod_{i=1}^{r}\frac{(jb_{i})!}{b_{i}!} 
+
+ is a polynomial of degree b b which depends only on b b and j j . 
+
+ Proof. 
+
+ We first show by induction on k k that 
+
+ (8.2) 
+
+ ∫⋯∫ ℛ k ( 1 − ∑ i = 1 k t i ) a ​ ∏ i = 1 k t i a i ​ d ​ t 1 ​ … ​ d ​ t k = a ! ​ ∏ i = 1 k a i ! ( k + a + ∑ i = 1 k a i ) ! . \idotsint\limits_{\mathcal{R}_{k}}\Bigl(1-\sum_{i=1}^{k}t_{i}\Bigr)^{a}\prod_{i=1}^{k}t_{i}^{a_{i}}dt_{1}\dotsc dt_{k}=\frac{a!\prod_{i=1}^{k}a_{i}!}{(k+a+\sum_{i=1}^{k}a_{i})!}. 
+
+ We consider the integration with respect to t 1 t_{1} . The limits of integration are 0 0 and 1 − ∑ i = 2 k t i 1-\sum_{i=2}^{k}t_{i} for ( t 2 , … , t k ) ∈ ℛ k − 1 (t_{2},\dotsc,t_{k})\in\mathcal{R}_{k-1} . By substituting v = t 1 / ( 1 − ∑ i = 2 k t i ) v=t_{1}/(1-\sum_{i=2}^{k}t_{i}) we find 
+
+ ∫ 0 1 − ∑ i = 2 k t i ( 1 − ∑ i = 1 k t i ) a ​ ( ∏ i = 1 k t i a i ) ​ d ​ t 1 \displaystyle\int_{0}^{1-\sum_{i=2}^{k}t_{i}}\Bigl(1-\sum_{i=1}^{k}t_{i}\Bigr)^{a}\Bigl(\prod_{i=1}^{k}t_{i}^{a_{i}}\Bigr)dt_{1} 
+ = ( ∏ i = 2 k t i a i ) ​ ( 1 − ∑ i = 2 k t i ) a + a 1 + 1 ​ ∫ 0 1 ( 1 − v ) a ​ v a 1 ​ 𝑑 v \displaystyle=\Bigl(\prod_{i=2}^{k}t_{i}^{a_{i}}\Bigr)\Bigl(1-\sum_{i=2}^{k}t_{i}\Bigr)^{a+a_{1}+1}\int_{0}^{1}(1-v)^{a}v^{a_{1}}dv 
+
+ (8.3) 
+
+ = a ! ​ a 1 ! ( a + a 1 + 1 ) ! ​ ( ∏ i = 2 k t i a i ) ​ ( 1 − ∑ i = 2 k t i ) a + a 1 + 1 . \displaystyle=\frac{a!a_{1}!}{(a+a_{1}+1)!}\Bigl(\prod_{i=2}^{k}t_{i}^{a_{i}}\Bigr)\Bigl(1-\sum_{i=2}^{k}t_{i}\Bigr)^{a+a_{1}+1}. 
+
+ Here we used the beta function identity ∫ 0 1 t a ​ ( 1 − t ) b ​ 𝑑 t = a ! ​ b ! / ( a + b + 1 ) ! \int_{0}^{1}t^{a}(1-t)^{b}dt=a!b!/(a+b+1)! in the last line. We now see ( 8.2 ) follows by induction. 
+
+ By the binomial theorem, 
+
+ (8.4) 
+
+ P j b = ∑ b 1 , … , b k ∑ i = 1 k b i = b b ! ∏ i = 1 k b i ! ​ ∏ i = 1 k t i j ​ b i . P_{j}^{b}=\sum_{\begin{subarray}{c}b_{1},\dots,b_{k}\\
+\sum_{i=1}^{k}b_{i}=b\end{subarray}}\frac{b!}{\prod_{i=1}^{k}b_{i}!}\prod_{i=1}^{k}t_{i}^{jb_{i}}. 
+
+ Thus, applying ( 8.2 ), we obtain 
+
+ (8.5) 
+
+ ∫⋯∫ ℛ k ( 1 − P 1 ) a ​ P j b ​ d ​ t 1 ​ … ​ d ​ t k = b ! ​ a ! ( k + a + j ​ b ) ! ​ ∑ b 1 , … , b k ∑ i = 1 k b i = b ∏ i = 1 k ( j ​ b i ) ! b i ! . \idotsint\limits_{\mathcal{R}_{k}}(1-P_{1})^{a}P_{j}^{b}dt_{1}\dotsc dt_{k}=\frac{b!a!}{(k+a+jb)!}\sum_{\begin{subarray}{c}b_{1},\dotsc,b_{k}\\
+\sum_{i=1}^{k}b_{i}=b\end{subarray}}\prod_{i=1}^{k}\frac{(jb_{i})!}{b_{i}!}. 
+
+ For computations b b will be small, and so we find it convenient to split the summation depending on how many of the b i b_{i} are non-zero. Given an integer r r , there are ( k r ) \binom{k}{r} ways of choosing r r of b 1 , … , b k b_{1},\dotsc,b_{k} to be non-zero. Thus 
+
+ (8.6) 
+
+ ∑ b 1 , … , b k ∑ i = 1 k b i = b ∏ i = 1 k ( j ​ b i ) ! b i ! = ∑ r = 1 b ( k r ) ​ ∑ b 1 , … , b r ≥ 1 ∑ i = 1 r b i = b ∏ i = 1 r ( j ​ b i ) ! b i ! . \sum_{\begin{subarray}{c}b_{1},\dotsc,b_{k}\\
+\sum_{i=1}^{k}b_{i}=b\end{subarray}}\prod_{i=1}^{k}\frac{(jb_{i})!}{b_{i}!}=\sum_{r=1}^{b}\binom{k}{r}\sum_{\begin{subarray}{c}b_{1},\dots,b_{r}\geq 1\\
+\sum_{i=1}^{r}b_{i}=b\end{subarray}}\prod_{i=1}^{r}\frac{(jb_{i})!}{b_{i}!}. 
+
+ This gives the result.
+∎ 
+
+ It is straightforward to extend Lemma 8.1 to more general combinations of the symmetric power polynomials. In this paper we will concentrate on the case when P P is a polynomial expression in only P 1 P_{1} and P 2 P_{2} for simplicity. We comment the polynomials G b , j G_{b,j} are not problematic to calculate numerically for small values of b b . We now use Lemma 8.1 to obtain a manageable expression for I k ​ ( F ) I_{k}(F) and J k ( m ) ​ ( F ) J_{k}^{(m)}(F) with this choice of P P . 
+
+ Lemma 8.2 . 
+
+ Let F F be given in terms of a polynomial P P by ( 8.1 ). Let P P be given in terms of a polynomial expression in the symmetric power polynomials P 1 = ∑ i = 1 k t i P_{1}=\sum_{i=1}^{k}t_{i} and P 2 = ∑ i = 1 k t i 2 P_{2}=\sum_{i=1}^{k}t_{i}^{2} by P = ∑ i = 1 d a i ​ ( 1 − P 1 ) b i ​ P 2 c i P=\sum_{i=1}^{d}a_{i}(1-P_{1})^{b_{i}}P_{2}^{c_{i}} for constants a i ∈ ℝ a_{i}\in\mathbb{R} and non-negative integers b i , c i b_{i},c_{i} . Then for each 1 ≤ m ≤ k 1\leq m\leq k we have 
+
+ I k ​ ( F ) \displaystyle I_{k}(F) 
+ = ∑ 1 ≤ i , j ≤ d a i ​ a j ​ ( b i + b j ) ! ​ G c i + c j , 2 ​ ( k ) ( k + b i + b j + 2 ​ c i + 2 ​ c j ) ! , \displaystyle=\sum_{1\leq i,j\leq d}a_{i}a_{j}\frac{(b_{i}+b_{j})!G_{c_{i}+c_{j},2}(k)}{(k+b_{i}+b_{j}+2c_{i}+2c_{j})!}, 
+
+ J k ( m ) ​ ( F ) \displaystyle J^{(m)}_{k}(F) 
+ = ∑ 1 ≤ i , j ≤ d a i ​ a j ​ ∑ c 1 ′ = 0 c i ∑ c 2 ′ = 0 c j ( c i c 1 ′ ) ​ ( c j c 2 ′ ) ​ γ b i , b j , c i , c j , c 1 ′ , c 2 ′ ​ G c 1 ′ + c 2 ′ , 2 ​ ( k − 1 ) ( k + b i + b j + 2 ​ c i + 2 ​ c j + 1 ) ! , \displaystyle=\sum_{1\leq i,j\leq d}a_{i}a_{j}\sum_{c_{1}^{\prime}=0}^{c_{i}}\sum_{c_{2}^{\prime}=0}^{c_{j}}\binom{c_{i}}{c_{1}^{\prime}}\binom{c_{j}}{c_{2}^{\prime}}\frac{\gamma_{b_{i},b_{j},c_{i},c_{j},c_{1}^{\prime},c_{2}^{\prime}}G_{c_{1}^{\prime}+c_{2}^{\prime},2}(k-1)}{(k+b_{i}+b_{j}+2c_{i}+2c_{j}+1)!}, 
+
+ where 
+
+ γ b i , b j , c i , c j , c 1 ′ , c 2 ′ = b i ! ​ b j ! ​ ( 2 ​ c i − 2 ​ c 1 ′ ) ! ​ ( 2 ​ c j − 2 ​ c 2 ′ ) ! ​ ( b i + b j + 2 ​ c i + 2 ​ c j − 2 ​ c 1 ′ − 2 ​ c 2 ′ + 2 ) ! ( b i + 2 ​ c i − 2 ​ c 1 ′ + 1 ) ! ​ ( b j + 2 ​ c j − 2 ​ c 2 ′ + 1 ) ! , \gamma_{b_{i},b_{j},c_{i},c_{j},c_{1}^{\prime},c_{2}^{\prime}}=\frac{b_{i}!b_{j}!(2c_{i}-2c^{\prime}_{1})!(2c_{j}-2c^{\prime}_{2})!(b_{i}+b_{j}+2c_{i}+2c_{j}-2c_{1}^{\prime}-2c_{2}^{\prime}+2)!}{(b_{i}+2c_{i}-2c^{\prime}_{1}+1)!(b_{j}+2c_{j}-2c^{\prime}_{2}+1)!}, 
+
+ and where G G is the polynomial given by Lemma 8.1 . 
+
+ Proof. 
+
+ We first consider I k ​ ( F ) I_{k}(F) . We have, using Lemma 8.1 , 
+
+ I k ​ ( F ) \displaystyle I_{k}(F) 
+ = ∫⋯∫ ℛ k P 2 ​ d ​ t 1 ​ … ​ d ​ t k = ∑ 1 ≤ i , j ≤ d a i ​ a j ​ ∫⋯∫ ℛ k ( 1 − P 1 ) b i + b j ​ P 2 c i + c j ​ d ​ t 1 ​ … ​ d ​ t k \displaystyle=\idotsint\limits_{\mathcal{R}_{k}}P^{2}dt_{1}\dotsc dt_{k}=\sum_{1\leq i,j\leq d}a_{i}a_{j}\idotsint\limits_{\mathcal{R}_{k}}(1-P_{1})^{b_{i}+b_{j}}P_{2}^{c_{i}+c_{j}}dt_{1}\dotsc dt_{k} 
+
+ (8.7) 
+
+ = ∑ 1 ≤ i , j ≤ d a i ​ a j ​ ( b i + b j ) ! ​ G c i + c j , 2 ​ ( k ) ( k + b i + b j + 2 ​ c i + 2 ​ c j ) ! . \displaystyle=\sum_{1\leq i,j\leq d}a_{i}a_{j}\frac{(b_{i}+b_{j})!G_{c_{i}+c_{j},2}(k)}{(k+b_{i}+b_{j}+2c_{i}+2c_{j})!}. 
+
+ We now consider J k ( m ) ​ ( F ) J^{(m)}_{k}(F) . Since F F is symmetric in t 1 , … , t k t_{1},\dotsc,t_{k} we see that J k ( m ) ​ ( F ) J_{k}^{(m)}(F) is independent of m m , and so it suffices to only consider J k ( 1 ) ​ ( F ) J^{(1)}_{k}(F) . We have 
+
+ ∫ 0 1 − ∑ i = 2 k t i ( 1 − P 1 ) b ​ P 2 c ​ d ​ t 1 \displaystyle\int_{0}^{1-\sum_{i=2}^{k}t_{i}}(1-P_{1})^{b}P_{2}^{c}dt_{1} 
+ = ∑ c ′ = 0 c ( c c ′ ) ​ ( ∑ i = 2 k t i 2 ) c ′ ​ ∫ 0 1 − ∑ i = 2 k t i ( 1 − ∑ i = 1 k t i ) b ​ t 1 2 ​ c − 2 ​ c ′ ​ d ​ t 1 \displaystyle=\sum_{c^{\prime}=0}^{c}\binom{c}{c^{\prime}}\Bigl(\sum_{i=2}^{k}t_{i}^{2}\Bigr)^{c^{\prime}}\int_{0}^{1-\sum_{i=2}^{k}t_{i}}\Bigl(1-\sum_{i=1}^{k}t_{i}\Bigr)^{b}t_{1}^{2c-2c^{\prime}}dt_{1} 
+
+ = ∑ c ′ = 0 c ( c c ′ ) ​ ( P 2 ′ ) c ′ ​ ( 1 − P 1 ′ ) b + 2 ​ c − 2 ​ c ′ + 1 ​ ∫ 0 1 ( 1 − u ) b ​ u 2 ​ c − 2 ​ c ′ ​ 𝑑 u \displaystyle=\sum_{c^{\prime}=0}^{c}\binom{c}{c^{\prime}}(P^{\prime}_{2})^{c^{\prime}}(1-P_{1}^{\prime})^{b+2c-2c^{\prime}+1}\int_{0}^{1}(1-u)^{b}u^{2c-2c^{\prime}}du 
+
+ (8.8) 
+
+ = ∑ c ′ = 0 c ( c c ′ ) ​ ( P 2 ′ ) c ′ ​ ( 1 − P 1 ′ ) b + 2 ​ c − 2 ​ c ′ + 1 ​ b ! ​ ( 2 ​ c − 2 ​ c ′ ) ! ( b + 2 ​ c − 2 ​ c ′ + 1 ) ! , \displaystyle=\sum_{c^{\prime}=0}^{c}\binom{c}{c^{\prime}}(P^{\prime}_{2})^{c^{\prime}}(1-P_{1}^{\prime})^{b+2c-2c^{\prime}+1}\frac{b!(2c-2c^{\prime})!}{(b+2c-2c^{\prime}+1)!}, 
+
+ where P 1 ′ = ∑ i = 2 k t i P_{1}^{\prime}=\sum_{i=2}^{k}t_{i} and P 2 ′ = ∑ i = 2 k t i 2 P_{2}^{\prime}=\sum_{i=2}^{k}t_{i}^{2} . Thus 
+
+ ( ∫ 0 1 F ​ d ​ t 1 ) 2 \displaystyle\Bigl(\int_{0}^{1}Fdt_{1}\Bigr)^{2} 
+ = ( ∑ i = 1 d a i ​ ∫ 0 1 − ∑ j = 2 k t j ( 1 − P 1 ) b i ​ P 2 c i ​ d ​ t 1 ) 2 \displaystyle=\Bigl(\sum_{i=1}^{d}a_{i}\int_{0}^{1-\sum_{j=2}^{k}t_{j}}(1-P_{1})^{b_{i}}P_{2}^{c_{i}}dt_{1}\Bigr)^{2} 
+
+ = ∑ 1 ≤ i , j ≤ d a i ​ a j ​ ∑ c 1 ′ = 0 c i ∑ c 2 ′ = 0 c j ( c i c 1 ′ ) ​ ( c j c 2 ′ ) ​ ( P 2 ′ ) c 1 ′ + c 2 ′ ​ ( 1 − P 1 ′ ) b i + b j + 2 ​ c i + 2 ​ c j − 2 ​ c 1 ′ − 2 ​ c 2 ′ + 2 \displaystyle=\sum_{1\leq i,j\leq d}a_{i}a_{j}\sum_{c^{\prime}_{1}=0}^{c_{i}}\sum_{c^{\prime}_{2}=0}^{c_{j}}\binom{c_{i}}{c_{1}^{\prime}}\binom{c_{j}}{c_{2}^{\prime}}(P_{2}^{\prime})^{c_{1}^{\prime}+c_{2}^{\prime}}(1-P_{1}^{\prime})^{b_{i}+b_{j}+2c_{i}+2c_{j}-2c_{1}^{\prime}-2c_{2}^{\prime}+2} 
+
+ (8.9) 
+
+ × b i ! ​ b j ! ​ ( 2 ​ c i − 2 ​ c 1 ′ ) ! ​ ( 2 ​ c j − 2 ​ c 2 ′ ) ! ( b i + 2 ​ c i − 2 ​ c 1 ′ + 1 ) ! ​ ( b j + 2 ​ c j − 2 ​ c 2 ′ + 1 ) ! . \displaystyle\qquad\times\frac{b_{i}!b_{j}!(2c_{i}-2c^{\prime}_{1})!(2c_{j}-2c^{\prime}_{2})!}{(b_{i}+2c_{i}-2c^{\prime}_{1}+1)!(b_{j}+2c_{j}-2c^{\prime}_{2}+1)!}. 
+
+ Applying Lemma 8.1 again, we see that 
+
+ (8.10) 
+
+ ∫⋯∫ ℛ k − 1 ( 1 − P 1 ′ ) b ​ ( P 2 ′ ) c ′ ​ d ​ t 2 ​ … ​ d ​ t k = b ! ( k + b + c − 1 ) ! ​ G c , 2 ​ ( k − 1 ) . \idotsint\limits_{\mathcal{R}_{k-1}}(1-P_{1}^{\prime})^{b}(P_{2}^{\prime})^{c^{\prime}}dt_{2}\dotsc dt_{k}=\frac{b!}{(k+b+c-1)!}G_{c,2}(k-1). 
+
+ Combining ( 8.9 ) and ( 8.10 ) gives the result.
+∎ 
+
+ We see from Lemma 8.2 that I k ​ ( F ) I_{k}(F) and ∑ m = 1 k J k ( m ) ​ ( F ) \sum_{m=1}^{k}J_{k}^{(m)}(F) can both be expressed as quadratic forms in the coefficients 𝐚 = ( a 1 , … , a d ) \mathbf{a}=(a_{1},\dots,a_{d}) of P P . Moreover, these will be positive definite real quadratic forms. Thus in particular we find that 
+
+ (8.11) 
+
+ ∑ m = 1 k J k ( m ) ​ ( F ) I k ​ ( F ) = 𝐚 T ​ A 2 ​ 𝐚 𝐚 T ​ A 1 ​ 𝐚 , \frac{\sum_{m=1}^{k}J_{k}^{(m)}(F)}{I_{k}(F)}=\frac{\mathbf{a}^{T}A_{2}\mathbf{a}}{\mathbf{a}^{T}A_{1}\mathbf{a}}, 
+
+ for two rational symmetric positive definite matrices A 1 , A 2 A_{1},A_{2} , which can be calculated explicitly in terms of k k for any choice of the exponents b i , c i b_{i},c_{i} . Maximizing expressions of this form has a known solution. 
+
+ Lemma 8.3 . 
+
+ Let A 1 , A 2 A_{1},A_{2} be real, symmetric positive definite matrices. Then 
+
+ 𝐚 T ​ A 2 ​ 𝐚 𝐚 T ​ A 1 ​ 𝐚 \frac{\mathbf{a}^{T}A_{2}\mathbf{a}}{\mathbf{a}^{T}A_{1}\mathbf{a}} 
+
+ is maximized when 𝐚 \mathbf{a} is an eigenvector of A 1 − 1 ​ A 2 A_{1}^{-1}A_{2} corresponding to the largest eigenvalue of A 1 − 1 ​ A 2 A_{1}^{-1}A_{2} . The value of the ratio at its maximum is this largest eigenvalue. 
+
+ Proof. 
+
+ We see that multiplying 𝐚 \mathbf{a} by a non-zero scalar doesn’t change the ratio, so we may assume without loss of generality that 𝐚 T ​ A 1 ​ 𝐚 = 1 \mathbf{a}^{T}A_{1}\mathbf{a}=1 . By the theory of Lagrangian multipliers, 𝐚 T ​ A 2 ​ 𝐚 \mathbf{a}^{T}A_{2}\mathbf{a} is maximized subject to 𝐚 T ​ A 1 ​ 𝐚 = 1 \mathbf{a}^{T}A_{1}\mathbf{a}=1 when 
+
+ (8.12) 
+
+ L ⁡ ( 𝐚 , λ ) = 𝐚 T ​ A 2 ​ 𝐚 − λ ⁡ ( 𝐚 T ​ A 1 ​ 𝐚 − 1 ) L(\mathbf{a},\lambda)=\mathbf{a}^{T}A_{2}\mathbf{a}-\lambda(\mathbf{a}^{T}A_{1}\mathbf{a}-1) 
+
+ is stationary. This occurs when (using the symmetricity of A 1 , A 2 A_{1},A_{2} ) 
+
+ (8.13) 
+
+ 0 = ∂ L ∂ a i = ( ( 2 ​ A 2 − 2 ​ λ ​ A 1 ) ​ 𝐚 ) i , 0=\frac{\partial L}{\partial a_{i}}=((2A_{2}-2\lambda A_{1})\mathbf{a})_{i}, 
+
+ for each i i . This implies that (recalling that A 1 A_{1} is positive definite so invertible) 
+
+ (8.14) 
+
+ A 1 − 1 ​ A 2 ​ 𝐚 = λ ​ 𝐚 . A_{1}^{-1}A_{2}\mathbf{a}=\lambda\mathbf{a}. 
+
+ It then is clear that 𝐚 T ​ A 1 ​ 𝐚 = λ − 1 ​ 𝐚 T ​ A 2 ​ 𝐚 \mathbf{a}^{T}A_{1}\mathbf{a}=\lambda^{-1}\mathbf{a}^{T}A_{2}\mathbf{a} .
+∎ 
+
+ Proof of parts ( 1 ) (1) and ( 2 ) (2) of Proposition 4.3 . 
+
+ To establish Proposition 4.3 we rely on some computer calculation to calculate a lower bound for M k M_{k} . We let F F be given in terms of a polynomial P P by ( 8.1 ). We let P P be given by a polynomial expression in P 1 = ∑ i = 1 k t i P_{1}=\sum_{i=1}^{k}t_{i} and P 2 = ∑ i = 1 k t i 2 P_{2}=\sum_{i=1}^{k}t_{i}^{2} which is a linear combination of all monomials ( 1 − P 1 ) b ​ P 2 c (1-P_{1})^{b}P_{2}^{c} with b + 2 ​ c ≤ 11 b+2c\leq 11 . There are 42 42 such monomials, and with k = 105 k=105 we can calculate the 42 × 42 42\times 42 rational symmetric matrices A 1 A_{1} and A 2 A_{2} corresponding to the coefficients of the quadratic forms I k ​ ( F ) I_{k}(F) and ∑ m = 1 k J k ( m ) ​ ( F ) \sum_{m=1}^{k}J_{k}^{(m)}(F) . We then find 3 3 
+ 3 
+
+ An ancillary Mathematica ® file detailing these computations is available alongside this paper at www.arxiv.org . that the largest eigenvalue of A 1 − 1 ​ A 2 A_{1}^{-1}A_{2} is 
+
+ (8.15) 
+
+ λ ≈ 4.0020697 ​ … > 4 . \lambda\approx 4.0020697\dotsc>4. 
+
+ Thus M 105 > 4 M_{105}>4 . This verifies part ( 2 ) (2) of Proposition 4.3 . We comment that by taking a rational approximation to the corresponding eigenvector, we can verify this lower bound by calculating the ratio ∑ m = 1 k J k ( m ) ​ ( F ) / I k ​ ( F ) \sum_{m=1}^{k}J_{k}^{(m)}(F)/I_{k}(F) using only exact arithmetic. 
+
+ For part ( 1 ) (1) of Proposition 4.3 , we take k = 5 k=5 and 
+
+ (8.16) 
+
+ P = ( 1 − P 1 ) ​ P 2 + 7 10 ​ ( 1 − P 1 ) 2 + 1 14 ​ P 2 − 3 14 ​ ( 1 − P 1 ) . P=(1-P_{1})P_{2}+\frac{7}{10}(1-P_{1})^{2}+\frac{1}{14}P_{2}-\frac{3}{14}(1-P_{1}). 
+
+ With this choice we find that 
+
+ (8.17) 
+
+ M 5 ≥ ∑ m = 1 k J k ( m ) ​ ( F ) I k ​ ( F ) = 1 417 255 708 216 > 2 . M_{5}\geq\frac{\sum_{m=1}^{k}J_{k}^{(m)}(F)}{I_{k}(F)}=\frac{$1\,417\,255$}{$708\,216$}>2. 
+
+ This completes the proof of Proposition 4.3 .
+∎ 
+
+ 9. Acknowledgements 
+
+ The author would like to thank Andrew Granville, Roger Heath-Brown, Dimitris Koukoulopoulos and Terence Tao for many useful conversations and suggestions. 
+
+ The work leading to this paper was started whilst the author was a D.Phil student at Oxford and funded by the EPSRC (Doctoral Training Grant EP/P505216/1), and was finished when the author was a CRM-ISM postdoctoral fellow at the Université de Montréal. 
+
+ References 
+
+ [1] 
+
+P. D. T. A. Elliott and H. Halberstam.
+
+ A conjecture in prime number theory.
+
+ In Symposia Mathematica, Vol. IV (INDAM, Rome,
+1968/69) , pages 59–72. Academic Press, London, 1970.
+
+ [2] 
+
+J. Friedlander and A. Granville.
+
+ Limitations to the equi-distribution of primes. I.
+
+ Ann. of Math. (2) , 129(2):363–382, 1989.
+
+ [3] 
+
+D. A. Goldston, S. W. Graham, J. Pintz, and C. Y. Yıldırım.
+
+ Small gaps between products of two primes.
+
+ Proc. Lond. Math. Soc. (3) , 98(3):741–774, 2009.
+
+ [4] 
+
+D. A. Goldston, J. Pintz, and C. Y. Yıldırım.
+
+ Primes in tuples. III. On the difference p n + ν − p n p_{n+\nu}-p_{n} .
+
+ Funct. Approx. Comment. Math. , 35:79–89, 2006.
+
+ [5] 
+
+D. A. Goldston, J. Pintz, and C. Y. Yıldırım.
+
+ Primes in tuples. I.
+
+ Ann. of Math. (2) , 170(2):819–862, 2009.
+
+ [6] 
+
+D. A. Goldston and C. Y. Yıldırım.
+
+ Higher correlations of divisor sums related to primes. III. Small
+gaps between primes.
+
+ Proc. Lond. Math. Soc. (3) , 95(3):653–686, 2007.
+
+ [7] 
+
+D. H. J. Polymath.
+
+ A new bound for gaps between primes.
+
+ Preprint .
+
+ [8] 
+
+A. Selberg.
+
+ Collected papers. Vol. II .
+
+ Springer-Verlag, Berlin, 1991.
+
+ With a foreword by K. Chandrasekharan.
+
+ [9] 
+
+Y. Zhang.
+
+ Bounded gaps between primes.
+
+ Ann. of Math.(2), to appear .
+
+ ◄ 
+
+ Feeling lucky? 
+
+ Conversion report 
+ Report an issue 
+ View original on arXiv ► 
+
+ Copyright 
+ Privacy Policy 
+
+ Generated by L a T e XML oxide 
+
