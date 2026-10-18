@@ -41,7 +41,7 @@
 
 ### 需要什么输入
 
-- `papers/maynard/fulltext.txt`：论文全文（公开预印本 arXiv:1311.4600，可自行下载；仓库 `examples/maynard-fulltext.txt` 是同源的纯文本）
+- `papers/maynard/fulltext.txt`：论文全文（公开预印本 arXiv:1311.4600）。仓库不分发正文，按 [`examples/README.md`](examples/README.md) 里的两条命令自行下载并转成文本
 - 无其他依赖
 
 ### 最后得到什么
@@ -213,7 +213,7 @@ knapsack.json 是一个 0-1 背包问题。用 MILP 建模求解，报告选了�
 - 实测：macOS（Apple Silicon），PuLP 2.8.0 + CBC
 - Windows：未实测
 
-**实测记录**：状态 `Optimal`（gap = 0），选中 A/B/C/D、E 未选，总重量 14/15，总价值 **20**；模型同时给出「剩余 1、任何未选物品都装不下」的容量检查。
+**实测记录**（用上面的提示词原样跑）：状态 `Optimal`（gap = 0），选中 A/B/C/D、E 未选，总重量 14/15，总价值 **20**；模型同时给出「剩余 1、任何未选物品都装不下」的容量检查。
 
 ---
 
@@ -251,7 +251,7 @@ points.csv 是 20 组 (x, y) 观测。用最小二乘拟合线性模型 y = a·x
 - 实测：macOS（Apple Silicon），numpy 2.5.4 / scipy 1.18.1
 - Windows：未实测
 
-**实测记录**：a = 2.455857（SE 0.029332）、b = 1.347086（SE 0.351370），R² = 0.997439，RMSE = 0.7564，cond(X) = 25.02，Durbin-Watson = 1.791（无自相关迹象）；`lstsq` / `linregress` / `curve_fit` 三条路径结果一致到 6 位小数。
+**实测记录**（用上面的提示词原样跑）：a = 2.455857（SE 0.029332）、b = 1.347086（SE 0.351370），R² = 0.997439，RMSE = 0.7564，cond(X) = 25.02，Durbin-Watson = 1.791（无自相关迹象）；`lstsq` / `linregress` / `curve_fit` 三条路径结果一致到 6 位小数。
 
 ---
 
@@ -289,7 +289,7 @@ matrix.json 里是一个 3×3 实对称矩阵。计算它的秩、行列式、�
 - 实测：macOS（Apple Silicon），numpy 2.5.4（本机无 sympy，验算走纯 Python）
 - Windows：未实测
 
-**实测记录**：秩 3、det = 8、特征值 {1, 2, 4}、cond = 4；用特征多项式 `(2−λ)(λ²−5λ+4)` 手算复核一致（det = 1·2·4 = 8）。
+**实测记录**（用上面的提示词原样跑）：秩 3、det = 8、特征值 {1, 2, 4}、cond = 4；用特征多项式 `(2−λ)(λ²−5λ+4)` 手算复核一致（det = 1·2·4 = 8）。
 
 ---
 
@@ -311,7 +311,7 @@ Recoloring graphs of treewidth 2）。梳理主定理和关键引理的依赖关
 
 ### 需要什么输入
 
-- `paper/paper-treewidth.txt`：论文纯文本（arXiv:2012.11459，公开；见 [`examples/paper-treewidth.txt`](examples/paper-treewidth.txt)）
+- `paper/paper-treewidth.txt`：论文纯文本（公开预印本 arXiv:2012.11459）。按 [`examples/README.md`](examples/README.md) 自行下载转换，仓库不分发正文
 - TeX Live（XeLaTeX + `forest`）
 
 ### 最后得到什么
@@ -328,7 +328,7 @@ Recoloring graphs of treewidth 2）。梳理主定理和关键引理的依赖关
 - 实测：macOS（Apple Silicon），TeX Live 2025；产出 12 页报告 + 2 份证明树，编译无错误
 - Windows：未实测
 
-**实测记录**：生成 `paper-treewidth_reading.pdf`（420 KB，12 页）与 `paper-treewidth_tree_thm1.pdf`、`paper-treewidth_tree_lem4.pdf`；编译日志无缺字、无 undefined reference。
+**实测记录**（用上面的提示词原样跑）：生成 `paper-treewidth_reading.pdf`（420 KB，12 页）与 `paper-treewidth_tree_thm1.pdf`、`paper-treewidth_tree_lem4.pdf`；编译日志无缺字、无 undefined reference。
 
 ---
 
@@ -365,7 +365,7 @@ claims.md 是我准备写的一篇短文的三条断言。帮我搭一个可溯�
 - 实测：macOS（Apple Silicon）
 - Windows：未实测
 
-**实测记录**：三条断言拆成 8 行台账。真抓到问题：C1 的"Jerrum 1976"实际应为 Jerrum 1995（RSA 7:157–165），且更合适的引用是 Dyer–Flaxman–Frieze–Vigoda 2006 / Cereceda–van den Heuvel–Johnson 2009；C2 的"O(n²)"在 t=5 时已被线性上界取代（DM 344:112553, 2021），被标为 overclaimed；"本地实验观察"因工作区无实验文件被标为 needs-experiment。
+**实测记录**（用上面的提示词原样跑）：三条断言拆成 8 行台账。真抓到问题：C1 的"Jerrum 1976"实际应为 Jerrum 1995（RSA 7:157–165），且更合适的引用是 Dyer–Flaxman–Frieze–Vigoda 2006 / Cereceda–van den Heuvel–Johnson 2009；C2 的"O(n²)"在 t=5 时已被线性上界取代（DM 344:112553, 2021），被标为 overclaimed；"本地实验观察"因工作区无实验文件被标为 needs-experiment。
 
 ---
 
@@ -401,7 +401,7 @@ claims.md 是我准备写的一篇短文的三条断言。帮我搭一个可溯�
 - 实测：macOS（Apple Silicon），TeX Live 2025；产出 6 页 PDF
 - Windows：未实测
 
-**实测记录**：`verymath_beamer_check` 报 latexmk / xelatex / forest / ctex 全部可用；`main.pdf` 6 页，编译无错误。
+**实测记录**（用上面的提示词原样跑）：`verymath_beamer_check` 报 latexmk / xelatex / forest / ctex 全部可用；`main.pdf` 6 页，编译无错误。
 
 ---
 
@@ -439,7 +439,7 @@ broken-proof.lean 是我准备提交的 Lean 补丁。按验收纪律检查它�
 - 实测：macOS（Apple Silicon），仅扫描路径
 - Windows：未实测
 
-**实测记录**：检出 3 处禁用词——第 4 行 `sorry`、第 7 行 `admit`、第 9 行 `axiom shortcut : False`；明确判定"新增 `False` 公理使文件不一致，不可接受"，并给出 `rfl` / `simp` 的最小修复；编译验证如实报为未执行（工作区无 Lake 项目、无 `lean-toolchain`）。
+**实测记录**（用上面的提示词原样跑）：检出 3 处禁用词——第 4 行 `sorry`、第 7 行 `admit`、第 9 行 `axiom shortcut : False`；明确判定"新增 `False` 公理使文件不一致，不可接受"，并给出 `rfl` / `simp` 的最小修复；编译验证如实报为未执行（工作区无 Lake 项目、无 `lean-toolchain`）。
 
 ---
 
@@ -475,7 +475,7 @@ broken-proof.lean 是我准备提交的 Lean 补丁。按验收纪律检查它�
 - 实测：macOS（Apple Silicon）
 - Windows：未实测
 
-**实测记录**：`workstream_completion` PASSED（report.md 三节齐全）、`final_render` PASSED（`ws-lsa` render-ready）；`goal_approval` 在**不带 goalId** 的聚合调用下曾报工具侧错误 `value is not lossless JSON`——这是本插件 0.3.2 修复的一个真实缺陷（`details` 里残留 undefined），带 `goalId=g1` 时可正常返回 PASSED。
+**实测记录**（用上面的提示词原样跑）：`workstream_completion` PASSED（report.md 三节齐全）、`final_render` PASSED（`ws-lsa` render-ready）；`goal_approval` 在**不带 goalId** 的聚合调用下曾报工具侧错误 `value is not lossless JSON`——这是本插件 0.3.2 修复的一个真实缺陷（`details` 里残留 undefined），带 `goalId=g1` 时可正常返回 PASSED。
 
 ---
 
@@ -496,8 +496,11 @@ broken-proof.lean 是我准备提交的 Lean 补丁。按验收纪律检查它�
 
 ### 需要什么输入
 
-- 本机 SageMath 文档语料（`~/.verymath/sagemath-corpus`，CC BY-SA，独立分发）
-- 可选：`sage` 二进制（设置 `SAGE_PYTHON` 指向 sage 可执行文件）；只查文档不需要
+- SageMath 文档语料（默认 `~/.verymath/sagemath-corpus`，可用 `VERYMATH_SAGE_CORPUS` 覆盖）：
+  取自 SageMath 官方 Sphinx 参考手册（SageMath 10.9.beta9，CC BY-SA 3.0），共 3196 篇纯文本 +
+  一份 `reference_manifest.jsonl`；只收录文档文本，不含 SageMath 源码
+- 可选：`sage` 可执行文件（设置 `SAGE_PYTHON` 指向该文件，例如
+  `~/.verymath/miniforge/envs/sage/bin/sage`）；只查文档不需要它
 
 ### 最后得到什么
 
@@ -512,7 +515,7 @@ broken-proof.lean 是我准备提交的 Lean 补丁。按验收纪律检查它�
 - 实测：macOS（Apple Silicon），语料可用；未设 `SAGE_PYTHON` 时工具如实报告"binary not found"，设置后可检出
 - Windows：Sage 需 WSL，未实测
 
-**实测记录**：语料可用（3196 篇），检索命中椭圆曲线 `rank` 相关文档并给出 `ell_rational_field` / `ell_number_field` 路径；首次运行时因未设 `SAGE_PYTHON` 报二进制缺失——这正是"缺失依赖如实降级"路径，不是故障。
+**实测记录**（用上面的提示词原样跑）：语料可用（3196 篇，79 个顶层领域），检索命中椭圆曲线 `rank` 相关文档并给出 `ell_rational_field` / `ell_number_field` 路径；未设 `SAGE_PYTHON` 时工具如实报二进制缺失，设置后检出。本插件**只做事文档查询**，不提供 Sage 代码执行能力；执行需用户自己的 Sage 环境。
 
 ---
 
@@ -550,7 +553,7 @@ broken-proof.lean 是我准备提交的 Lean 补丁。按验收纪律检查它�
 - 实测：macOS（Apple Silicon），R2025b Update 7（Optimization + Symbolic）
 - Windows：未实测
 
-**实测记录**：MATLAB 返回 rank 3、det 8、cond 4，与对称正定矩阵特征值 {1, 2, 4} 交叉一致（det = 1·2·4，cond = 4/1）；工具箱清单由 `detect_matlab_toolboxes` 给出。
+**实测记录**（用上面的提示词原样跑）：MATLAB 返回 rank 3、det 8、cond 4，与对称正定矩阵特征值 {1, 2, 4} 交叉一致（det = 1·2·4，cond = 4/1）；工具箱清单由 `detect_matlab_toolboxes` 给出。这一项需要本机 MATLAB + license + MathWorks MCP server，**无法在无 MATLAB 的环境或 CI 中复现**。
 
 ---
 

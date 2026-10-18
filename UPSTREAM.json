@@ -46,7 +46,7 @@
         "skills/paper-writing/templates/",
         "skills/math-beamer/ (SKILL.md + templates/ catalog+23 packs+previews + references/, verbatim with DSH notes)"
       ],
-      "adaptationNotes": "paper-writing bundled with sub-skills flattened to module files (plugin skill-discovery layout) and DSH Integration Notes added; templates verbatim. math-beamer NOT bundled (TeX-heavy; candidate for later with verymath_beamer_check). math-beamer bundled after verifying local TeX Live 2025 compiles the seminar-minimal-zh template end-to-end; ECNU third-party template index NOT vendored (upstream policy)."
+      "adaptationNotes": "paper-writing bundled with sub-skills flattened to module files (plugin skill-discovery layout) and DSH Integration Notes added; templates verbatim. math-beamer bundled after verifying local TeX Live 2025 compiles the seminar-minimal-zh template end-to-end; ECNU third-party template index NOT vendored (upstream policy)."
     },
     {
       "repository": "https://github.com/VeryMath/AI4Math-Auto-Research",
@@ -71,7 +71,7 @@
     },
     {
       "repository": "https://github.com/VeryMath/AI4Math-Optimization",
-      "commit": "a054d39a",
+      "commit": "a054d39a6be36a539eb511336af5a6b8c6c466b7",
       "license": "MIT",
       "adaptedPaths": [
         "skills/osqp-solver/ (SKILL.md + scripts/, scripts verbatim)",

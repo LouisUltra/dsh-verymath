@@ -43,23 +43,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   on v0.14.0 and v0.12.0; docs corrected (`docs/matlab-connection-status.md`).
   The matlab-runner skill now documents the desktop-attach execution path.
 
-### Added (late 0.3.0 round)
+### Added (0.3.1 round — tools and skills)
 
-- Sage execution path verified: miniforge `sage=10.9` env installed; the
-  sagemath-skill runner works via SAGE_PYTHON with Python-form syntax
-  (preparser constructs like `x^2` are correctly rejected per the contract).
-  Search works without the binary; execution requires it.
+- Sage environment note: miniforge `sage=10.9` installed on the development
+  machine; the upstream runner works via `SAGE_PYTHON` with Python-form
+  syntax (preparser constructs like `x^2` are correctly rejected per the
+  contract). This package exposes corpus search only; running Sage code is
+  the user's own environment.
 
 - `verymath_research_gate`: three-gate validation for Co-Mathematician-style
   research workspaces (goal approval / workstream completion / final render),
   ported from the documented upstream file contract (report.md mandatory
   sections, independent-reviewer rule, blocking-review resolution).
 - `verymath_sage_check` / `verymath_sage_search`: clean-room TypeScript corpus
-  search over the separately-distributed CC BY-SA SageMath docs (route-a).
+  search over the separately-distributed CC BY-SA SageMath docs (the
+  Sagemath-skill repository itself is GPLv3 and is not bundled).
 - `verymath_osqp_check` / `verymath_osqp_solve`: OSQP stack probe + JSON
   contract QP solving with independent verification.
 - Bundled skills: `osqp-solver`, `mixed-integer-programming` (repaired),
-  `matlab-runner`, `math-beamer`.
+  `matlab-runner`, `math-beamer` (23 template packs).
 
 ## [0.3.0] - 2026-10-15
 
@@ -78,11 +80,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
     (AI4Math-Computational-Mathematics).
   - Formalization: `lean-formalization` (with embedded lean-runtime support
     layer), `lean-setup` (AI4Math-Lean-Agents).
-- **12 model-facing tools**: `verymath_glossary_query`, `verymath_glossary_upsert`,
-  `verymath_glossary_build`, `verymath_python_check`, `verymath_osqp_check`,
-  `verymath_osqp_solve`, `verymath_ocr_scan`, `verymath_lean_detect_sorry`,
-  `verymath_paper_validate`, `verymath_paper_graph` (+ `focus` closure),
-  and the paper-graph engine.
+- **10 model-facing tools**: `verymath_glossary_query`,
+  `verymath_glossary_upsert`, `verymath_glossary_build`,
+  `verymath_python_check`, `verymath_osqp_check`, `verymath_osqp_solve`,
+  `verymath_ocr_scan`, `verymath_lean_detect_sorry`, `verymath_paper_validate`,
+  `verymath_paper_graph` (with `focus` transitive closure and Mermaid
+  rendering). `verymath_sage_check`/`verymath_sage_search`,
+  `verymath_research_gate`, and `verymath_beamer_check` followed in the
+  0.3.1 round (see above), bringing the current total to 14.
 - Package-hygiene tests ported from upstream `test_course_skills.py`
   (no machine-local paths/secrets in skills, no tool caches).
 

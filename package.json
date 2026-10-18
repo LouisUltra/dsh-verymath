@@ -1,7 +1,7 @@
 {
   "name": "@louisultra/dsh-verymath",
   "version": "0.3.2",
-  "description": "VeryMath capabilities for DSH: bilingual math glossary tools and adaptive math paper-reading skills. Community plugin for issue ECNU/EduWork#152.",
+  "description": "VeryMath capabilities for DSH: 16 bundled math skills and 14 tools covering paper reading, bilingual glossary, writing, Beamer, optimization, computation, Lean formalization, research workflows, Sage doc lookup and MATLAB. Community plugin for issue ECNU/EduWork#152.",
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -17,6 +17,8 @@
     "skills/**/*",
     "!**/__pycache__",
     "!**/*.pyc",
+    "docs/capability-examples.md",
+    "docs/examples/**",
     "cordis.patch.yml",
     "README.md",
     "README_EN.md",
