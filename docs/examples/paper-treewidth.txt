@@ -1,0 +1,484 @@
+                                                                       Recoloring graphs of treewidth 2*
+
+                                                               Valentin Bartier1 , Nicolas Bousquet2 , and Marc Heinrich3
+                                                1
+                                                  Univ. Grenoble Alpes, CNRS, Laboratoire G-SCOP, Grenoble-INP, Grenoble,
+                                                               France.valentin.bartier@grenoble-inp.fr
+                                               2
+                                                 Université de Lyon, Université Lyon 1, LIRIS, UMR CNRS 5205, Lyon, France,
+                                                           France. E-mail: nicolas.bousquet@univ-lyon1.fr
+                                               3
+                                                 School of Computing, University of Leeds, UK. M.Heinrich@leeds.ac.uk
+arXiv:2012.11459v1 [cs.DM] 21 Dec 2020
+
+
+
+
+                                                                                                      Abstract
+                                                     Two (proper) colorings of a graph are adjacent if they differ on exactly one vertex. Jerrum proved
+                                                 that any (d + 2)-coloring of any d-degenerate graph can be transformed into any other via a sequence
+                                                 of adjacent colorings. A result of Bonamy et al. ensures that a shortest transformation can have a
+                                                 quadratic length even for d = 1. Bousquet and Perarnau proved that a linear transformation exists for
+                                                 between (2d + 2)-colorings. It is open to determine if this bound can be reduced.
+                                                     In this paper, we prove that it can be reduced for graphs of treewidth 2, which are 2-degenerate.
+                                                 More formally, we prove that there always exists a linear transformation between any pair of 5-
+                                                 colorings. This result is tight since there exist graphs of treewidth 2 and two 4-colorings such that
+                                                 a shortest transformation between them is quadratic.
+
+
+                                         1      Introduction
+                                         Reconfiguration problems consist in finding step-by-step transformations between two feasible solu-
+                                         tions of a problem such that all intermediate states are also feasible. Such problems model situations
+                                         where a solution already in place has to be modified for a more desirable one while keeping some
+                                         properties all along. Reconfiguration problems have been studied in various fields such as discrete ge-
+                                         ometry [6], optimization [1] or statistical physics [20]. For a complete overview of the reconfiguration
+                                         field, the reader is referred to the two recent surveys on the topic [21, 22]. In this paper, our reference
+                                         problem is graph coloring.
+                                             In this work, we will focus on the diameter of the reconfiguration graph. The diameter of the recon-
+                                         figuration graph plays an important role, for instance in random sampling, since it provides a lower
+                                         bound on the mixing time of the underlying Markov chain (and the connectivity of the reconfiguration
+                                         graph ensures the ergodicity of the Markov chain1 ). Since proper colorings correspond to states of the
+                                         anti-ferromagnetic Potts model at zero temperature, Markov chains related to graph colorings received
+                                         a considerable attention in statistical physics and many questions related to the ergodicity or the mixing
+                                         time of these chains remain widely open (see e.g. [13, 19]).
+
+                                         Graph recoloring. All along the paper G = (V, E) denotes a graph, n := |V | and k is an integer. For
+                                         standard definitions and notations on graphs, we refer the reader to [14]. A (proper) k-coloring of G is a
+                                         function σ : V (G) → {1, . . . , k} such that, for every edge xy ∈ E, we have σ(x) 6= σ(y). Throughout the
+                                         paper we only consider proper colorings and will then omit the proper for brevity. The chromatic number
+                                         χ(G) of a graph G is the smallest k such that G admits a k-coloring. Two k-colorings are adjacent if they
+                                         differ on exactly one vertex. The k-reconfiguration graph of G, denoted by G(G, k) and defined for any
+                                             * This work was supported by ANR project GrR (ANR-18-CE40-0032).
+                                             1 Actually, it only gives the irreducibility of the chain. To get the ergodicity, we also need the chain to be aperiodic. For the
+
+                                         chains associated to proper graph colorings, this property is usually straightforward.
+
+
+
+                                                                                                           1
+k ≥ χ(G), is the graph whose vertices are k-colorings of G, with the adjacency relation defined above.
+Cereceda et al. provided an algorithm to decide whether, given two 3-colorings, one can be transformed
+into the other in polynomial time, and characterized graphs for which G(G, 3) is connected [11, 12].
+Given any two k-colorings of G, it is PSPACE-complete to decide whether one can be transformed
+into the other for k ≥ 4 [5].
+     The k-recoloring diameter of a graph G is the diameter of G(G, k) if G(G, k) is connected and is equal
+to +∞ otherwise. In other words, it is the minimum D for which any k-coloring can be transformed
+into any other one through a sequence of at most D adjacent k-colorings. Bonsma and Cereceda [5]
+proved that there exists a family G of graphs and an integer k such that, for every graph G ∈ G there
+exist two k-colorings whose distance in the k-reconfiguration graph is finite and super-polynomial in n.
+     Cereceda conjectured that the situation is different for degenerate graphs. A graph G is d-degenerate
+if any subgraph of G admits a vertex of degree at most d. In other words, there exists an ordering
+v1 , . . . , vn of the vertices such that for every i ≤ n, the vertex vi has at most d neighbors in vi+1 , . . . , vn .
+It was shown independently by Dyer et al. [16] and Cereceda et al. [11] that for any d-degenerate graph
+G and every k ≥ d + 2, G(G, k) is connected. However the (upper) bound on the k-recoloring diameter
+given by these constructive proofs is of order cn (where c is a constant). Cereceda [10] conjectured that
+the the diameter of G(G, k) is of order O(n2 ) as long as k ≥ d + 2. If correct, the quadratic function is
+sharp, even for paths or chordal graphs as proved in [4]. Bousquet and Heinrich [8] proved that the
+diameter of G(G, k) is nd+1 , improving the 2n upper bound of [16]. The conjecture is known to be true
+for a few graph classes such as chordal graphs [4] or bounded treewidth graphs [3, 17].
+     One can wonder what happens if k increases. No non trivial lower bound on the diameter of G(G, k)
+is known for d-degenerate graphs G when k ≥ d + 3. Bousquet and Perarnau [9] showed that the
+diameter of G(G, k) is linear when k ≥ 2d + 2. Bartier and Bousquet [7] proved that the diameter of
+G(G, k) is linear for bounded degree chordal graphs. The problem remains open for bounded treewidth
+graphs or general chordal graphs.
+     The class of planar graphs also received a considerable attention. Feghali proved that G(G, k) is
+almost linear (precisely O(n · P olylog(n))) when G is a planar graph and k ≥ 8 [18]. Dvorak and Feghali
+also showed that it becomes linear when k ≥ 10 [15]. One can naturally ask for which graph classes the
+diameter of G(G, k) becomes linear when k ≥ d + 2.
+     In this paper, we investigate the class of outerplanar graphs and more generally the graphs of
+treewidth 2. Since graphs of treewidth 2 are 2-degenerate, the result of [9] ensures that there exist
+linear transformations between any pair of 6-colorings. We also know that such a result is impossible
+for 4-colorings [4] (the diameter is quadratic). So the only open case is when k = 5. In this note, we
+answer this question and show:
+Theorem 1. Let G be graph of treewidth at most 2 and k = 5. There exists a constant c such that, for every pair
+of 5-colorings α, β of G, there exists a transformation from α to β recoloring each vertex at most c times.
+    Note that since outerplanar graphs have treewidth 2 and the quadratic diameter for k = 4 obtained
+in [4] also holds for outerplanar graphs, it also completely characterizes the recoloring diameter of
+outerplanar graphs.
+    One can naturally ask if the results of Theorem 1 can be extended further. In particular we ask the
+two following questions, where the second generalizes the first one:
+Question 2. Does there exists a constant C such that, for every graph G of treewidth at most d, the
+diameter of G(G, k) is linear when k ≥ d + C?
+
+Question 3. Does there exists a constant C such that, for every d-degenerate graph G, the diameter of
+G(G, k) is linear when k ≥ d + C?
+
+Outline of the paper Before going into the details of the proof, let us describe from a high level point
+of view how the proof works, and how the paper is organized. The first step in the proof of Theorem 1
+is to show that it is sufficient to prove the result for chordal graphs with cliques of size at most 3,
+instead of graphs of treewidth 2. This reduction to chordal graphs is done in Section 2. Proving that
+the result holds for chordal graphs is the main technical part of the paper, and is done in Section 3. The
+proof for chordal graphs is algorithmic in nature. We first describe the procedure, introduced in [9],
+which builds a recoloring sequence by making greedy choices. We prove that the recoloring sequences
+
+
+                                                          2
+produced by this procedure recolor each vertex of the graph a constant number of times. This is done
+by first proving some properties of the sequences produced by this algorithm in Section 3.1, and then
+showing in Section 3.2 how these properties can be used to bound the number of times that each vertex
+is recolored. The core of the proof proceeds by contradiction. Assuming that a vertex is recolored a
+large number of times puts some very strong constraints on the recoloring sequence on its neighbor.
+This in turn is used to show that the algorithm would recolor x a much smaller number of times in this
+sequence.
+
+
+2    Reduction to chordal graphs
+Let G = (V, E) be a graph of treewidth at most d and T be a tree decomposition of G. A tree decompo-
+sition (T, X ) is a tree T given with a bag function X such that, for every u ∈ V (T ), X (u) is a subset of
+V (G), for every edge e = xy in E(G), there exists a node u of T such that {x, y} ⊆ X (u). Moreover, for
+every x ∈ V (G), the subset of nodes containing x in their bags is connected.
+    The clique number of G, denoted by ω(G) is the maximum size of a clique in G. The following lemma
+is sufficient to prove Theorem 1.
+Lemma 4. There exists a constant c such that for every chordal graph H with ω = 3, there exists a transformation
+from any 5-coloring of H into a 3-coloring of H by recoloring each vertex at most c times.
+   The proof of Lemma 4 is postponed to Section 3.2. Let us explain how we can use it to prove
+Theorem 1
+
+Proof of Theorem 1. Let G be a graph of treewidth at most 2 and α, β be two 5-colorings of G. Let T be a
+tree decomposition T of G that can be found in linear time by [2].
+    Let us first transform G into a chordal graph H with clique number at most three. The transfor-
+mation is based on a trick used in [17]. For every bag B of T , we merge the vertices of B colored the
+same in α. We repeat until we obtain a graph H 0 such that no bag contains two vertices of the same
+color. Note that tw(H 0 ) ≤ tw(G) since we only identify vertices belonging to the same bags. Since
+we merged vertices colored the same in α, the coloring α0 which is the coloring of H 0 where a vertex
+receives the color of its color class in G is proper and well-defined. Note that, in H 0 , vertices belonging
+to the same bag receive distinct colors. So α0 is also a coloring of H which is the chordal graph whose
+clique tree is TH 0 . In other words, H is the graph obtained from H 0 by transforming every bag of the
+tree decomposition of H 0 into cliques.
+    By Lemma 4, α0 can be transformed into a 3-coloring of H by recoloring every vertex at most c
+times. Feghali observed in [17] that it implies that, in G, we can transform α into a 3-coloring γ1 of
+G by recoloring every vertex of G at most c times. With a similar argument, we can transform β in a
+3-coloring γ2 by recoloring every vertex at most c times. The following claim concludes the proof of
+Theorem 1 by taking d = 2.
+Claim A. Let G be a graph of treewidth at most d and γs , γt be two (d+1)-colorings of G using colors {1, . . . , d+
+1}. If k ≥ 2d + 1, γs can be transformed into γt by recoloring every vertex at most twice.
+    We perform the following recolorings. We denote by Xi the subset of vertices colored with i in γs .
+For every i ≤ d, recolor one by one all the vertices of Xi with color d + 1 + i. Then recolor the vertices of
+Xd+1 with their target colors. Finally recolor all the vertices of Xi for i ≤ d with their target color. The
+resulting coloring is γt and we claim that at every step, the current coloring is proper. Indeed, during
+the first phase, the color classes are the same (we simply change the color classes of the Xi s). When
+Xd+1 is recolored, all the vertices that receive a color in {1, . . . , d + 1} in the current coloring have their
+final color. The property is kept all along the rest of the recoloring algorithm, which completes the proof
+since γt is proper. ♦
+
+    So, in what follows, our goal is to prove Lemma 4.
+
+
+
+
+                                                         3
+3     Best choice algorithm
+Our proof of Lemma 4 is algorithmic and is based on an algorithm already used for instance in [9]. Our
+main contribution consists in making a careful analysis of its behavior for chordal graphs with clique
+number at most 3, and showing that the recoloring sequence produced by the algorithm recolors each
+vertex a constant number of times. We start by describing the algorithm and its properties.
+     In the following, given a graph G and two colorings α and β of G, a recoloring sequence S is a se-
+quence s1 s2 . . . st where each si is a pair (v, c) describing the vertex v and the color c which characterize
+the i-th step of the sequence. All the intermediate colorings described by this sequence must be proper.
+The restriction of S to X, denoted S|X , is the recoloring sequence obtained from S by keeping only re-
+colorings of vertices in X. In particular if X is a single vertex v, then S|v denotes the sequence of colors
+taken by the vertex v in the recoloring sequence S. With this notation, |S|v | is the number of times the
+vertex v is recolored in the sequence S.
+     Part of our proof relies on the identification of patterns in a recoloring sequence S. Given a sequence
+of vertices v1 . . . v` , we say that S contains this pattern if there is an index i such that for all j ≤ `, si+j
+recolors the vertex vj . Given an integer r, we also denote by vi≥r the pattern where vi is recolored r
+times in a row (without any other vertex interleaved in S), and (v1 . . . v` )r to denote that the pattern
+v1 . . . v` is repeated r times in a row in the sequence S.
+     Consider a d-degenerate graph G, two k-colorings α, β of G with k ≥ d + 2, and a vertex u of G with
+degree at most d. Let α0 and β 0 be the restrictions of α and β to G − u and S a recoloring sequence from
+α0 to β 0 . Let us now explain how we can extend this recoloring sequence to the whole graph.
+     Let t1 , . . . , t` be all the steps where the color of any neighbor of u is modified in S, and let cti be the
+new color assigned to the recolored neighbor at step ti . A best choice for u at step t ∈ {t1 , . . . , t` } is:
+    • the color β(u) if β(u) is distinct from ct , . . . , ct` ;
+
+    • or any valid choice for u at step t which is distinct from {cti with ti ≥ t} otherwise;
+    • or the valid choice for u at step t that appears the latest in the sequence (cti )ti ≥t otherwise.
+    The Local Best Choice for u extends the sequence S by recoloring only the vertex u. When a neighbor
+v of u is recolored in S with the current color of u, we add a recoloring for u just before this recoloring
+and we recolor u with a best choice. We do not perform any other recoloring for u except at the very
+last step to give it color β(u) if needed.
+    Let G be a chordal graph and v1 , . . . , vn be a degeneracy ordering of G. The Best Choice Recoloring
+Algorithm is the algorithm which consists in making the Local Best Choice successively on vn , . . . , v1 .
+We call a best choice recoloring a sequence S which can be obtained from this procedure for some degen-
+eracy ordering of G. Observe that by construction, if S is a best choice recoloring for some graph G and
+some degeneracy ordering v1 , . . . , vn , then for every index i ≥ 0, if Vi = {vi , . . . , vn }, then S|Vi is a best
+choice recoloring for G[Vi ].
+
+3.1    Properties of the Best Choice Algorithm
+In what follows, we always assume that G is a chordal graph with ω = 3 and k = 5. The ordering
+v1 , . . . , vn is a perfect elimination ordering of G, and S = s1 . . . st is a best choice recoloring for this
+ordering between two 5-colorings α and β of G. We denote by Vi the set {vi , . . . , vn }, and Gi = G[Vi ].
+The perfect elimination ordering of G can be used to construct an acyclic orientation of the graph,
+with the edge vi vj oriented towards vj if j > i. With this convention, each vertex of the graph has at
+most 2 out-neighbors, and for every vertex v of G, we denote by N + (v) these two out-neighbors, and
+N + [v] = N + (v) ∪ {v} the inclusive out-neighborhood. Because the ordering is a perfect elimination
+ordering, the out-neighbors of a vertex are adjacent.
+     Given a vertex v, the step i of the sequence S is saved for v if si recolors a vertex w ∈ N + (v) and one
+of the following holds:
+    • v is not recolored at steps 1, . . . , i;
+
+    • v is not recolored at steps i, . . . , t;
+
+
+
+                                                             4
+   • the two steps preceding si in S|N + [v] do not recolor v.
+   Informally, in the ”worst case” scenario, when we apply the Best Choice Algorithm to extend a
+recoloring sequence to a new vertex v, whenever we have to recolor v because of one of its neighbors
+there are two possible choice of color to recolor v with. By choosing the correct color, the algorithm
+recolors v once every two steps at most. This is formalized in the following observation:
+Observation 5. For every vertex v and w ∈ N + (v), the patterns vv never occur in S|N + [v] , and the
+pattern vwv can occur at most once, at the very end of the sequence S|N + [v] .
+    Saved steps quantify how many additional steps are saved by the algorithm compared to the worst
+case scenario. More precisely, we will show that every two saved recolorings for x reduce the number
+of times x is recolored by one compared with the worst case scenario. In order to prove this result, we
+will need one additional notion. We say that a step i recoloring a vertex v is caused by a vertex w if the
+recoloring step following si in SN + (v) recolors w. Note that by construction, this recoloring step recolors
+w with the color that v had just before the transformation si . Moreover, all the steps recoloring v, except
+possibly the last one where v is given its target color, are caused by one of the out-neighbor of v.
+    Let us start by proving a simple inequality on the number of times that a vertex v is recolored.
+Lemma 6. For every vertex v of, if r is the number of saved recolorings for v, then the following inequality holds:
+                                                      &P                   '
+                                                r         w∈N + (v) |S|w |
+                                    |S|v | ≤ 1 − +                           .
+                                                2              2
+                                                                  P
+Proof. The statement is proved by induction on m :=                  w∈N + (v) |S|w |. If v is recolored at most once
+during the sequence (which is the case when m = 0, i.e., when its out-neighbors are not recolored) the
+conclusion follows immediately. Hence, let us assume that v is recolored at least twice. If v is not the
+first recolored vertex of S|N [v] , then the first recoloring is saved. If we consider the coloring α0 obtained
+after this first recoloring, and S 0 the subsequence of S which recolors α0 to β, then by induction, v is
+recolored at most (m−1)−(r−1)
+                          2        + 1 times in S 0 , and consequently also in S. In this case the induction step
+holds, consequently we can assume in the rest of the proof that v is the first vertex recolored in S|N + [v] .
+    Let us write S|N + [v] = s01 . . . s0` . We know that s01 recolors v, let us write c0 and c1 the colors of v
+respectively before and after the transformation s01 . Since v is recolored at least twice, this recoloring
+must be caused by one of its out-neighbors say w, and w must be recolored in s02 with the color c0 .
+Consequently, there are still two colors that did not appeared in N + [v] in the transformation up to step
+2. By Observation 5, either s03 recolors P    v, and in this case is the last step of S|N + [v] (i.e., ` = 3); or s03 does
+not recolor v. In the first case we have w∈N + (v) |S|w | = 1, and since v is recolored twice, the inequality
+holds. In the second case we consider the coloring α0 obtained after the transformation s03 , and let S 0
+be the subsequence starting after the step s03 recoloring α0 into β. We know that v is recolored at one
+less times in S 0 than in S. Moreover, by definition neither s02 nor s03 are saved recolorings for v, hence
+the number of saved recolorings for v in S 0 is still equal to r. Using the induction hypothesis on S 0 , we
+know that v is recolored at most m−2−r      2   + 1 in S 0 , and since v is recolored one additional time in S, the
+induction step holds.
+
+    Hence in order to prove that a vertex is not recolored to many times, it is sufficient to show that
+there exists a sufficient number of saved recolorings. The following lemma gives a sufficient condition
+for a saved recoloring to appear.
+Lemma 7. Let u be a vertex of G and v, w ∈ N + (u). We write S|N + [u] = s01 , . . . s0` . Assume that the step i of
+S|N + [u] recolors u and is caused by v, and step i + 1 is caused by w. Then either i + 3 ≥ ` or the step i + 3 of
+S|N + [u] is saved for u.
+
+Proof. Let c1 (resp. c2 , resp. c3 ) denotes the color of u (resp. v, resp. w) just before step i. By definition,
+at step i + 1 the vertex u takes the color c1 (since the step i is caused by u) and at step i + 2, w takes the
+color c2 (since i + 1 is caused by w). Thus, after step i + 2, the only colors which appeared for v and w at
+steps i, i + 1 and i + 2 are the colors c1 , c2 , c3 . Since we make the best choice for u and there remain two
+valid colors, u is not recolored at step i + 3 (and then is saved for u) except if it is the last step of S|N + [u]
+where v1 receives its final color.
+
+
+                                                            5
+Lemma 8. Let u be a vertex of G, and v, w ∈ N + (v). If S|N [u] contains the pattern uvw>0 u then the initial,
+intermediate and final colors of u in the subsequence corresponding to this pattern are pairwise distinct.
+
+Proof. If the three colors are not pairwise distinct then only the initial and final colors of u can be the
+same. Let c1 be the initial color of u. Let s01 . . . s0` be the subsequence of S|N [v] corresponding to the
+pattern, then s01 is caused by v, which implies that v is recolored in s02 with c1 . Since v and w are
+adjacent, all the subsequent recolorings of w and u use a color different from c1 , and in particular, the
+final color of v is different from c1 .
+
+Lemma 9. Let x, u, v, w be vertices of G such that N + (x) = {u, v} and N + (u) = {v, w}. If i is the first index
+such that x = vi , let us write c = maxi0 >i |S|vi0 |. If x is recolored at least c − 1 times in S, then:
+   1. the pattern uwvu appears at least c − 34 times in S|N + (u) ;
+   2. in the sequence of colors of x, there are at most 74 indices where three consecutive colors are not pairwise
+      distinct.
+
+Proof. Let us prove the two points of the lemma successively.
+   1. Let us write S|N + (u) = s01 , . . . , s0` . Let us start by showing that few recolorings of u are caused by
+      v. Let i be an index such that the recoloring s0i of u is caused by the recoloring s0i+1 of v.
+      First observe that x is not recolored between s0i and s0i+1 . Indeed, let us denote by c the color of u
+      before s0i . Since the step i is caused by v, this means that v is recolored with c in s0i+1 . Moreover,
+      since x and u are adjacent, x is not colored c before s0i . This implies that x is not recolored between
+      s0i and s0i+1 , as it would be a recoloring caused by v, which can only happen if v is recolored with
+      the color of x which is not the case here.
+      If s0i is the first recoloring of a vertex in N + [x], then it is saved for x. Otherwise, the recoloring
+      preceding s0i in S|N +[x] can be either:
+         • a recoloring of x, in which case it is caused by u, and by Lemma 7, this implies that either
+           s0i+1 is the last, or before last, step of S|N + [x] , or the step following s0i+1 in S|N + [x] is saved for
+           x.
+         • a recoloring of either u or v, and in this case s0i+1 is saved for x.
+      This implies that every time (except once) there is a recoloring of u caused by v, we can find a
+      saved step for x, and all these saved steps are different. Moreover, since x is recolored at least
+      c − 1 times, by Lemma 6 there are at most 5 saved recolorings for x, and consequently by the
+      observation above there are at most 6 recolorings of u caused by v.
+      Since x is recolored at least c − 1 times, we know by Lemma 6 that u is recolored at least c − 3
+      times. At most 6 of these recolorings are caused by v by the argument above. Hence, except the
+      last one, the other c − 10 recolorings of u are caused by w. Moreover, since w is recolored at most
+      c times, it also means that there are at most 10 recolorings of w which do not cause a recoloring of
+      u.
+      Let us consider i and j such that s0i and s0j are two consecutive recolorings of u in SN + [u] . Our goal
+      is to show that except for a small number of choices of i, we have j = i + 3, and s0i . . . s0j matches
+      the pattern uwvu. Observe that the following properties hold:
+         • By Observation 5, we have j ≥ i + 2, and j = i + 2 can only happen once at the end of the
+           sequence.
+         • If j > i + 3, i.e., if there are at least three recolorings of v or w between si and sj , then at least
+           one of these recolorings is saved for u. This can happen at most 9 times since u is recolored
+           at least c − 3 times, and using Lemma 6.
+         • If j = i + 3 and s0i+1 does not recolor w, then we have a recoloring of u which is not caused
+           by w, which can happen at most 10 times by the arguments from the previous paragraph.
+         • Finally, if j = i + 3 and s0i+1 recolors w, and if s0i+2 does not recolor v, then it must recolor w
+           (it cannot recolor u by the assumption that j = i + 3), in which case we have a recoloring of
+           w which does not cause a recoloring of u, which can happen at most 10 times.
+
+
+                                                          6
+       Combining all the points above, and since u is recolored at least c − 3 times, the pattern uwvu
+       occurs at least c − 4 − 1 − 9 − 10 − 10 = c − 34 times, proving the first point of the lemma.
+   2. Let us now consider the second point. Since x is recolored at least c − 1 times while its at most
+      two out-neighbors are recolored at most c times, then by Lemma 6, there are at most 5 saved
+      recolorings for x. Let us write S|N + [x] = s01 . . . s0` , and consider two indices i < j such that s0i
+      and s0j are two consecutive recolorings of x. Again, by Observation 5, we have j ≥ i + 2, and
+      j = i + 2 can occur only once at the end of the sequence. If j > i + 3, then sj−1 is saved for
+      x, which can happen at most 5 times. In all the other cases, there are exactly two recolorings of
+      either u or v between si and sj . By the point 1. above, we know that the pattern uwvu appears
+      at least c − 34 times in S|N + [u] . This implies that in the sequence S|{u,v} there are at most 2 × 34
+      times where either two consecutive u or two consecutive v appear as a pattern. Hence, in all but
+      at most 68 + 5 + 1 = 74 occurrences, the subsequence si . . . sj matches one of the patterns xuvx or
+      xvux. By Lemma 8 the three colors taken by x during this portion of the recoloring sequence are
+      all different, which proves the second point of the lemma.
+
+
+
+3.2    Proof of Lemma 4
+Let c be a constant equal to 542. In order to prove Lemma 4, we will show that a best choice recoloring
+sequence recolors each vertex at most c times. This is proved by induction on the number of vertices
+of G. This is clearly true when G contains a single vertex since the sequence will recolor this vertex at
+most once. Assume that the conclusion holds for all the chordal graphs with clique number at most
+three on n vertices. Let G be a graph with n + 1 vertices and let x be the first vertex in the elimination
+ordering. Assume by contradiction that x is recolored c + 1 times in a best choice recoloring sequence
+for this elimination ordering. Using the induction hypothesis, all the vertices but x are colored at most
+c times.
+      If x has a single neighbor, then by Lemma 6, it is recolored at most 2c + 1 ≤ c times, a contradiction.
+Hence, we can assume that x has two neighbors y and z. Again, using Lemma 6, both y and z are
+recolored at least c − 1 times in S. Since G is chordal, yz is an edge of G, and we can assume without
+loss of generality that z is an out-neighbor of y. Let y1 be the second out-neighbor of y (if it exists).
+      By the first point of Lemma 9, there are at most 34 recolorings of y in S|N + [y] where the subsequence
+starting at this point does not match the pattern yy1 zy. Moreover, by the second point of Lemma 9
+applied to z, there are at most 74 triplets of consecutive colors of z which are not composed of pairwise
+distinct colors. Since both y and z are recolored at least c − 1 times, there exists a subsequence S 0 of
+                                     0
+SN + [y] of the form (yy1 z)c where c0 := b c−2        108 c = 5 and where three consecutive colors of z are always
+pairwise distinct.
+      For X ∈ {x, y, z, y1 }, let us denote by cX      i the color of X after the i-th recoloring of X in the sequence
+   0
+S , with the convention that cX         0  is the initial color of X.
+      Note that all the recolorings of y are caused by y1 in this subsequence, consequently, cyi+1                 1
+                                                                                                                        = cyi for
+              0                                                                            y        y
+all i ≤ c . Since we choose the best color for y when we recolor y from ci+1 to ci+2 , the set of colors
+cyi+1
+    1
+       , cyi+2
+            1
+               , czi+1 , czi+2 are pairwise distinct. Indeed, if they were not, the algorithm could have chosen an
+other color for y, which would postponed the recoloring of y, a contradiction with the fact that we made
+a best choice for y. Using this fact, and the equality cyi+1          1
+                                                                        = cyi , it follows that cyi+2 is the unique color
+which is not in the set {ci , ci+1 , ci+1 , ci+2 }, or stated differently, the colors cyi , cyi+1 , czi+1 , cyi+2 , czi+2 are all
+                                    y y     z     z
+
+pairwise disjoint. Writing this property for the index i + 1 gives that cyi+1 , cyi+2 , czi+2 , cyi+3 , czi+3 are all
+pairwise disjoint. With the overlap between these two sets, it follows that we must have {cyi , czi+1 } =
+{cyi+3 , czi+3 }. Moreover, since czi+1 6= czi+3 by assumption on the sequence S 0 , then we must have czi+3 =
+cyi , and czi+1 = cyi+3 . Hence, we can see from these conditions that the vertex y takes the colors 1, 2, 3, 4, 5
+successively (up to a permutation of colors), and similarly for y1 and z, but with a shift of 1 and 3
+respectively compared to y.
+      We can now use the fact that S 0 is very constrained to show that there must be a sufficient number of
+saved recolorings for x, which will contradict the assumption that x is recolored at least c + 1 times. Let
+us first assume that there is a recoloring of x caused by the recoloring of y from cyi to cyi+1 . This means
+that x is colored cyi+1 , and is recolored with a color not in the set {cyi , cyi+1 , czi , czi+1 }. However, we also
+
+
+                                                               7
+                                   x      z      y      z         y    x     z      y      z
+                         y    3                 3-4              4-2               2-1
+                         z    4          4-2           2-1                   1-5          5-3
+                         x    2   2-5                                  5-4
+
+     Figure 1: Example for S 0 |{y,z} and the best choices it implies for x. Initial colors of x, y, and z are 2, 3 and
+     4 respectively. Recolorings are ordered from left to right. The recolorings in red are saved for x.
+
+
+know that cyi+2 = czi , which implies that the recoloring of y from cyi+1 to cyi+2 will be saved for x. In a
+similar way, if the recoloring of x is caused by a recoloring of z from czi to czi+1 , then the new color of x
+will not be in the set {czi , czi+1 , cyi+1 , cyi+2 }. And since czi = cyi+2 , the recoloring of z from czi+1 to czi+2 will
+also be saved. An example of such a sequence S 0 is given in Figure 1.
+    Hence, in the sequence S 0 , for every recoloring of x, there is at least one recoloring saved for x.
+Hence, either x is recolored at most c0 − 2 times during S 0 , in which case there are at least 2 saved
+recolorings for x, or x is recolored at least c0 − 2 = 3 times during S 0 , and by the argument above at
+least two of these recolorings cause a recoloring saved for x (the last one might be at the end of S 0 ). In
+all cases, we obtain two saved recolorings for x, which is a contradiction of the assumption that x is
+recolored at least c + 1 times. Hence x is recolored at most c times and the inductive step holds.
+
+
+References
+ [1] H.-J. Böckenhauer, E. Burjons, M. Raszyk, and P. Rossmanith. Reoptimization of Parameterized
+     Problems. arXiv e-prints, 2018.
+ [2] H. L. Bodlaender. A linear time algorithm for finding tree-decompositions of small treewidth.
+     Proceedings of the twentyfifth annual ACM symposium on Theory of computing, 25(6):226–234, 1993.
+ [3] M. Bonamy and N. Bousquet. Recoloring bounded treewidth graphs. Electronic Notes in Discrete
+     Mathematics, 44:257–262, 2013.
+ [4] M. Bonamy, M. Johnson, I. Lignos, V. Patel, and D. Paulusma. Reconfiguration graphs for vertex
+     colourings of chordal and chordal bipartite graphs. Journal of Combinatorial Optimization, pages
+     1–12, 2012.
+ [5] P. Bonsma and L. Cereceda. Finding Paths Between Graph Colourings: PSPACE-Completeness
+     and Superpolynomial Distances. In MFCS, volume 4708 of Lecture Notes in Computer Science, pages
+     738–749, 2007.
+
+ [6] P. Bose, A. Lubiw, V. Pathak, and S. Verdonschot. Flipping edge-labelled triangulations. Comput.
+     Geom., 68:309–326, 2018.
+ [7] N. Bousquet and V. Bartier. Linear transformations between colorings in chordal graphs. In 27th
+     Annual European Symposium on Algorithms, ESA 2019, pages 24:1–24:15, 2019.
+
+ [8] N. Bousquet and M. Heinrich.                 A polynomial version of cereceda’s conjecture.                     CoRR,
+     abs/1903.05619, 2019.
+ [9] N. Bousquet and G. Perarnau. Fast recoloring of sparse graphs. Eur. J. Comb., 52:1–11, 2016.
+[10] L. Cereceda. Mixing Graph Colourings. PhD thesis, London School of Economics and Political
+     Science, 2007.
+
+[11] L. Cereceda, J. van den Heuvel, and M. Johnson. Mixing 3-colourings in bipartite graphs. Eur. J.
+     Comb., 30(7):1593–1606, 2009.
+[12] L. Cereceda, J. van den Heuvel, and M. Johnson. Finding paths between 3-colorings. Journal of
+     Graph Theory, 67(1):69–82, 2011.
+
+
+
+                                                             8
+[13] S. Chen, M. Delcourt, A. Moitra, G. Perarnau, and L. Postle. Improved bounds for randomly
+     sampling colorings via linear programming. In Proceedings of the Thirtieth Annual ACM-SIAM Sym-
+     posium on Discrete Algorithms, SODA 2019, pages 2216–2234, 2019.
+[14] R. Diestel. Graph Theory, volume 173 of Graduate Texts in Mathematics. Springer-Verlag, Heidelberg,
+     third edition, 2005.
+[15] Z. Dvořák and C. Feghali. An update on reconfiguring 10-colorings of planar graphs, 2020.
+[16] M. Dyer, A. D. Flaxman, A. M. Frieze, and E. Vigoda. Randomly coloring sparse random graphs
+     with fewer colors than the maximum degree. Random Structures & Algorithms, 29(4):450–465, 2006.
+
+[17] C. Feghali. Paths between colourings of sparse graphs. Eur. J. Comb., 75:169–171, 2019.
+[18] C. Feghali. Reconfiguring colorings of graphs with bounded maximum average degree. Journal of
+     Combinatorial Theory, Series B, 147:133 – 138, 2021.
+[19] A. Frieze and E. Vigoda. A survey on the use of markov chains to randomly sample colourings.
+     Oxford Lecture Series in Mathematics and its Applications, 34:53, 2007.
+[20] B. Mohar and J. Salas. On the non-ergodicity of the Swendsen–Wang–Kotecký algorithm on the
+     Kagomé lattice. Journal of Statistical Mechanics: Theory and Experiment, 2010(05):P05016, 2010.
+[21] N. Nishimura. Introduction to reconfiguration. preprint, 2017.
+
+[22] J. van den Heuvel. The Complexity of change, page 409. Part of London Mathematical Society Lecture
+     Note Series. S. R. Blackburn, S. Gerke, and M. Wildon edition, 2013.
+
+
+
+
+                                                   9
+

@@ -47,6 +47,20 @@ describe('checkGoalApproval', () => {
     expect(result.gate).toBe('goal_approval')
   })
 
+  // Regression: an undefined goalId used to leave `{ goalId: undefined }` in
+  // details, which the tool output contract rejects as non-lossless JSON
+  // (surfaced by a real run of verymath_research_gate on gate=goal_approval).
+  it('keeps details JSON-serializable when no goalId is given', async () => {
+    const result = await checkGoalApproval(ws)
+    expect(result.details).toEqual({})
+    expect(Object.values(result.details).every(value => value !== undefined)).toBe(true)
+  })
+
+  it('carries the goalId in details when one is given', async () => {
+    const result = await checkGoalApproval(ws, 'g1')
+    expect(result.details).toEqual({ goalId: 'g1' })
+  })
+
   it('names a missing goal id', async () => {
     const result = await checkGoalApproval(ws, 'nope')
     expect(result.passed).toBe(false)

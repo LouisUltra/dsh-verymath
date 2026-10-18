@@ -186,7 +186,7 @@ export async function checkGoalApproval(workspace: string, goalId?: string): Pro
   } else if (!goals.some(goal => String(goal.status ?? '').toLowerCase() === 'approved')) {
     issues.push('No approved goals are recorded.')
   }
-  return { gate: 'goal_approval', passed: issues.length === 0, issues, details: { goalId } }
+  return { gate: 'goal_approval', passed: issues.length === 0, issues, details: goalId !== undefined ? { goalId } : {} }
 }
 
 /**

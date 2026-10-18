@@ -149,8 +149,9 @@ exit 3 契约断层、触发词弱化、tests/agents 元数据损失、.ruff_cac
 
 **Lean-Agents（MIT）→ 中优先第二批**：
 - lean-setup + lean-formalization 两个公开技能 + lean-runtime 支撑层原样随包（不可拆）。
-- 工具：`verymath_lean_check`（两级 readiness）+ `verymath_lean_detect_sorry` + `verymath_lean_review`
-  （后两个无 Lean 环境也有真实价值——纯文本分析）。不移植 Numina/Archon 后端。
+- 工具：`verymath_lean_detect_sorry`（无 Lean 环境也有真实价值——纯文本分析）；
+  环境探测与 patch 审查走随包脚本 `ai4m_lean.py doctor / review`（bash 调用，未包成模型工具）。
+  不移植 Numina/Archon 后端。
 - **elan shim 陷阱（必须照抄）**：`.elan/bin` 下的 lean/lake 绝不能跑 `--version`（触发 GB 级隐式工具链下载）；
   版本从 lean-toolchain 文件读（上游 tool_status.py:33-41）。
 - GB 级工具链不随包——上游本就是"检测+引导+批准后安装"设计；共享工作区 ~/.ai4math/lean-workspace 概念带入。

@@ -9,9 +9,10 @@ description: Use for interactive Lean 4 formal verification by coding agents wit
 
 - 本技能由 `@louisultra/dsh-verymath` 插件提供；`lean-runtime/` 支撑层随包内嵌于本技能目录
   （上游为兄弟目录；此处按 DSH 技能发现约定调整，所有 `lean-runtime/` 引用改读 `lean-runtime/`）。
-- DSH 工具优先：`verymath_lean_detect_sorry`（无 Lean 也可用的 sorry/admit/axiom 纯文本检测）
-  与 `verymath_lean_review`（patch 结构安全审查：陈述漂移 + 禁用词）。两者覆盖本技能的部分安全红线。
-- 编译验证（lake build / lake env lean）需要真实 Lean 工具链：先调 `verymath_lean_check`；
+- DSH 工具优先：`verymath_lean_detect_sorry`（无 Lean 也可用的 sorry/admit/axiom 纯文本检测）。
+  patch 结构安全审查（陈述漂移 + 禁用词）用随包脚本 `python3 lean-runtime/scripts/ai4m_lean.py review`
+  经 bash 执行；环境探测用 `ai4m_lean.py doctor` / `env`（同样是 bash）。本插件没有额外的 lean 审查工具。
+- 编译验证（lake build / lake env lean）需要真实 Lean 工具链，先跑 `ai4m_lean.py doctor` 看两级 readiness；
   **elan shim 陷阱**——`.elan/bin` 下的 lean/lake 不可跑 `--version`（会触发 GB 级隐式工具链下载），
   版本一律从项目 `lean-toolchain` 文件读取。
 - mathlib 缓存与共享工作区概念（`${AI4MATH_HOME:-~/.ai4math}/lean-workspace`）继续适用；

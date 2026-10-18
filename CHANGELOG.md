@@ -3,6 +3,24 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.2] - 2026-10-19
+
+### Fixed
+
+- `verymath_research_gate` `goal_approval`: the `details` payload carried an
+  `undefined` `goalId`, which the tool output contract rejects as
+  "value is not lossless JSON" whenever the gate ran without an explicit
+  goalId. Found by a real run during capability-example verification; covered
+  by two regression tests.
+- `lean-formalization` DSH notes referenced `verymath_lean_review` and
+  `verymath_lean_check`, which do not exist; patch review and environment
+  checks go through the bundled `ai4m_lean.py` script instead.
+
+### Added
+
+- `docs/capability-examples.md`: all 14 capabilities documented with the
+  five-field scenario structure and real verification records (macOS).
+
 ## [0.3.1] - 2026-10-16
 
 ### Added

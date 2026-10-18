@@ -1,6 +1,6 @@
 {
   "name": "@louisultra/dsh-verymath",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "VeryMath capabilities for DSH: bilingual math glossary tools and adaptive math paper-reading skills. Community plugin for issue ECNU/EduWork#152.",
   "type": "module",
   "main": "lib/index.js",
