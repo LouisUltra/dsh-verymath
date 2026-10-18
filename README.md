@@ -87,6 +87,8 @@ npm run build       # tsc → lib/
 npm test            # vitest 合成测试（不联网）
 npm run test:runtime  # 真实 DSH API 探针（合成数据，不调用模型）
 npm run check       # 全部
+npm run test:upstream  # 上游 math-glossary 离线测试（需把 VeryMath 的 AI4Math-MathTool 仓库
+                       # 克隆到与本仓库同级的 research/ 下；仅开发机可用，不随 npm 包分发）
 ```
 
 ## 许可与来源
