@@ -3,6 +3,51 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.3] - 2026-11-08
+
+### Fixed
+
+- The package root entry did not exist: `main`, `types` and `exports["."]`
+  all pointed at `lib/index.js`, but there was no `src/index.ts`, so `tsc`
+  only ever emitted `lib/core/` and `lib/tool/`. The file was missing from the
+  published 0.3.0, 0.3.1 and 0.3.2 tarballs, so `import '@louisultra/dsh-verymath'`
+  failed for anyone using the package by name. DSH loads the `./core` and
+  `./tool` subpaths, which is why this never showed up in use. A re-export-only
+  entry is added and verified to be inside the packed tarball.
+- `verymath_beamer_check` shelled out to `/usr/bin/which` and
+  `/Library/TeX/texbin/kpsewhich`. The former does not exist on Windows and the
+  latter is a macOS-only directory, so a Linux or Windows host reported a
+  missing TeX toolchain even with TeX installed. Binaries are now resolved
+  in-process by scanning `PATH` (honouring `PATHEXT` on Windows) and falling
+  back to the distribution's own bin directory, which is what a desktop app
+  launched from Finder needs because it does not inherit the login shell
+  `PATH`. `kpsewhich` is resolved the same way instead of assuming a fixed
+  location. Covered by five new tests.
+
+### Changed
+
+- Development dependencies moved to DSH `0.2.2-rc.1`, cordis `4.1.0` and
+  schemastery `3.19.0`, matching the version EduWork 0.4.13 bundles. The
+  runtime probe is now the dual-version variant: it mounts
+  `dsh-tool-executor-native` when present and drives the 0.2.2 batch
+  `ctx.tools.execute` API, falling back to the 0.2.1 single-call shape
+  otherwise. `npm run test:runtime` therefore exercises the host version that
+  users actually run rather than the previous 0.2.0-rc.2 pin.
+- Two unreferenced development dependencies that conflicted with cordis 4.1.0
+  (`cordis-plugin-include`, `cordis-plugin-loader`) are removed.
+- `engines.node` raised to `>=24.22.1` and the peer range starts at
+  `0.2.1-rc.5`, matching what is actually tested.
+
+### Documentation
+
+- The skill table in both READMEs listed 15 of the 16 bundled skills; it was
+  missing `osqp-solver`, which the tool table already documented.
+- `docs/integration-matrix.md` is repository research material that `files`
+  deliberately excludes, but the READMEs linked it by relative path, so the
+  link was broken in an installed package. It now points at the repository URL
+  and says it is not shipped.
+- `docs/glossary-coverage-gap.md` listed 68 tests; the suite has 107.
+
 ## [0.3.2] - 2026-10-19
 
 ### Fixed
