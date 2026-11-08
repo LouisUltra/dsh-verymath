@@ -55,7 +55,7 @@ Skills carry the methodology; tools carry deterministic execution. The plugin co
 
 ## Installation and usage
 
-Requires Node.js `24.18.0+` and DSH `0.2.x (since 0.2.0-rc.1)`.
+Requires Node.js `24.22.1+` and DSH `0.2.x`: the peer range covers `0.2.1-rc.5` through `0.2.x` and names `0.2.2-rc.1` explicitly, and the development dependencies pin `0.2.2-rc.1`. The runtime probe detects whether the host mounted a tool executor and adapts to the 0.2.1 single-call and 0.2.2 batch interfaces accordingly.
 
 ```sh
 dsh plugin --profile <your-profile> add @louisultra/dsh-verymath

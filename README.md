@@ -57,7 +57,7 @@
 
 ## 安装与使用
 
-要求 Node.js `24.18.0+` 与 DSH `0.2.x（从 0.2.0-rc.1 起）`。
+要求 Node.js `24.22.1+` 与 DSH `0.2.x`：peer 覆盖 `0.2.1-rc.5` 到 `0.2.x` 并显式包含 `0.2.2-rc.1`，开发依赖锁定 `0.2.2-rc.1`。运行探针会检测宿主是否装载了工具执行器，据此自适应 0.2.1 的单调用与 0.2.2 的批量接口。
 
 ```sh
 dsh plugin --profile <你的profile> add @louisultra/dsh-verymath
