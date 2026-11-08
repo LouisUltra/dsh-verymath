@@ -40,12 +40,13 @@
 | `least-squares` | Least-squares fitting and parameter estimation (OLS/WLS/regularized/nonlinear/Bayesian, 12-tier degradation). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `invariant-computation` | Routing and evidence reporting for algebraic/topological/geometric invariant computation (approval-gated installs). | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `mixed-integer-programming` | MILP modeling and solving: tested knapsack/assignment examples (PuLP+CBC) + restored upstream LP examples. | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization) (broken examples repaired) |
+| `osqp-solver` | Convex QP solving and verification: status gate, independent KKT check and infeasibility certificates (needs the osqp Python stack). | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization) |
 | `matlab-runner` | MATLAB execution routing/safety/reporting layer — drives local MATLAB via the official MathWorks MCP server (requires user-installed MATLAB + license). | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) |
 | `math-beamer` | Mathematical Beamer slide decks: 23 template packs (bilingual, per-field), 4-gate guided workflow, slide-source-ledger provenance. | [AI4Math-Writing](https://github.com/VeryMath/AI4Math-Writing) |
 | `lean-formalization` | Lean 4 formalization, proof repair, sorry completion, and patch review (coding-agent-first; the GB-scale toolchain stays on the user machine). | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib workspace detection, install guidance, and two-level readiness reporting. | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
-> Deferred (rationale and upgrade paths in `docs/integration-matrix.md`): Sagemath-skill skill body (GPLv3; route-a
+> Deferred (rationale and upgrade paths in [`docs/integration-matrix.md`](https://github.com/LouisUltra/dsh-verymath/blob/main/docs/integration-matrix.md), repository research material that is not shipped in the npm package): Sagemath-skill skill body (GPLv3; route-a
 > clean-room TS lookup shipped, corpus distributed separately), paper-to-skill chain (MinerU cloud-API privacy; local mineru optional), agent-laboratory-workflow (external LLM API + heavy deploy),
 > scientific-computing-reproduction (Codex ecosystem coupling; zero-dep scripts extractable on demand),
 > co-mathematician (standalone app; concepts only), textbook-copilot (Apache-2.0 standalone app).
@@ -75,7 +76,7 @@ Then just ask in a session, e.g. "look up the Chinese term for manifold" or "rea
 
 - **Query and paper validation**: no external dependencies.
 - **Glossary build/export** (`verymath_glossary_build`): requires a local Python 3 plus the upstream script dependencies (`PyYAML`; Excel export additionally needs `openpyxl`, the web UI needs `Flask`). Check availability with `verymath_python_check` first and install per its hints; the plugin does not bundle Python.
-- **Platforms**: verified on macOS (Apple Silicon) (DSH CLI sandbox + the EduWork 0.4.3 desktop app itself); Windows should work (Node and Python on PATH) but is not yet tested — feedback welcome.
+- **Platforms**: verified on macOS (Apple Silicon) (DSH CLI sandbox + the EduWork 0.4.3 desktop app itself); Windows should work (Node and Python on PATH) but is not yet tested — external binaries are now resolved through PATH and PATHEXT rather than a macOS-only path, though that has not been exercised on Windows. Feedback welcome.
 
 ## Continuous integration
 

@@ -42,12 +42,13 @@
 | `least-squares` | 最小二乘拟合与参数估计（OLS/WLS/正则化/非线性/贝叶斯，12 级降级链）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `invariant-computation` | 代数/拓扑/几何不变量的计算路由与证据报告（审批式环境安装）。 | [AI4Math-Computational-Mathematics](https://github.com/VeryMath/AI4Math-Computational-Mathematics) |
 | `mixed-integer-programming` | MILP 建模求解：背包/指派等实测示例（PuLP+CBC）+ 恢复的上游 LP 示例。 | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization)（已修复错版示例） |
+| `osqp-solver` | 凸二次规划的求解与验证：状态门、独立 KKT 检查与不可行证书（需 osqp Python 栈）。 | [AI4Math-Optimization](https://github.com/VeryMath/AI4Math-Optimization) |
 | `matlab-runner` | MATLAB 执行路由/安全/报告层——经 MathWorks 官方 MCP server 驱动本机 MATLAB（需用户自装 MATLAB + license）。 | [AI4Math-MathTool](https://github.com/VeryMath/AI4Math-MathTool) |
 | `math-beamer` | 数学 Beamer 幻灯片：23 模板包（中英/学科分类）、4 闸门引导流程、slide-source-ledger 溯源。 | [AI4Math-Writing](https://github.com/VeryMath/AI4Math-Writing) |
 | `lean-formalization` | Lean 4 形式化、证明修复、sorry 补全与 patch 审查（编码代理优先，GB 级工具链留在用户机器）。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 | `lean-setup` | Lean/elan/lake/mathlib 工作区的检测、安装引导与两级就绪度报告。 | [AI4Math-Lean-Agents](https://github.com/VeryMath/AI4Math-Lean-Agents) |
 
-> 暂缓接入（理由与升级路径见 `docs/integration-matrix.md`）：Sagemath-skill 技能本体（GPLv3；查询能力已按
+> 暂缓接入（理由与升级路径见 [`docs/integration-matrix.md`](https://github.com/LouisUltra/dsh-verymath/blob/main/docs/integration-matrix.md)，该文件是仓库内的调研材料，不随 npm 包分发）：Sagemath-skill 技能本体（GPLv3；查询能力已按
 > 评审结论以干净房间 TS 重实现，语料独立分发）、paper-to-skill 全链（MinerU 云 API 隐私考量；本地 mineru 可选）、
 > agent-laboratory-workflow（外部 LLM API+重部署）、scientific-computing-reproduction（Codex 生态耦合，零依赖脚本按需摘取）、
 > co-mathematician（独立 App，仅提炼概念）、textbook-copilot（Apache-2.0 独立应用）。
@@ -77,7 +78,7 @@ dsh plugin --profile <你的profile> add ./louisultra-dsh-verymath-<version>.tgz
 
 - **查询与论文校验**：无需任何外部依赖。
 - **术语库构建/导出**（`verymath_glossary_build`）：需要本地 Python 3 与上游脚本依赖（`PyYAML`；Excel 导出另需 `openpyxl`，Web 管理界面另需 `Flask`）。缺失时先用 `verymath_python_check` 检查并按提示安装；插件不捆绑 Python。
-- **平台**：仅在 macOS（Apple Silicon）验证过（DSH CLI 沙箱 + EduWork 0.4.3 桌面端实际装载）。**Windows 未测试**：代码依赖 Node 与 Python 的 PATH，但路径与二进制发现逻辑在 Windows 上未验证，涉及 TeX、MATLAB、osqp 等外部环境的场景尤其如此。
+- **平台**：仅在 macOS（Apple Silicon）验证过（DSH CLI 沙箱 + EduWork 0.4.3 桌面端实际装载）。**Windows 未测试**：代码依赖 Node 与 Python 的 PATH；外部二进制按 PATH 与 PATHEXT 解析（不再指向 macOS 固定路径），但未在 Windows 上实测，涉及 TeX、MATLAB、osqp 等外部环境的场景尤其如此。
 
 ## 持续集成
 

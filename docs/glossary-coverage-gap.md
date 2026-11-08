@@ -1,7 +1,7 @@
 # Glossary coverage gap self-audit
 
 Compared upstream `AI4Math-MathTool/skills/math-glossary/tests/test_glossary_tools.py` (19 tests, 607 lines)
-against our plugin's TS tests (68 specs) and bundled scripts.
+against our plugin's TS tests (107 specs) and bundled scripts.
 
 ## Verified working right now (real execution)
 - All 5 bundled scripts pass `--help` (glossary_backup/export/build/enrich_examples/web).
