@@ -6,6 +6,32 @@
 
 `@louisultra/dsh-verymath` 把 [VeryMath](https://github.com/orgs/VeryMath/repositories) 的 AI4Math 技能与工具封装为 [DeepSeek Harness（DSH）](https://github.com/deepseek-ai/deepseek-harness)插件，适用于 [EduWork](https://github.com/ECNU/EduWork) 及其他 DSH 0.2.x 宿主。对应 [ECNU/EduWork#152](https://github.com/ECNU/EduWork/issues/152) 的首批场景。
 
+## 快速上手
+
+装好插件后，在 EduWork 或任意 DSH 0.2.x 宿主里直接说这两句，就能看到能力本身：
+
+**① 把一份 CSV 变成可查询的双语术语库**（需要本机 `python3` + `PyYAML`；`verymath_python_check` 会先探测并给出安装提示）
+
+```text
+从 source.csv 构建一份中英数学术语表，输出 glossary/glossary.json；
+然后查「同调」对应的英文。
+```
+
+得到符合 math-glossary 合同的 `glossary/glossary.json`（条目有序、`term_id` 唯一、`idx` 连续）和 `同调 → homology` 的查询结果。
+输入样例：[`docs/examples/source.csv`](docs/examples/source.csv)。
+
+**② 读一篇数学预印本，看主定理依赖哪些引理**（纯文件操作，不需要 Python、不需要联网）
+
+```text
+帮我读 papers/maynard/fulltext.txt（arXiv 1311.4600）的第 1 节，
+把里面的定义提取成结构 JSON 并用工具校验。
+```
+
+再追问「画出 Theorem 1.2 的依赖关系，标明每个节点对应的原文位置」，就得到定理依赖图。
+论文全文仓库不分发（第三方许可），按 [`docs/examples/README.md`](docs/examples/README.md) 里的命令自行下载并转成文本。
+
+其余 12 项能力（OCR 后校对、二次规划、混合整数规划、Lean、Sage 文档查询、MATLAB、Beamer 等）的「谁在什么情况下用、用户怎么说、需要什么输入、最后得到什么、运行条件与实测记录」逐项写在 [`docs/capability-examples.md`](docs/capability-examples.md)。
+
 ## 提供的能力
 
 **模型工具**（安装即用，Agent 自动调用）：

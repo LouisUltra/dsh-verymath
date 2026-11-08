@@ -6,6 +6,32 @@
 
 `@louisultra/dsh-verymath` packages the VeryMath AI4Math skills and tools as a [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness) plugin for [EduWork](https://github.com/ECNU/EduWork) and other DSH 0.2.x hosts. It addresses the first-phase scenarios of [ECNU/EduWork#152](https://github.com/ECNU/EduWork/issues/152).
 
+## Quick start
+
+Once installed, say either of these in EduWork or any DSH 0.2.x host to see the capabilities directly:
+
+**1. Turn a CSV into a queryable bilingual glossary** (needs local `python3` + `PyYAML`; `verymath_python_check` probes first and prints install hints)
+
+```text
+从 source.csv 构建一份中英数学术语表，输出 glossary/glossary.json；
+然后查「同调」对应的英文。
+```
+
+You get a contract-conforming `glossary/glossary.json` (sorted entries, unique `term_id`, contiguous `idx`) and the lookup `同调 → homology`.
+Sample input: [`docs/examples/source.csv`](docs/examples/source.csv).
+
+**2. Read a math preprint and see which lemmas the main theorem depends on** (pure file work — no Python, no network)
+
+```text
+帮我读 papers/maynard/fulltext.txt（arXiv 1311.4600）的第 1 节，
+把里面的定义提取成结构 JSON 并用工具校验。
+```
+
+Then ask "draw the dependency graph of Theorem 1.2 and mark each node's source location" to get the theorem dependency graph.
+The repo does not redistribute paper full texts (third-party license); follow [`docs/examples/README.md`](docs/examples/README.md) to download and convert one yourself.
+
+Per-capability detail for the remaining 12 (OCR post-review, QP, MILP, Lean, Sage doc lookup, MATLAB, Beamer, ...) — who uses it, what to say, what input is needed, what you get, run conditions and recorded runs — is in [`docs/capability-examples.md`](docs/capability-examples.md).
+
 ## What it provides
 
 **Model-facing tools** (available right after install; the Agent calls them automatically):
