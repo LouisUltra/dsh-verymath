@@ -10,7 +10,7 @@
 
 装好插件后，在 EduWork 或任意 DSH 0.2.x 宿主里直接说这两句，就能看到能力本身：
 
-**① 把一份 CSV 变成可查询的双语术语库**（需要本机 `python3` + `PyYAML`；`verymath_python_check` 会先探测并给出安装提示）
+**① 把一份 CSV 变成可查询的双语术语库**（需要本机 `python3` + `PyYAML`。`verymath_python_check` 只确认 `python3` 可用；缺 `PyYAML` 时脚本会报 `No module named 'yaml'`，用 `pip install PyYAML` 补上）
 
 ```text
 从 source.csv 构建一份中英数学术语表，输出 glossary/glossary.json；
@@ -103,7 +103,7 @@ dsh plugin --profile <你的profile> add ./louisultra-dsh-verymath-<version>.tgz
 ### 依赖说明
 
 - **查询与论文校验**：无需任何外部依赖。
-- **术语库构建/导出**（`verymath_glossary_build`）：需要本地 Python 3 与上游脚本依赖（`PyYAML`；Excel 导出另需 `openpyxl`，Web 管理界面另需 `Flask`）。缺失时先用 `verymath_python_check` 检查并按提示安装；插件不捆绑 Python。
+- **术语库构建/导出**（`verymath_glossary_build`）：需要本地 Python 3 与上游脚本依赖（`PyYAML`；Excel 导出另需 `openpyxl`，Web 管理界面另需 `Flask`）。`verymath_python_check` 只能确认 `python3` 可用；上游依赖缺失时由脚本报错（如 `No module named 'yaml'`），按需 `pip install PyYAML openpyxl Flask`。插件不捆绑 Python。
 - **平台**：仅在 macOS（Apple Silicon）验证过（DSH CLI 沙箱 + EduWork 0.4.3 桌面端实际装载）。**Windows 未测试**：代码依赖 Node 与 Python 的 PATH；外部二进制按 PATH 与 PATHEXT 解析（不再指向 macOS 固定路径），但未在 Windows 上实测，涉及 TeX、MATLAB、osqp 等外部环境的场景尤其如此。
 
 ## 持续集成

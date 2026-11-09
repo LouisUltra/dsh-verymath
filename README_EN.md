@@ -10,7 +10,7 @@
 
 Once installed, say either of these in EduWork or any DSH 0.2.x host to see the capabilities directly:
 
-**1. Turn a CSV into a queryable bilingual glossary** (needs local `python3` + `PyYAML`; `verymath_python_check` probes first and prints install hints)
+**1. Turn a CSV into a queryable bilingual glossary** (needs local `python3` + `PyYAML`. `verymath_python_check` only confirms that `python3` is available; without `PyYAML` the script fails with `No module named 'yaml'`, which `pip install PyYAML` fixes)
 
 ```text
 从 source.csv 构建一份中英数学术语表，输出 glossary/glossary.json；
@@ -101,7 +101,7 @@ Then just ask in a session, e.g. "look up the Chinese term for manifold" or "rea
 ### Dependencies
 
 - **Query and paper validation**: no external dependencies.
-- **Glossary build/export** (`verymath_glossary_build`): requires a local Python 3 plus the upstream script dependencies (`PyYAML`; Excel export additionally needs `openpyxl`, the web UI needs `Flask`). Check availability with `verymath_python_check` first and install per its hints; the plugin does not bundle Python.
+- **Glossary build/export** (`verymath_glossary_build`): requires a local Python 3 plus the upstream script dependencies (`PyYAML`; Excel export additionally needs `openpyxl`, the web UI needs `Flask`). `verymath_python_check` only confirms that `python3` is available; a missing upstream dependency surfaces as a script error (for example `No module named 'yaml'`), so install what you need with `pip install PyYAML openpyxl Flask`. The plugin does not bundle Python.
 - **Platforms**: verified on macOS (Apple Silicon) (DSH CLI sandbox + the EduWork 0.4.3 desktop app itself); Windows should work (Node and Python on PATH) but is not yet tested — external binaries are now resolved through PATH and PATHEXT rather than a macOS-only path, though that has not been exercised on Windows. Feedback welcome.
 
 ## Continuous integration
