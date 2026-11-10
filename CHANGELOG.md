@@ -3,6 +3,131 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.4] - 2026-11-10
+
+### Fixed
+
+- **`verymath_glossary_upsert` destroyed translations of polysemous terms.** The
+  upstream contract stores a second translation of the same English term as a
+  separate alias row (`term_id` `<en>__N`), and the bundled
+  `glossary_build.py` produces exactly that. The tool never created alias rows:
+  it used the lowercased English term as the only identity, so upserting
+  `group / 分组` against a document holding `group / 群` plus `group__1 / 分组`
+  rewrote the primary row and left two rows carrying the same translation, with
+  群 gone. Upserts now resolve identity as: an explicit `term_id` (correction of
+  one row), else the exact `(en, cn)` pair (idempotent re-add), else a new row
+  whose id continues the upstream sequence (`<en>`, `<en>__1`, `<en>__2`, …),
+  skipping ids other rows already use. See "Changed" for the intent split this
+  introduces.
+- `verymath_paper_graph` returned an empty `topDownOrder` and reported
+  `supportsMainTheorem: false` for every entity whenever `extraPaths` merged
+  more than one batch artifact. Batch merging unions `entities` only, so the
+  `main_theorems` the reading directions are rooted at were dropped; the same
+  applied to `focus` when the target theorem appeared only in `main_theorems`.
+  Main theorems are now collected across all merged artifacts.
+- `verymath_glossary_query` labelled an exact Chinese match as `matchedBy: 'en'`,
+  so a query for 流形 reported an English-field hit.
+- `verymath_sage_check` spawned a bare `sage`. A conda-installed SageMath is not
+  on the `PATH` a desktop app inherits (a macOS app launched from Finder reads no
+  login shell profile), so the probe reported SageMath missing on machines that
+  have it. Resolution is now explicit and documented: `VERYMATH_SAGE` (an
+  absolute path) wins, then `PATH`, the TeX/conda base directories, and
+  `<conda root>/envs/<name>/bin` for the known roots — including this package's
+  own documented layout `~/.verymath/miniforge`, so the recommended
+  `conda create -n sage sage=10.9` environment is found. The search is
+  SageMath-only; it is not added to the generic executable path used by the TeX
+  probe.
+- `verymath_glossary_upsert` read the document from the query cache. A glossary
+  edited by the user or by the bundled `glossary_web.py` could therefore be
+  overwritten from a stale snapshot; the write path now re-reads from disk, and
+  concurrent upserts on one document are serialized so the later write cannot
+  drop the earlier one. The lock is keyed on the document's canonical identity
+  (`fs.resolve` + `processPath`), not the model-supplied string, so a relative
+  path and an absolute path to the same file cannot run in parallel. Scope: this
+  runtime only — an external editor, a bundled Python script or another DSH
+  process does not take the lock.
+- Only a genuine `ENOENT` is now treated as "this glossary does not exist yet".
+  Every read failure used to map to `VERYMATH_GLOSSARY_UNAVAILABLE`, which the
+  upsert tool interpreted as "start an empty glossary" — a permission or I/O
+  error could therefore replace a real document with only the terms in that one
+  request. Other failures surface as `VERYMATH_IO`, and cancellation propagates.
+- `upsertTerms` built its id map before validating the input, so a document with
+  duplicate `term_id`s was silently collapsed and the closing invariant check
+  could no longer see the loss. Invariants are validated first.
+- `verymath_paper_graph` rejected the upstream batch protocol. Each artifact was
+  validated on its own, so a later batch citing a label an earlier batch defined
+  failed with "depends on unknown label" before the merge could run. Artifacts
+  are now validated as a group against the merged label set: cross-batch edges
+  are accepted, genuinely dangling ones are still rejected.
+- `verymath_paper_graph` rendered only the first artifact in Mermaid while the
+  counts described every merged batch. The render now uses the merged structure.
+- `verymath_paper_graph` dropped a main theorem recorded only in `main_theorems`
+  (no matching entity) from the top-down order, contradicting `focus`, which
+  resolved the same theorem. Both directions now agree.
+- `verymath_glossary_build` invalidated the query cache for the path it could
+  parse out of `--output`. That key was the raw argument, while queries cache the
+  resolved absolute path, so the invalidation never matched and a later query
+  could serve the document from before the build. Script runs now drop the whole
+  glossary cache.
+- Probe timers are cleared when a probe settles; an uncleared timer kept the
+  event loop alive for the rest of the timeout after the answer was known.
+
+### Internal hardening (defects introduced and fixed within this release)
+
+These were never present in a published version. They are listed so the review
+history is honest, not because any user could have hit them.
+
+- The `(en, cn)` lookup key joined the two strings with `\u0000`. JSON strings may
+  contain that character, so `en="a", cn="b\u0000c"` and `en="a\u0000b", cn="c"`
+  produced one key and the second request could overwrite a row belonging to a
+  different English term. The key is JSON-encoded now.
+- Alias id allocation could hang the host. A `number` counter derived from
+  existing suffixes meant an id such as `group__9007199254740992` made
+  `occurrence + 1 === occurrence`, so the allocation loop never advanced —
+  synchronously, freezing the event loop instead of failing. The counter is a
+  `BigInt`, and the suffix bound is applied to both parsing and emitting so the
+  allocator never produces an id it would refuse to read back.
+- Invalidation after an upsert covered only the paths that call knew about, so a
+  query issued earlier through a symlink alias could keep serving the pre-write
+  document. A successful upsert now clears the glossary cache.
+
+### Changed
+
+- **Behavior change in `verymath_glossary_upsert`.** A request that omits
+  `term_id` and supplies a different translation for an existing English term
+  used to overwrite the existing translation in place; it now adds an alias row
+  and keeps the existing translation. To change a translation, query the term
+  and pass the returned `term_id`. Requests are rejected (no write) when:
+  `term_id` is blank or unknown, the `term_id` belongs to a different English
+  term, the `(en, cn)` pair is already held by another row, or an id-less
+  request matches several rows. `en` is never rewritten by this tool, so
+  renaming a term is not supported. Migration for a script that relied on the
+  overwrite: add `term_id: '<the id you meant>'` to the request.
+- `TermUpsert` gained the optional `term_id` field; the model-facing
+  `verymath_glossary_upsert` schema, its description and the `math-glossary`
+  skill gained the matching "add alias vs correct a row" guidance. The tool
+  descriptions state that `en` must match the target row and is not renamed.
+- `parsePaperStructure` takes an optional `deferDependencyCheck`; new exports
+  `parsePaperBatch` (validate artifacts as a group) and `collectMainTheorems` /
+  `mergeStructures` in the graph module.
+
+### Added
+
+- Regression tests for the glossary write contract (alias creation, correction by
+  `term_id`, gap/skip id allocation, oversized suffixes, `(en, cn)` key encoding,
+  ambiguity, unknown/blank id, duplicate ids in the input, cache and lock
+  behaviour), for batch reading directions, and for SageMath resolution:
+  **107 → 146 specs**.
+- The runtime probe now exercises the tool contract rather than only the core
+  functions: upsert alias creation and correction by `term_id`, an unknown
+  `term_id` rejected without writing, a batch whose later request is invalid
+  writing nothing, cache invalidation reaching a symlink alias, concurrent
+  writes through a path alias, batch paper-graph merging (cross-batch dependency
+  accepted, batched main theorem driving the top-down order, every merged entity
+  in the Mermaid render), a main theorem recorded only in `main_theorems`
+  resolving in both reading directions, and a dependency missing from every batch
+  still rejected: **8 → 16 probe checks**.
+
 ## [0.3.3] - 2026-11-08
 
 ### Fixed

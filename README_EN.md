@@ -40,7 +40,7 @@ Per-capability detail for the remaining 12 (OCR post-review, QP, MILP, Lean, Sag
 | --- | --- |
 | `verymath_glossary_query` | Query a bilingual (English-Chinese) math glossary JSON: exact, prefix, substring, term_id, and subfield matching; returns examples and supports subfield disambiguation. |
 | `verymath_glossary_build` | Run the upstream `math-glossary` Python scripts to build or extend a glossary from CSV/TSV/JSON/YAML. |
-| `verymath_glossary_upsert` | Save terms while reading/translating: maintains contract invariants (term_id, ordering, contiguous idx) automatically — no hand-editing of glossary.json. |
+| `verymath_glossary_upsert` | Save terms while reading/translating: maintains contract invariants (term_id, ordering, contiguous idx) automatically — no hand-editing of glossary.json. A second translation of the same English term is stored as an `en__N` alias row (the existing translation is kept); pass `term_id` to correct one specific row. |
 | `verymath_python_check` | Check local Python 3 availability and surface installation hints. |
 | `verymath_paper_validate` | Validate `math-paper-reading` `<slug>_structure.json` artifacts (entity kinds, dependency integrity). |
 | `verymath_paper_graph` | Paper dependency-graph engine: batch merging, `cited_by` reconstruction, `shared_node` hubs, cycle detection, both reading directions, `focus` transitive closure, Mermaid rendering (auto-degrades above 40 entities). |
@@ -125,7 +125,7 @@ This package is MIT licensed (`LICENSE`). Skill content and Python scripts are a
 ## Differences from upstream VeryMath
 
 - **Paper dependency graph as a tool**: upstream `skill_base`/`skill_pathway_proof` explicitly forbid model-side manual graph traversal but ship no merge/topology scripts (the model regenerates one each time). This plugin implements a deterministic TypeScript engine (`verymath_paper_graph`); the paper-reading critical path no longer requires Python.
-- **Glossary read/write loop**: `verymath_glossary_upsert` maintains the upstream contract invariants (term_id derivation, ordering, contiguous idx) that upstream leaves to hand-edits.
+- **Glossary read/write loop**: `verymath_glossary_upsert` maintains the upstream contract invariants (term_id derivation, `en__N` alias rows, ordering, contiguous idx) that upstream leaves to hand-edits. Multiple translations of one English term stay as separate rows; corrections name the row by `term_id`.
 - **Disambiguation**: queries return examples and support subfield filtering, implementing the upstream usage-guide strategies that could not execute in DSH before.
 - **Validation scope**: this plugin performs structural validation (dependency integrity, cycles, dangling/isolated nodes) and does not verify mathematical proof correctness — consistent with the upstream `skill_base` capability boundary.
 

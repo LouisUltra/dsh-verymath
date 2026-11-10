@@ -1,6 +1,6 @@
 {
   "name": "@louisultra/dsh-verymath",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "VeryMath capabilities for DSH: 16 bundled math skills and 14 tools covering paper reading, bilingual glossary, writing, Beamer, optimization, computation, Lean formalization, research workflows, Sage doc lookup and MATLAB. Community plugin for issue ECNU/EduWork#152.",
   "type": "module",
   "main": "lib/index.js",

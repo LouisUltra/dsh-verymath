@@ -1,7 +1,7 @@
 # Glossary coverage gap self-audit
 
 Compared upstream `AI4Math-MathTool/skills/math-glossary/tests/test_glossary_tools.py` (19 tests, 607 lines)
-against our plugin's TS tests (107 specs) and bundled scripts.
+against our plugin's TS tests (146 specs) and bundled scripts.
 
 ## Verified working right now (real execution)
 - All 5 bundled scripts pass `--help` (glossary_backup/export/build/enrich_examples/web).
@@ -23,7 +23,18 @@ against our plugin's TS tests (107 specs) and bundled scripts.
 
 ## Action items (feed into Phase 4)
 - A1: Port upstream Python tests to run against our bundled scripts as a `test:upstream` script (they load
-  scripts by path — can point at our copies directly).
+  scripts by path — can point at our copies directly). **Partially done, and the label was wrong until
+  2026-11-10**: `npm run test:upstream` runs the 19 upstream tests, but it points at the *research clone*
+  (`../../research/AI4Math-MathTool/skills/math-glossary/tests`), and those tests locate `scripts/` relative
+  to their own file, so they exercise the clone's scripts, not the copies inside this package. That is a
+  useful regression gate for upstream behaviour, but it is **not** a test of the bundled scripts. Closing it
+  properly means copying the test module next to `skills/math-glossary/scripts` (or passing the script root
+  explicitly) and running it from the packed artifact.
 - A2: Add TS-side tests for upsert alias rows (`en__N`) matching upstream unique-alias-id semantics.
+  **Done in 0.3.4** — and it turned out to be a real defect, not just a coverage gap: `upsertTerms` never
+  created alias rows and overwrote the primary translation when a second one was stored. Now covered by
+  alias-creation, correction-by-`term_id`, gap/skip allocation, ambiguity, and unknown/blank-id rejection
+  tests.
 - A3: Document that web UI + enrich are skill-workflow paths with their own upstream test coverage; decide
-  whether to wire them into `npm run check` (network/dependency gated).
+  whether to wire them into `npm run check` (network/dependency gated). **Documented, not wired** (they need
+  network/Flask/openpyxl).

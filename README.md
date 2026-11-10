@@ -40,7 +40,7 @@
 | --- | --- |
 | `verymath_glossary_query` | 查询双语（英中）数学术语库 JSON：精确、前缀、子串、term_id、子领域匹配；返回例句，支持按子领域过滤消歧。 |
 | `verymath_glossary_build` | 运行上游 `math-glossary` Python 脚本，从 CSV/TSV/JSON/YAML 构建或扩充术语库。 |
-| `verymath_glossary_upsert` | 读论文/翻译时顺手存词：自动维护 term_id、排序与连续 idx 等合同不变量，无需手改 JSON。 |
+| `verymath_glossary_upsert` | 读论文/翻译时顺手存词：自动维护 term_id、排序与连续 idx 等合同不变量，无需手改 JSON。同一英文的另一种译法存为 `en__N` 别名行（不覆盖已有译名）；带 `term_id` 则纠正指定那一行。 |
 | `verymath_python_check` | 检查本机 Python 3 可用性并给出安装提示。 |
 | `verymath_paper_validate` | 校验 `math-paper-reading` 产出的 `<slug>_structure.json`（实体类型、依赖完整性）。 |
 | `verymath_paper_graph` | 论文依赖图引擎：批次合并、`cited_by` 重建、`shared_node` 枢纽、环检测、双向阅读路径、`focus` 传递闭包、Mermaid 渲染（>40 实体自动降级）。 |
@@ -129,7 +129,7 @@ npm run test:upstream  # 上游 math-glossary 离线测试（需把 VeryMath 的
 ## 相对上游 VeryMath 的差异
 
 - **论文依赖图工具化**：上游 `skill_base`/`skill_pathway_proof` 明文要求"严禁大模型手工遍历拼接 JSON"，但上游仓库并未提供合并/拓扑脚本（模型每次现场生成）。本插件用 TypeScript 实现了确定性引擎（`verymath_paper_graph`），论文阅读关键路径不再依赖 Python。
-- **术语读写闭环**：`verymath_glossary_upsert` 自动维护上游合同的不变量（term_id 派生、排序、连续 idx），上游只能靠模型手改 JSON。
+- **术语读写闭环**：`verymath_glossary_upsert` 自动维护上游合同的不变量（term_id 派生、`en__N` 别名行、排序、连续 idx），上游只能靠模型手改 JSON。同一英文的多个译名分开成行保留，改译名用 `term_id` 指定具体行。
 - **消歧支持**：查询返回例句、支持按子领域过滤，对应上游 usage-guide 的消歧策略（上游 DSH 化后原本无法执行）。
 - **验证边界**：本插件做结构层验证（依赖完整性、环检测、断链/孤立节点），不验证数学证明的正确性——这与上游 `skill_base` 的能力边界声明一致。
 
