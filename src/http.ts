@@ -20,8 +20,8 @@
  *
  * @module @louisultra/dsh-verymath/http
  */
-import { readdir, readFile, rename, stat, writeFile } from 'node:fs/promises'
-import { basename, join, resolve } from 'node:path'
+import { readdir, readFile, realpath, rename, stat, writeFile } from 'node:fs/promises'
+import { basename, join, resolve, sep } from 'node:path'
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import {
@@ -89,12 +89,28 @@ function safeUrl(request: Request): URL | undefined {
   }
 }
 
-/** Resolve a caller-supplied relative path and refuse anything outside the workspace. */
-function withinWorkspace(workspace: string, candidate: string): string | undefined {
-  const absolute = resolve(workspace, candidate)
-  const root = resolve(workspace)
-  if (absolute !== root && !absolute.startsWith(`${root}/`)) return undefined
-  return absolute
+/**
+ * Resolve a caller-supplied relative path and refuse anything outside the workspace.
+ *
+ * Two details matter here:
+ *   * the separator is `sep`, not `/` — on Windows the string form is
+ *     `C:\ws\glossary.json`, so a `/`-suffixed prefix matched nothing and every
+ *     panel write was refused;
+ *   * the result is compared after `realpath`, so a symlink inside the workspace
+ *     that points outside it cannot be used to read or overwrite an outside file.
+ *     A path that does not exist yet (a new glossary) is compared lexically, since
+ *     there is nothing to resolve.
+ */
+async function withinWorkspace(workspace: string, candidate: string): Promise<string | undefined> {
+  const root = await realpath(resolve(workspace)).catch(() => resolve(workspace))
+  const absolute = resolve(root, candidate)
+  if (absolute !== root && !absolute.startsWith(`${root}${sep}`)) return undefined
+
+  // Existing file: resolve it and re-check, which is what catches symlink escapes.
+  const resolved = await realpath(absolute).catch(() => undefined)
+  if (resolved === undefined) return absolute
+  if (resolved !== root && !resolved.startsWith(`${root}${sep}`)) return undefined
+  return resolved
 }
 
 /** Run one short command; never throws. */
@@ -491,7 +507,7 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
       if (url === undefined) return json({ error: 'invalid request url' }, 400)
       const relative = url.searchParams.get('path') ?? ''
       const query = (url.searchParams.get('q') ?? '').trim()
-      const absolute = withinWorkspace(ctx.workspace(), relative)
+      const absolute = await withinWorkspace(ctx.workspace(), relative)
       if (absolute === undefined) return json({ error: 'path escapes the workspace' }, 400)
 
       let terms: GlossaryTerm[]
@@ -538,7 +554,7 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
       if (url === undefined) return json({ error: 'invalid request url' }, 400)
       const relative = url.searchParams.get('path') ?? ''
       const focus = (url.searchParams.get('focus') ?? '').trim()
-      const absolute = withinWorkspace(ctx.workspace(), relative)
+      const absolute = await withinWorkspace(ctx.workspace(), relative)
       if (absolute === undefined) return json({ error: 'path escapes the workspace' }, 400)
 
       let structure
@@ -645,7 +661,7 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
       const body = await readBody(request)
       if ('error' in body) return json({ error: body.error }, 400)
       const relative = typeof body.body.path === 'string' ? body.body.path : ''
-      const absolute = withinWorkspace(ctx.workspace(), relative)
+      const absolute = await withinWorkspace(ctx.workspace(), relative)
       if (absolute === undefined) return json({ error: 'path escapes the workspace' }, 400)
       const requests = Array.isArray(body.body.terms) ? body.body.terms : []
       if (requests.length === 0) return json({ error: 'terms must be a non-empty array' }, 400)
@@ -681,7 +697,7 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
       if ('error' in body) return json({ error: body.error }, 400)
       const relative = typeof body.body.path === 'string' ? body.body.path : ''
       const termId = typeof body.body.term_id === 'string' ? body.body.term_id : ''
-      const absolute = withinWorkspace(ctx.workspace(), relative)
+      const absolute = await withinWorkspace(ctx.workspace(), relative)
       if (absolute === undefined) return json({ error: 'path escapes the workspace' }, 400)
       if (termId.length === 0) return json({ error: 'term_id is required' }, 400)
 

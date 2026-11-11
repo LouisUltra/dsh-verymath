@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { registerHttp, withinWorkspace } from '../../src/http.ts'
@@ -69,10 +69,31 @@ async function callPost(routes: Map<string, Registered>, path: string, payload: 
 }
 
 describe('withinWorkspace', () => {
-  it('allows paths inside and rejects escapes', () => {
-    expect(withinWorkspace('/tmp/ws', 'glossary/glossary.json')).toBe('/tmp/ws/glossary/glossary.json')
-    expect(withinWorkspace('/tmp/ws', '../etc/passwd')).toBeUndefined()
-    expect(withinWorkspace('/tmp/ws', '/etc/passwd')).toBeUndefined()
+  it('allows paths inside the workspace and rejects escapes', async () => {
+    const workspace = await makeWorkspace()
+    // macOS: /var is a symlink to /private/var, and the rule returns the resolved
+    // path, so expectations are built from the resolved root.
+    const root = await realpath(workspace)
+    expect(await withinWorkspace(workspace, 'glossary/glossary.json')).toBe(join(root, 'glossary/glossary.json'))
+    expect(await withinWorkspace(workspace, '../etc/passwd')).toBeUndefined()
+    expect(await withinWorkspace(workspace, '/etc/passwd')).toBeUndefined()
+  })
+
+  it('rejects a symlink that points outside the workspace', async () => {
+    // A lexical prefix check passes for ws/link/passwd when link -> /etc, so the
+    // rule has to compare realpaths once the target exists.
+    const workspace = await makeWorkspace()
+    const outside = await makeWorkspace()
+    await writeFile(join(outside, 'secret.json'), '[]')
+    await symlink(outside, join(workspace, 'escape'))
+    expect(await withinWorkspace(workspace, 'escape/secret.json')).toBeUndefined()
+  })
+
+  it('allows a not-yet-existing file inside the workspace', async () => {
+    // Creating a new glossary is a legitimate write to a path that does not exist.
+    const workspace = await makeWorkspace()
+    const root = await realpath(workspace)
+    expect(await withinWorkspace(workspace, 'glossary/new.json')).toBe(join(root, 'glossary/new.json'))
   })
 })
 
