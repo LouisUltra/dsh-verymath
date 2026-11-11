@@ -3,7 +3,13 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.3.4] - 2026-11-10
+## [0.4.0] - 2026-11-11
+
+Minor rather than patch: `verymath_glossary_upsert` changes what it does with a
+request that omits `term_id` and supplies a different translation for an
+existing English term (overwrite → additional alias row). The data-loss fix
+below cannot be made without that change, and a patch number would understate
+it.
 
 ### Fixed
 

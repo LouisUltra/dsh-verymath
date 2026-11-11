@@ -31,7 +31,7 @@ against our plugin's TS tests (146 specs) and bundled scripts.
   properly means copying the test module next to `skills/math-glossary/scripts` (or passing the script root
   explicitly) and running it from the packed artifact.
 - A2: Add TS-side tests for upsert alias rows (`en__N`) matching upstream unique-alias-id semantics.
-  **Done in 0.3.4** — and it turned out to be a real defect, not just a coverage gap: `upsertTerms` never
+  **Done in 0.4.0** — and it turned out to be a real defect, not just a coverage gap: `upsertTerms` never
   created alias rows and overwrote the primary translation when a second one was stored. Now covered by
   alias-creation, correction-by-`term_id`, gap/skip allocation, ambiguity, and unknown/blank-id rejection
   tests.
