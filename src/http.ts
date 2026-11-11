@@ -21,7 +21,7 @@
  * @module @louisultra/dsh-verymath/http
  */
 import { readdir, readFile, realpath, rename, stat, unlink, writeFile } from 'node:fs/promises'
-import { basename, join, resolve, sep } from 'node:path'
+import { basename, dirname, join, resolve, sep } from 'node:path'
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import {
@@ -32,6 +32,8 @@ import {
   parsePaperStructure,
   queryGlossary,
   deleteTerm,
+  resolveExecutable,
+  resolvePythonExecutable,
   resolveSageExecutable,
   upsertTerms,
   validateGlossaryInvariants,
@@ -58,6 +60,17 @@ export interface HttpContext {
   readonly workspace: () => string
   /** Host logger; absent in some hosts. */
   readonly log?: (message: string) => void
+  /**
+   * The `ctx.verymath` write lock. Sharing it with the tool layer is the point:
+   * two independent chains (panel and tool) let a concurrent read-modify-write
+   * from each side drop the other's update on the same document.
+   */
+  readonly withWrite?: <T>(path: string, task: () => Promise<T>) => Promise<T>
+  /**
+   * Drop the service's glossary query cache. Without this the panel writes a
+   * document and the chat tool keeps answering from the pre-write snapshot.
+   */
+  readonly invalidateGlossaryCache?: () => void
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json; charset=utf-8' } as const
@@ -113,11 +126,24 @@ async function withinWorkspace(workspace: string, candidate: string): Promise<st
   const absolute = resolve(root, candidate)
   if (absolute !== root && !absolute.startsWith(`${root}${sep}`)) return undefined
 
-  // Existing file: resolve it and re-check, which is what catches symlink escapes.
-  const resolved = await realpath(absolute).catch(() => undefined)
-  if (resolved === undefined) return absolute
-  if (resolved !== root && !resolved.startsWith(`${root}${sep}`)) return undefined
-  return resolved
+  // Resolve the deepest **existing** ancestor and re-append the missing segments.
+  // Checking only the full path let `ws/linkdir/new.json` through when `linkdir` is
+  // a symlink to somewhere outside: the file does not exist yet, so `realpath`
+  // failed and the lexical check was all that ran.
+  const missing: string[] = []
+  let probe = absolute
+  for (;;) {
+    const resolved = await realpath(probe).catch(() => undefined)
+    if (resolved !== undefined) {
+      const full = missing.length === 0 ? resolved : join(resolved, ...missing.reverse())
+      if (full !== root && !full.startsWith(`${root}${sep}`)) return undefined
+      return full
+    }
+    const parent = dirname(probe)
+    if (parent === probe) return undefined
+    missing.push(basename(probe))
+    probe = parent
+  }
 }
 
 /** Run one short command; never throws. */
@@ -181,17 +207,26 @@ async function probeEnvironment(): Promise<ProbeRow[]> {
   const check = (executable: string, args: readonly string[], timeoutMs = 8_000) =>
     run(executable, args, timeoutMs).catch(() => ({ ok: false, stdout: '', stderr: 'probe failed' }))
 
-  const pythonProbe = check('python3', ['--version'], 5_000)
-  const binaryProbes = ['latexmk', 'xelatex'].map(async (name) => ({ name, result: await check(name, ['--version']) }))
+  const checkResolved = async (name: string, args: readonly string[], timeoutMs = 8_000) => {
+    const executable = resolveExecutable(name)
+    if (executable === undefined) return { ok: false, stdout: '', stderr: 'not found' }
+    return await check(executable, args, timeoutMs)
+  }
+
+  const pythonExecutable = resolvePythonExecutable()
+  const pythonProbe = pythonExecutable === undefined
+    ? Promise.resolve({ ok: false, stdout: '', stderr: 'not found' })
+    : check(pythonExecutable, ['--version'], 5_000)
+  const binaryProbes = ['latexmk', 'xelatex'].map(async (name) => ({ name, result: await checkResolved(name, ['--version']) }))
   const [python, ...binaries] = await Promise.all([pythonProbe, ...binaryProbes])
 
   // The deeper checks need Python, so they start once it is known to exist.
   const [yaml, osqp, sage, lean] = await Promise.all([
-    python.ok
-      ? check('python3', ['-c', 'import yaml, sys; sys.stdout.write(yaml.__version__)'])
+    python.ok && pythonExecutable !== undefined
+      ? check(pythonExecutable, ['-c', 'import yaml, sys; sys.stdout.write(yaml.__version__)'])
       : Promise.resolve(undefined),
-    python.ok
-      ? check('python3', ['-c', 'import osqp, numpy; print(osqp.__version__)'], 10_000)
+    python.ok && pythonExecutable !== undefined
+      ? check(pythonExecutable, ['-c', 'import osqp, numpy; print(osqp.__version__)'], 10_000)
       : Promise.resolve(undefined),
     // Resolve through the same helper the tool uses; a bare `sage` missed conda
     // environments and made the panel disagree with `verymath_sage_check`.
@@ -200,7 +235,7 @@ async function probeEnvironment(): Promise<ProbeRow[]> {
       if (executable === undefined) return undefined
       return await check(executable, ['--version'], 10_000)
     })(),
-    check('lean', ['--version']),
+    checkResolved('lean', ['--version']),
   ])
 
   const rows: ProbeRow[] = []
@@ -459,6 +494,10 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
    * second write drops the first.
    */
   const writeChains = new Map<string, Promise<unknown>>()
+  /** Prefer the service's chain so panel and tool writes cannot interleave. */
+  const writeLock = <T>(key: string, task: () => Promise<T>): Promise<T> =>
+    ctx.withWrite !== undefined ? ctx.withWrite(key, task) : withWrite(key, task)
+
   const withWrite = async <T>(key: string, task: () => Promise<T>): Promise<T> => {
     const previous = writeChains.get(key) ?? Promise.resolve()
     const run = previous.then(task, task)
@@ -673,7 +712,7 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
       const requests = Array.isArray(body.body.terms) ? body.body.terms : []
       if (requests.length === 0) return json({ error: 'terms must be a non-empty array' }, 400)
 
-      return await withWrite(absolute, async () => {
+      return await writeLock(absolute, async () => {
         const loaded = await loadForWrite(absolute)
         if ('error' in loaded) return json({ error: loaded.error }, 400)
         let result
@@ -685,6 +724,9 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
           return json({ error: error instanceof Error ? error.message : String(error) }, 400)
         }
         await writeJsonAtomic(absolute, result.document)
+        // The chat tool reads through this cache; leaving it means the panel edit is
+        // invisible to the agent until something else touches the file.
+        ctx.invalidateGlossaryCache?.()
         return json({
           added: [...result.added],
           updated: [...result.updated],
@@ -708,12 +750,15 @@ export function registerHttp(ctx: HttpContext, connection: ConnectionLike | unde
       if (absolute === undefined) return json({ error: 'path escapes the workspace' }, 400)
       if (termId.length === 0) return json({ error: 'term_id is required' }, 400)
 
-      return await withWrite(absolute, async () => {
+      return await writeLock(absolute, async () => {
         const loaded = await loadForWrite(absolute)
         if ('error' in loaded) return json({ error: loaded.error }, 400)
         const result = deleteTerm(loaded.terms, termId)
         if (!result.removed) return json({ error: `no term with term_id ${JSON.stringify(termId)}` }, 404)
         await writeJsonAtomic(absolute, result.document)
+        // The chat tool reads through this cache; leaving it means the panel edit is
+        // invisible to the agent until something else touches the file.
+        ctx.invalidateGlossaryCache?.()
         return json({ removed: termId, stats: glossaryStats(result.document), document: result.document })
       })
     }),

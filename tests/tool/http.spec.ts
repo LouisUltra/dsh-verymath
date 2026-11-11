@@ -35,7 +35,7 @@ interface Registered {
 }
 
 /** Capture the routes the plugin registers, without a real host connection. */
-function mount(workspace: string): Map<string, Registered> {
+function mount(workspace: string, extras: { withWrite?: (path: string, task: () => Promise<unknown>) => Promise<unknown>, invalidate?: () => void } = {}): Map<string, Registered> {
   const routes = new Map<string, Registered>()
   const connection = {
     fetch: {
@@ -44,7 +44,11 @@ function mount(workspace: string): Map<string, Registered> {
       },
     },
   }
-  const ok = registerHttp({ workspace: () => workspace }, connection)
+  const ok = registerHttp({
+    workspace: () => workspace,
+    ...(extras.withWrite !== undefined ? { withWrite: extras.withWrite } : {}),
+    ...(extras.invalidate !== undefined ? { invalidateGlossaryCache: extras.invalidate } : {}),
+  }, connection)
   expect(ok).toBe(true)
   return routes
 }
@@ -307,6 +311,46 @@ describe('panel routes', () => {
     })
     expect(conflict.status).toBe(400)
     expect(conflict.body.error).toMatch(/English term/)
+  })
+
+  it('writes through the service lock and invalidates the service cache', async () => {
+    // The panel must not keep a private lock chain: a panel write and a tool write
+    // on the same document would interleave, and without invalidation the agent
+    // keeps answering from the pre-write snapshot.
+    const workspace = await makeWorkspace()
+    await writeFile(join(workspace, 'glossary.json'), JSON.stringify([term()]))
+    const lockCalls: string[] = []
+    let invalidations = 0
+    const routes = mount(workspace, {
+      withWrite: async (path, task) => {
+        lockCalls.push(path)
+        return await task()
+      },
+      invalidate: () => { invalidations += 1 },
+    })
+
+    const result = await callPost(routes, '/api/verymath/glossary/upsert', {
+      path: 'glossary.json',
+      terms: [{ term_id: 'manifold', en: 'manifold', cn: '流形（几何）' }],
+    })
+    expect(result.status).toBe(200)
+    expect(lockCalls).toHaveLength(1)
+    expect(lockCalls[0]).toContain('glossary.json')
+    expect(invalidations).toBe(1)
+
+    const removed = await callPost(routes, '/api/verymath/glossary/delete', { path: 'glossary.json', term_id: 'manifold' })
+    expect(removed.status).toBe(200)
+    expect(lockCalls).toHaveLength(2)
+    expect(invalidations).toBe(2)
+  })
+
+  it('refuses a new file under a symlinked directory that escapes the workspace', async () => {
+    // The target does not exist yet, so a realpath of the full path fails; the rule
+    // has to resolve the deepest existing ancestor instead.
+    const workspace = await makeWorkspace()
+    const outside = await makeWorkspace()
+    await symlink(outside, join(workspace, 'escape'))
+    expect(await withinWorkspace(workspace, 'escape/new.json')).toBeUndefined()
   })
 
   it('lists the bundled skills with descriptions', async () => {
