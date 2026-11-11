@@ -1,3 +1,8 @@
+# DSH bundling note (not upstream): openpyxl's stubs type Worksheet/worksheet cells as
+# Optional, so six reportOptionalMemberAccess / reportAttributeAccessIssue findings fire on
+# code that is correct at runtime (the upstream test suite exercises this path and passes).
+# Scoped to this file only; behaviour is unchanged.
+# pyright: reportOptionalMemberAccess=false, reportAttributeAccessIssue=false
 """术语库 Excel 导入导出工具。"""
 
 from __future__ import annotations

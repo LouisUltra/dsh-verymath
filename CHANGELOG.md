@@ -3,6 +3,26 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.7.1] - 2026-11-11
+
+### Fixed
+
+- **The panel and the tools could disagree about the same machine.** The
+  environment tab spawned a bare `sage`, while `verymath_sage_check` resolved it
+  through the conda environment directories — so a machine with
+  `~/.verymath/miniforge/envs/sage` showed "SageMath missing" in the panel and
+  "available" in the tool. Executable discovery now lives in `core/exec.ts` and
+  both surfaces use it; `tool` re-exports the same functions for compatibility.
+- Panel writes used `writeFile`, which truncates before writing: a concurrent
+  reader (the panel polling, or a chat tool call landing mid-write) could see a
+  half-written document and report "not a valid glossary". Writes now go through a
+  sibling temp file plus `rename`.
+- The environment probe ran its seven checks sequentially, so the tab could sit on
+  "probing…" for up to twenty seconds and read as a hang. The independent probes
+  now run concurrently.
+- The read route and the write routes returned two different `stats` shapes; both
+  now use one `glossaryStats`, so the panel's counters do not jump after an edit.
+
 ## [0.7.0] - 2026-11-11
 
 ### Added
