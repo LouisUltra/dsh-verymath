@@ -74,7 +74,7 @@ window.__ModuleLoader__.load({
     /** 主面板：能力清单与当前状态。 */
     function VeryMathPanel() {
       return h('div', { style: { padding: '16px 18px', fontSize: 13, lineHeight: 1.6 } },
-        h('div', { style: { fontSize: 15, fontWeight: 600 } }, '数学科研'),
+        h('div', { style: { fontSize: 15, fontWeight: 600 } }, 'VeryMath 数学科研'),
         h('div', { style: { color: 'var(--dsh-text-secondary, #666)', marginTop: 2 } },
           'VeryMath 能力接入：14 个工具 · 16 个技能'),
         h(Section, null, '工具'),
@@ -100,7 +100,7 @@ window.__ModuleLoader__.load({
         name: 'sidebar.panellist',
         id: PANEL_ID,
         order: 40,
-        label: '数学科研',
+        label: 'VeryMath 数学科研',
       }, VeryMathIcon)), 'verymath: sidebar entry')
 
       // 主面板（keyed 槽，键必须与上面 id 一致）
