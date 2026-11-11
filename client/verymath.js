@@ -228,7 +228,13 @@ window.__ModuleLoader__.load({
       const [busy, setBusy] = useState(false)
       const [error, setError] = useState('')
 
-      useEffect(() => { setDraft(draftFor(props.term)) }, [props.term])
+      // Reset the draft only when a *different* row is edited. Depending on the whole
+      // `props.term` object reset the draft whenever a background refresh produced a
+      // new object for the same term, silently discarding what the user had typed
+      // (the list reloads after every save).
+      const termId = props.term === undefined ? '' : props.term.term_id
+
+      useEffect(() => { setDraft(draftFor(props.term)) }, [termId])
 
       const field = (key) => (event) => setDraft((prev) => ({ ...prev, [key]: event.target.value }))
       const input = (key, placeholder, extra) => h('input', {
@@ -302,7 +308,7 @@ window.__ModuleLoader__.load({
               if (!window.confirm(`删除 ${term.term_id}（${term.en} / ${term.cn}）？此操作直接改 glossary.json。`)) return
               try { await props.onDelete(term.term_id) } catch (cause) { window.alert(String(cause && cause.message ? cause.message : cause)) }
             },
-            style: { ...S.deleteBtn },
+            style: { ...S.btnDanger },
           }, '删除'),
         ),
         h('div', { style: { ...S.hint, display: 'flex', gap: 10, flexWrap: 'wrap' } },
@@ -407,12 +413,18 @@ window.__ModuleLoader__.load({
         }),
         adding ? h(TermEditor, { term: undefined, onSave: upsert, onDone: () => setAdding(false) }) : null,
         h('div', { style: { marginTop: 12 } },
-          result.status === 'loading' ? h(Loading, null) : null,
+          // Stale-while-revalidate: a reload must NOT unmount the list. Rendering only
+          // on `status === 'ready'` tore down the open editor on every 刷新 (and on the
+          // reload that follows a save), which discarded the user's un-saved input.
+          result.status === 'loading' && result.data === undefined ? h(Loading, null) : null,
+          result.status === 'loading' && result.data !== undefined
+            ? h('div', { style: { ...S.hint, marginBottom: 6 } }, '刷新中…')
+            : null,
           result.status === 'failed' ? h(Failure, { message: result.error, onRetry: result.reload }) : null,
-          result.status === 'ready' && query.trim().length > 0 && terms.length === 0
+          result.data !== undefined && query.trim().length > 0 && terms.length === 0
             ? h(Empty, null, `没有匹配「${query}」。试试英文词根，或换个子领域名。`)
             : null,
-          result.status === 'ready' && terms.length > 0
+          result.data !== undefined && terms.length > 0
             ? h('div', null,
                 h('div', { style: { ...S.hint, marginBottom: 8 } },
                   `命中 ${result.data.matched} 条${result.data.truncated ? `，只显示前 ${terms.length} 条` : ''}`),
@@ -427,7 +439,7 @@ window.__ModuleLoader__.load({
                 })),
               )
             : null,
-          result.status === 'ready' && query.trim().length === 0 && terms.length === 0
+          result.data !== undefined && query.trim().length === 0 && terms.length === 0
             ? h('div', { style: { ...S.hint, marginTop: 8 } }, '输入关键词开始查；或点上面的「新增术语」。')
             : null,
         ),

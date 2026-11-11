@@ -243,6 +243,43 @@ describe('panel renders', () => {
     expect(screen.getByText(/不带 term_id = 新增/)).toBeTruthy()
   })
 
+  it('keeps the draft when the list refreshes with new objects for the same term', async () => {
+    // The list reloads after every save, and 刷新 reloads it on demand: each reload
+    // delivers the same terms as fresh objects. Resetting the draft on the object
+    // (rather than on term_id) threw away whatever the user had typed.
+    const Panel = loadPanel()
+    render(React.createElement(Panel))
+    fireEvent.click(screen.getByRole('button', { name: '术语库' }))
+    const search = await screen.findByPlaceholderText(/查术语/)
+    fireEvent.change(search, { target: { value: 'manifold' } })
+    await waitFor(() => expect(screen.getByText('流形')).toBeTruthy())
+
+    fireEvent.click(screen.getAllByRole('button', { name: '编辑' })[0]!)
+    const cnField = (await screen.findByPlaceholderText('流形')) as HTMLInputElement
+    fireEvent.change(cnField, { target: { value: '流形（正在输入）' } })
+    expect(cnField.value).toBe('流形（正在输入）')
+
+    // This is what actually re-fetches: the tab's own 刷新 button.
+    fireEvent.click(screen.getByRole('button', { name: '刷新' }))
+    await new Promise((resolve) => setTimeout(resolve, 80))
+    const after = screen.getByPlaceholderText('流形') as HTMLInputElement
+    expect(after.value).toBe('流形（正在输入）')
+  })
+
+  it('renders the delete button with the danger style', async () => {
+    // `S.deleteBtn` did not exist, so the destructive action rendered as an ordinary
+    // button with no visual warning.
+    const Panel = loadPanel()
+    render(React.createElement(Panel))
+    fireEvent.click(screen.getByRole('button', { name: '术语库' }))
+    const search = await screen.findByPlaceholderText(/查术语/)
+    fireEvent.change(search, { target: { value: 'manifold' } })
+    await waitFor(() => expect(screen.getByText('流形')).toBeTruthy())
+
+    const remove = screen.getAllByRole('button', { name: '删除' })[0]!
+    expect(remove.style.color).toBe('rgb(220, 38, 38)')
+  })
+
   it('renders the dependency graph and shows a node on click', async () => {
     const Panel = loadPanel()
     render(React.createElement(Panel))
