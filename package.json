@@ -1,6 +1,6 @@
 {
   "name": "@louisultra/dsh-verymath",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "description": "VeryMath capabilities for DSH: 16 bundled math skills and 14 tools covering paper reading, bilingual glossary, writing, Beamer, optimization, computation, Lean formalization, research workflows, Sage doc lookup and MATLAB. Community plugin for issue ECNU/EduWork#152.",
   "type": "module",
   "main": "lib/index.js",
@@ -73,8 +73,11 @@
     "@deepseek-ai/dsh-tool-executor-native": "0.2.2-rc.1",
     "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
     "@deepseek-ai/schemastery": "3.19.0",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
     "@types/js-yaml": "4.0.9",
     "@types/node": "24.19.2",
+    "jsdom": "31.0.0",
     "typescript": "6.0.3",
     "vitest": "4.1.8"
   },

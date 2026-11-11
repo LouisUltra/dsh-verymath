@@ -1,0 +1,5 @@
+{
+  "//": "This package ships no first-party Python. Everything under skills/ is vendored from the VeryMath upstream repositories and recorded as verbatim in UPSTREAM.json, so type-checking it here would report upstream's own annotations and invite edits that break provenance. Excluded accordingly.",
+  "exclude": ["skills", "lib", "node_modules", "docs"],
+  "typeCheckingMode": "off"
+}

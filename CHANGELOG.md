@@ -3,7 +3,78 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [0.5.0] - 2026-11-11
+## [0.7.0] - 2026-11-11
+
+### Added
+
+- **The glossary tab is an editor, not a viewer.** Editing a translation was the
+  one thing the panel could do better than the chat, and 0.6.0 could only read.
+  Per term you can now edit `cn`/`pos`/`field`/`source`/example, add a term, or
+  delete a row — with the same rules the tool enforces: a row is addressed by
+  `term_id` for corrections, a new translation of an existing English term
+  becomes an `en__N` alias row instead of overwriting, ambiguous or unknown
+  targets are refused with the core's own message, and a delete re-sorts with
+  contiguous `idx`. Writes go through `/api/verymath/glossary/{upsert,delete}`,
+  are confined to the workspace, and are serialized per document so two quick
+  edits cannot drop one another.
+- Coverage gaps became a to-do list: the tab reports how many terms lack an
+  example sentence or a subfield and names them, instead of only counting.
+- **The dependency graph is interactive.** The route now returns laid-out
+  coordinates and edges instead of a pre-rendered SVG string, and the client
+  draws it with real elements: clicking a node shows its statement, in/out
+  degree, whether it is a hub or supports a main theorem, and its immediate
+  relations; clicking again clears it. This also removes the panel's only use of
+  `dangerouslySetInnerHTML`.
+- The environment tab gained copy-to-clipboard for each install hint and a
+  one-click Markdown report of the whole probe result.
+
+### Changed
+
+- `pyrightconfig.json` excludes `skills/`: every Python file in this package is
+  vendored from upstream and recorded verbatim in `UPSTREAM.json`, so type
+  checking it reports upstream's own `openpyxl` stub complaints and invites edits
+  that would break provenance. The scripts are exercised by the upstream suite
+  (19 tests) and by real runs, not by pyright.
+
+## [0.6.0] - 2026-11-11
+
+### Added
+
+- **The panel is a real panel.** 0.5.0 shipped the sidebar entry with a static
+  list of tool names — an entry that proved the wiring, not a deliverable. This
+  release replaces it with four tabs backed by host routes that run the same core
+  code as the tools:
+  - **环境** — probes the local toolchain for real (Python 3, PyYAML, latexmk,
+    xelatex, the OSQP stack, SageMath, Lean) and shows, per row, what the
+    capability unlocks, the detected version, or the install command. A readiness
+    count answers "will this work on my machine" without trying a task first.
+  - **术语库** — picks any `glossary*.json` in the workspace (bounded scan), shows
+    term/example/alias/subfield counts, and searches by English, Chinese,
+    `term_id` or subfield with the same matching order the tool uses, including
+    example sentences for disambiguation.
+  - **论文图** — picks any `*_structure.json`, renders the theorem dependency
+    graph as an inline SVG (layered by the bottom-up reproduction order, coloured
+    by entity kind, thicker border for shared hubs), and reports topology:
+    hubs, cycles, isolated nodes, both reading directions, per-entity in/out
+    degree, plus a focus box that shows one theorem's transitive closure and
+    reading layers.
+  - **技能** — the 16 bundled skills with their descriptions, read from the
+    package the same way the host skill registry reads them.
+- `src/http.ts`: six `/api/verymath/*` routes (`env`, `glossaries`, `glossary`,
+  `structures`, `paper`, `skills`). Each is registered through
+  `connection.fetch.register` with an explicit `requestBody: 'buffered'`, and
+  every failure becomes structured JSON so the panel shows a sentence instead of
+  an empty 500. Paths are confined to the workspace; escaping paths are refused
+  with 400.
+- The root entry now registers those routes via `ctx.inject(['connection'], …)`.
+  When a host has no connection service (headless, CLI) the panel half simply
+  degrades away — the tools and skills are unaffected.
+- `tests/tool/http.spec.ts` (10 cases): every route the panel calls is registered
+  and returns its documented shape; workspace escape and non-glossary input are
+  client errors, not 500s; the paper route returns topology plus an SVG that
+  actually contains the entity labels.
+
+@@## [0.5.0] - 2026-11-11
 
 ### Added
 

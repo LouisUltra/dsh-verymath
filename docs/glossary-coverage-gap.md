@@ -38,3 +38,14 @@ against our plugin's TS tests (146 specs) and bundled scripts.
 - A3: Document that web UI + enrich are skill-workflow paths with their own upstream test coverage; decide
   whether to wire them into `npm run check` (network/dependency gated). **Documented, not wired** (they need
   network/Flask/openpyxl).
+
+## Known tooling noise (not defects)
+
+- `skills/math-glossary/scripts/glossary_export.py` shows Pyright findings (annotations
+  and a couple of unbound-name paths). The file is **byte-identical to upstream**
+  (`diff -q` against `research/AI4Math-MathTool/skills/math-glossary/scripts/`), and
+  `UPSTREAM.json` records it as included verbatim. Fixing those annotations here would
+  break the provenance claim and the `check-source-docs` whitelist, so the findings are
+  left as upstream's. They do not affect the bundled workflow: the script is executed
+  as a subprocess by `verymath_glossary_build`, and the upstream test suite (19 tests,
+  run by `npm run test:upstream`) passes.
