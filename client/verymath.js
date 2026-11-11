@@ -283,12 +283,11 @@ window.__ModuleLoader__.load({
 
     function TermRow(props) {
       const term = props.term
-      const [editing, setEditing] = useState(false)
-      if (editing) {
+      if (props.editing) {
         return h(TermEditor, {
           term,
           onSave: props.onUpsert,
-          onDone: () => setEditing(false),
+          onDone: props.onDoneEditing,
         })
       }
       return h('div', { style: S.card },
@@ -297,7 +296,7 @@ window.__ModuleLoader__.load({
           h('span', { style: { color: 'var(--dsh-text-tertiary, #999)' } }, '→'),
           h('span', null, term.cn),
           h('span', { style: { ...S.code, marginLeft: 'auto' } }, term.term_id),
-          h('button', { onClick: () => setEditing(true), style: { ...S.btn, padding: '2px 8px' } }, '编辑'),
+          h('button', { onClick: () => props.onStartEditing(term.term_id), style: { ...S.btn, padding: '2px 8px' } }, '编辑'),
           h('button', {
             onClick: async () => {
               if (!window.confirm(`删除 ${term.term_id}（${term.en} / ${term.cn}）？此操作直接改 glossary.json。`)) return
@@ -325,8 +324,10 @@ window.__ModuleLoader__.load({
       const [selected, setSelected] = useState('')
       const [query, setQuery] = useState('')
       const [showGaps, setShowGaps] = useState(false)
+      // One editor at a time: two open forms on the same document invite saving a
+      // stale draft over a fresh edit.
       const [adding, setAdding] = useState(false)
-      const [tick, setTick] = useState(0)
+      const [editingId, setEditingId] = useState('')
 
       const glossaries = (list.data && list.data.glossaries) || []
       useEffect(() => {
@@ -338,8 +339,7 @@ window.__ModuleLoader__.load({
         : `/api/verymath/glossary?path=${encodeURIComponent(selected)}&q=${encodeURIComponent(query)}`
       const result = useEndpoint(endpoint)
 
-      const refresh = useCallback(() => { setTick((value) => value + 1); list.reload(); result.reload() }, [list.reload, result.reload])
-      void tick
+      const refresh = useCallback(() => { list.reload(); result.reload() }, [list.reload, result.reload])
 
       const upsert = useCallback(async (payload) => {
         await postJson('/api/verymath/glossary/upsert', { path: selected, terms: [payload] })
@@ -370,7 +370,7 @@ window.__ModuleLoader__.load({
         h('div', { style: S.toolbar },
           h('select', { value: selected, onChange: (event) => setSelected(event.target.value), style: S.select },
             ...glossaries.map((item) => h('option', { key: item.path, value: item.path }, `${item.path}（${item.terms} 条）`))),
-          h('button', { onClick: () => setAdding(true), style: S.btnPrimary }, '新增术语'),
+          h('button', { onClick: () => { setEditingId(''); setAdding(true) }, style: S.btnPrimary }, '新增术语'),
           h('button', { onClick: refresh, style: S.btn }, '刷新'),
         ),
         h('div', { style: S.stat },
@@ -417,7 +417,13 @@ window.__ModuleLoader__.load({
                 h('div', { style: { ...S.hint, marginBottom: 8 } },
                   `命中 ${result.data.matched} 条${result.data.truncated ? `，只显示前 ${terms.length} 条` : ''}`),
                 ...terms.map((term) => h(TermRow, {
-                  key: term.term_id, term, onUpsert: upsert, onDelete: remove,
+                  key: term.term_id,
+                  term,
+                  editing: editingId === term.term_id,
+                  onStartEditing: (id) => { setAdding(false); setEditingId(id) },
+                  onDoneEditing: () => setEditingId(''),
+                  onUpsert: upsert,
+                  onDelete: remove,
                 })),
               )
             : null,

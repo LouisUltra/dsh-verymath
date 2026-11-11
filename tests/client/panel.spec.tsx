@@ -218,6 +218,31 @@ describe('panel renders', () => {
     })
   })
 
+  it('keeps a single editor open at a time', async () => {
+    // Two open forms on one document invite saving a stale draft over a fresh edit,
+    // so opening another row's editor must close the first (and vice versa for 新增).
+    const Panel = loadPanel()
+    render(React.createElement(Panel))
+    fireEvent.click(screen.getByRole('button', { name: '术语库' }))
+    const search = await screen.findByPlaceholderText(/查术语/)
+    fireEvent.change(search, { target: { value: 'manifold' } })
+    await waitFor(() => expect(screen.getByText('流形')).toBeTruthy())
+
+    const editButtons = screen.getAllByRole('button', { name: '编辑' })
+    fireEvent.click(editButtons[0]!)
+    expect(screen.getAllByText(/带 term_id 提交/)).toHaveLength(1)
+
+    fireEvent.click(editButtons[1]!)
+    await waitFor(() => expect(screen.getAllByText(/带 term_id 提交/)).toHaveLength(1))
+    // The second row's draft is the one now on screen.
+    expect((screen.getByPlaceholderText('流形') as HTMLInputElement).value).toBe('多样体')
+
+    // 新增 closes the row editor instead of stacking a second form.
+    fireEvent.click(screen.getByRole('button', { name: '新增术语' }))
+    await waitFor(() => expect(screen.queryByText(/带 term_id 提交/)).toBeNull())
+    expect(screen.getByText(/不带 term_id = 新增/)).toBeTruthy()
+  })
+
   it('renders the dependency graph and shows a node on click', async () => {
     const Panel = loadPanel()
     render(React.createElement(Panel))
