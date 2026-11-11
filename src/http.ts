@@ -20,7 +20,7 @@
  *
  * @module @louisultra/dsh-verymath/http
  */
-import { readdir, readFile, realpath, rename, stat, writeFile } from 'node:fs/promises'
+import { readdir, readFile, realpath, rename, stat, unlink, writeFile } from 'node:fs/promises'
 import { basename, join, resolve, sep } from 'node:path'
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
@@ -72,8 +72,15 @@ const JSON_HEADERS = { 'content-type': 'application/json; charset=utf-8' } as co
  */
 async function writeJsonAtomic(path: string, value: unknown): Promise<void> {
   const temp = `${path}.verymath-tmp-${process.pid}-${Date.now()}`
-  await writeFile(temp, JSON.stringify(value, null, 2) + '\n', 'utf8')
-  await rename(temp, path)
+  try {
+    await writeFile(temp, JSON.stringify(value, null, 2) + '\n', 'utf8')
+    await rename(temp, path)
+  } catch (error) {
+    // A failed rename (permissions, cross-device) must not leave the temp file
+    // behind: it would show up in the workspace and in the panel's own scans.
+    await unlink(temp).catch(() => undefined)
+    throw error
+  }
 }
 
 function json(body: unknown, status = 200): Response {
