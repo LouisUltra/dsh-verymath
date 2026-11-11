@@ -1,6 +1,6 @@
 {
   "name": "@louisultra/dsh-verymath",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "VeryMath capabilities for DSH: 16 bundled math skills and 14 tools covering paper reading, bilingual glossary, writing, Beamer, optimization, computation, Lean formalization, research workflows, Sage doc lookup and MATLAB. Community plugin for issue ECNU/EduWork#152.",
   "type": "module",
   "main": "lib/index.js",
@@ -9,7 +9,8 @@
     ".": "./lib/index.js",
     "./core": "./lib/core/index.js",
     "./tool": "./lib/tool/index.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./client": "./lib/client.js"
   },
   "files": [
     "lib/**/*.js",
@@ -32,10 +33,19 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ],
+      "immediately": true
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/build-client.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:runtime": "node scripts/probe-runtime.mjs",

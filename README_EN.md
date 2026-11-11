@@ -32,6 +32,15 @@ The repo does not redistribute paper full texts (third-party license); follow [`
 
 Per-capability detail for the remaining 12 (OCR post-review, QP, MILP, Lean, Sage doc lookup, MATLAB, Beamer, ...) — who uses it, what to say, what input is needed, what you get, run conditions and recorded runs — is in [`docs/capability-examples.md`](docs/capability-examples.md).
 
+## Interface
+
+The plugin ships a browser half: a **「数学科研」 entry in the left sidebar** that
+opens a panel listing the 14 tools and how to reach each capability. The entry
+registers on the host's `sidebar.panellist` list slot and the panel on the
+layout's `main` keyed slot under the same id, so both DSH web and the EduWork
+desktop show it. Hosts without the client-plugin mechanism simply skip this half;
+tools and skills are unaffected.
+
 ## What it provides
 
 **Model-facing tools** (available right after install; the Agent calls them automatically):

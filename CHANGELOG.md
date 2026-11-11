@@ -3,6 +3,30 @@
 All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] - 2026-11-11
+
+### Added
+
+- **Browser panel with a left-sidebar entry.** The plugin now ships a client half
+  (`dsh.client` + `lib/client.js`), so hosts that compose client plugins (DSH web,
+  EduWork desktop) show a 「数学科研」 row in the left sidebar; clicking it opens a
+  panel listing the 14 tools and how to reach the capabilities. Until now the
+  package was tools-and-skills only, which is why it had no entry anywhere while
+  a plugin with a client half (e.g. wellspring) did.
+  - The entry registers on `sidebar.panellist` (`kind: list`, root scope) with
+    `id: 'verymath'`, and the panel registers on the layout's `main` slot
+    (`kind: keyed`, root scope) with `key: 'verymath'` — the sidebar resolves the
+    panel by that id, so the two must stay in sync.
+  - `cordis.patch.yml` gains a **bare-package-name** entry (`verymath-client`).
+    The host resolves a client plugin's manifest from the loader entry name; with
+    only `/core` and `/tool` entries the specifier lookup returns undefined, so
+    `dsh.client` would never be read. The root module (`src/index.ts`) therefore
+    became a mountable no-op plugin alongside its existing re-exports.
+  - `scripts/build-client.mjs` copies `client/verymath.js` to `lib/client.js` and
+    fails the build when the bundle id does not match `package.json.name` or the
+    source does not parse — the host only shows a one-line error when a client
+    bundle fails to load, so this check is cheaper than debugging in the app.
+
 ## [0.4.0] - 2026-11-11
 
 Minor rather than patch: `verymath_glossary_upsert` changes what it does with a

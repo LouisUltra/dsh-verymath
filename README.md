@@ -32,6 +32,13 @@
 
 其余 12 项能力（OCR 后校对、二次规划、混合整数规划、Lean、Sage 文档查询、MATLAB、Beamer 等）的「谁在什么情况下用、用户怎么说、需要什么输入、最后得到什么、运行条件与实测记录」逐项写在 [`docs/capability-examples.md`](docs/capability-examples.md)。
 
+## 界面
+
+插件带一个浏览器半侧：**左侧栏「数学科研」入口**，点开是能力面板（14 个工具清单与用法指引）。
+注册走宿主的 `sidebar.panellist`（左栏列表槽）与布局的 `main`（keyed 槽，键与入口 id 一致），
+所以 DSH web 与 EduWork 桌面端都能显示；宿主没装客户端插件机制时这部分自动不生效，
+工具与技能不受影响。
+
 ## 提供的能力
 
 **模型工具**（安装即用，Agent 自动调用）：
